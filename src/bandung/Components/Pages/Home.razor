@@ -1,0 +1,152 @@
+﻿@page "/"
+@using bandung.Models
+
+<PageTitle>AWS User Group Bandung</PageTitle>
+
+<HeroSection 
+    Title="@heroTitle"
+    Subtitle="@heroSubtitle"
+    PrimaryActionText="@heroCTA"
+    PrimaryActionUrl="@heroCTAUrl" />
+
+<AboutSection 
+    CommunityInfo="@communityInfo"
+    ShowStats="true" />
+
+<EventsSection 
+    Events="@upcomingEvents"
+    NotificationSignupUrl="@notificationUrl"
+    InitialEventsToShow="4" />
+
+<ContactSection 
+    ContactInfo="@contactInfo" />
+
+@code {
+    private string heroTitle = "AWS User Group Bandung";
+    private string heroSubtitle = "Join our community of AWS enthusiasts, developers, and professionals in Bandung";
+    private string heroCTA = "Join Our Community";
+    private string heroCTAUrl = "#contact";
+    private string notificationUrl = "#contact";
+    
+    private CommunityInfo communityInfo = new();
+    private ContactInfo contactInfo = new();
+    private List<Event> upcomingEvents = new();
+    
+    protected override void OnInitialized()
+    {
+        InitializeCommunityInfo();
+        InitializeContactInfo();
+        InitializeEvents();
+    }
+    
+    private void InitializeCommunityInfo()
+    {
+        communityInfo = new CommunityInfo
+        {
+            Name = "AWS User Group Bandung",
+            Mission = "We are a community of AWS enthusiasts, developers, and professionals dedicated to learning, sharing knowledge, and building innovative solutions using Amazon Web Services. Our mission is to foster collaboration, provide educational opportunities, and support the growth of cloud computing expertise in the Bandung region.",
+            Activities = new List<string>
+            {
+                "Monthly meetups and technical workshops",
+                "Hands-on labs and AWS certification study groups",
+                "Guest speaker sessions with AWS experts and industry leaders",
+                "Hackathons and community projects",
+                "Networking events and career development opportunities"
+            },
+            Benefits = new List<string>
+            {
+                "Learn from experienced AWS practitioners and certified professionals",
+                "Network with like-minded developers and cloud enthusiasts",
+                "Access to exclusive AWS resources and learning materials",
+                "Opportunities to contribute to open-source projects",
+                "Stay updated with the latest AWS services and best practices",
+                "Build your professional portfolio and advance your career"
+            },
+            Stats = new CommunityStats
+            {
+                MemberCount = 250,
+                EventsHeld = 48,
+                EstablishedDate = new DateTime(2020, 3, 15)
+            }
+        };
+    }
+    
+    private void InitializeContactInfo()
+    {
+        contactInfo = new ContactInfo
+        {
+            PrimaryEmail = "hello@awsugbandung.id",
+            SocialMediaLinks = new Dictionary<string, string>
+            {
+                { "LinkedIn", "https://www.linkedin.com/company/aws-user-group-bandung" },
+                { "Twitter", "https://twitter.com/awsugbandung" },
+                { "Telegram", "https://t.me/awsugbandung" },
+                { "GitHub", "https://github.com/awsugbandung" }
+            },
+            OnlinePlatforms = new List<CommunityPlatform>
+            {
+                new CommunityPlatform
+                {
+                    Name = "Telegram Community",
+                    Url = "https://t.me/awsugbandung",
+                    Purpose = "Join our daily discussions, ask questions, and stay updated with announcements"
+                },
+                new CommunityPlatform
+                {
+                    Name = "LinkedIn Group",
+                    Url = "https://www.linkedin.com/company/aws-user-group-bandung",
+                    Purpose = "Connect professionally, share articles, and discover career opportunities"
+                },
+                new CommunityPlatform
+                {
+                    Name = "GitHub Organization",
+                    Url = "https://github.com/awsugbandung",
+                    Purpose = "Collaborate on open-source projects and access workshop materials"
+                }
+            }
+        };
+    }
+    
+    private void InitializeEvents()
+    {
+        upcomingEvents = new List<Event>
+        {
+            new Event
+            {
+                Title = "AWS Cloud Fundamentals Workshop",
+                Date = new DateTime(2026, 2, 15, 14, 0, 0),
+                Location = "Bandung Digital Valley",
+                Description = "Learn the fundamentals of AWS cloud computing, including EC2, S3, and basic networking concepts. Perfect for beginners!",
+                RegistrationUrl = "https://www.meetup.com/aws-user-group-bandung/events/cloud-fundamentals",
+                Topics = new List<string> { "EC2", "S3", "VPC", "IAM" }
+            },
+            new Event
+            {
+                Title = "Serverless Architecture Deep Dive",
+                Date = new DateTime(2026, 3, 8, 15, 30, 0),
+                Location = "Online via Zoom",
+                Description = "Explore serverless computing with AWS Lambda, API Gateway, and DynamoDB. Build a complete serverless application from scratch.",
+                RegistrationUrl = "https://www.meetup.com/aws-user-group-bandung/events/serverless-deep-dive",
+                Topics = new List<string> { "Lambda", "API Gateway", "DynamoDB", "Step Functions" }
+            },
+            new Event
+            {
+                Title = "AWS Certification Study Group",
+                Date = new DateTime(2026, 3, 22, 10, 0, 0),
+                Location = "Bandung Tech Hub",
+                Description = "Join our study group for AWS Solutions Architect Associate certification. Share tips, practice questions, and study strategies.",
+                RegistrationUrl = "https://www.meetup.com/aws-user-group-bandung/events/certification-study",
+                Topics = new List<string> { "Certification", "Solutions Architect", "Study Group" }
+            },
+            new Event
+            {
+                Title = "Container Orchestration with ECS and EKS",
+                Date = new DateTime(2026, 4, 12, 14, 0, 0),
+                Location = "Bandung Innovation Center",
+                Description = "Master container orchestration on AWS using ECS and EKS. Learn best practices for deploying and managing containerized applications.",
+                RegistrationUrl = "https://www.meetup.com/aws-user-group-bandung/events/container-orchestration",
+                Topics = new List<string> { "ECS", "EKS", "Docker", "Kubernetes" }
+            }
+        };
+    }
+}
