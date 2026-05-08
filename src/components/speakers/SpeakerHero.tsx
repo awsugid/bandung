@@ -22,7 +22,7 @@ export function SpeakerHero({ kioskUrl }: SpeakerHeroProps) {
         </div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100 fill-mode-both text-foreground">
-          Speak at <span className="text-primary">AWS UG Jakarta</span>
+          Speak at <span className="text-primary">AWS UG Bandung</span>
         </h1>
 
         <p className="max-w-2xl text-lg sm:text-xl text-muted-foreground mb-10 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-200 fill-mode-both leading-relaxed">

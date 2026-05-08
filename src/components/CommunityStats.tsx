@@ -70,10 +70,10 @@ export function CommunityStats() {
           <CardContent className="p-12 flex flex-col lg:flex-row items-center justify-between gap-8 relative z-10">
             <div className="max-w-xl space-y-4 text-center lg:text-left">
               <h3 className="text-3xl font-bold text-foreground">
-                Partner with AWS UG Jakarta
+                Partner with AWS UG Bandung
               </h3>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Connect with thousands of cloud professionals. Whether you want
+                Connect with Bandung's cloud professionals. Whether you want
                 to speak, host an event, or sponsor our community, we'd love to
                 collaborate.
               </p>
@@ -84,7 +84,7 @@ export function CommunityStats() {
                 size="lg"
                 className="h-14 px-8 text-base font-medium rounded-full bg-foreground text-background hover:bg-foreground/90 shadow-xl"
               >
-                <a href="mailto:awsugjakarta@gmail.com">
+                <a href="mailto:awsugbandung@gmail.com">
                   <Mail className="mr-2 h-5 w-5" />
                   Contact Organizers
                 </a>

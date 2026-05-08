@@ -57,7 +57,7 @@ export function SponsorTiers() {
                         Collaboration Opportunities
                     </h2>
                     <p className="text-muted-foreground text-lg leading-relaxed">
-                        There are many ways to partner with AWS User Group Jakarta.
+                        There are many ways to partner with AWS User Group Bandung.
                         Choose the collaboration model that works best for your organization.
                     </p>
                 </div>

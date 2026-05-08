@@ -32,7 +32,7 @@ export function SponsorHero({ kioskUrl }: SponsorHeroProps) {
         </h1>
 
         <p className="max-w-2xl text-lg sm:text-xl text-muted-foreground mb-12 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-200 fill-mode-both leading-relaxed">
-          AWS User Group Jakarta is always open for collaboration. Whether
+          AWS User Group Bandung is always open for collaboration. Whether
           you're a company looking to reach cloud professionals or an individual
           wanting to contribute, there are many ways to partner with us.
         </p>

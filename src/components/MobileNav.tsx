@@ -55,7 +55,7 @@ export function MobileNav({ items }: MobileNavProps) {
                             ))}
                             <div className="w-16 h-1 bg-white/10 rounded-full" />
                             <a
-                                href="https://www.meetup.com/aws-ug-jakarta"
+                                href="https://www.meetup.com/aws-user-group-bandung/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xl font-medium text-[#FF9900] hover:text-[#FF9900]/80 hover:underline underline-offset-4"

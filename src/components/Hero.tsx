@@ -23,11 +23,11 @@ export function Hero({ kioskUrl }: HeroProps) {
         </div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-100 fill-mode-both text-foreground">
-          AWS User Group <span className="text-primary">Jakarta</span>
+          AWS User Group <span className="text-primary">Bandung</span>
         </h1>
 
         <p className="max-w-2xl text-lg sm:text-xl text-muted-foreground mb-10 animate-in fade-in slide-in-from-bottom-5 duration-700 delay-200 fill-mode-both leading-relaxed">
-          Join Indonesia's largest community of AWS builders. Learn, share, and
+          Join Bandung's growing community of AWS builders. Learn, share, and
           connect with fellow developers, architects, and cloud enthusiasts.
         </p>
 
@@ -38,7 +38,7 @@ export function Hero({ kioskUrl }: HeroProps) {
             className="h-12 px-8 text-base bg-primary hover:bg-primary/90 text-white shadow-lg shadow-orange-500/20"
           >
             <a
-              href="https://www.meetup.com/aws-ug-jakarta"
+              href="https://www.meetup.com/aws-user-group-bandung/"
               target="_blank"
               rel="noopener noreferrer"
             >

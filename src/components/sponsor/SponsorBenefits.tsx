@@ -6,7 +6,7 @@ const benefits = [
     {
         icon: Target,
         title: "Direct Access to Cloud Professionals",
-        description: "Reach 4,000+ active AWS practitioners, developers, and architects in the Jakarta region.",
+        description: "Reach active AWS practitioners, developers, and architects in the Bandung region.",
     },
     {
         icon: Eye,
@@ -41,7 +41,7 @@ export function SponsorBenefits() {
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <h2 className="text-3xl font-bold tracking-tight mb-4 text-foreground lg:text-4xl">
-                        Why Partner with AWS UG Jakarta?
+                        Why Partner with AWS UG Bandung?
                     </h2>
                     <p className="text-muted-foreground text-lg leading-relaxed">
                         Partnering with our community delivers tangible value for your brand and organization.

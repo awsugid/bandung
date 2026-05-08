@@ -42,7 +42,7 @@ const divisions = [
         icon: Palette,
         name: "Design",
         roles: ["Figma Designer", "Visual Creative"],
-        description: "Collaborates and designs visual assets using Figma, creating materials that represent the AWS UG Jakarta brand across all event touchpoints and promotional channels.",
+        description: "Collaborates and designs visual assets using Figma, creating materials that represent the AWS UG Bandung brand across all event touchpoints and promotional channels.",
         skills: ["Figma", "Brand Identity", "Creativity"],
     },
     {
@@ -70,7 +70,7 @@ const divisions = [
         icon: Share2,
         name: "Social Media",
         roles: ["Social Media Manager", "Content Poster"],
-        description: "Responsible for live-posting event updates and highlights to AWS UG Jakarta's social media channels, keeping the online community engaged in real time.",
+        description: "Responsible for live-posting event updates and highlights to AWS UG Bandung's social media channels, keeping the online community engaged in real time.",
         skills: ["Social Media Marketing", "Copywriting", "Content Creation"],
     },
     {
@@ -84,7 +84,7 @@ const divisions = [
         icon: HandCoins,
         name: "Sponsorship",
         roles: ["Sponsor Outreach", "Partnership Coordinator"],
-        description: "Identifies and builds relationships with potential sponsors and partners to secure funding, resources, and in-kind support for AWS UG Jakarta events.",
+        description: "Identifies and builds relationships with potential sponsors and partners to secure funding, resources, and in-kind support for AWS UG Bandung events.",
         skills: ["Negotiation", "Networking", "Persuasion"],
     },
     {
@@ -98,7 +98,7 @@ const divisions = [
         icon: Globe,
         name: "Website",
         roles: ["Web Developer", "Content Manager"],
-        description: <>Builds and maintains the AWS UG Jakarta website, ensuring it stays up to date with event information, speaker profiles, and community resources. Check out the repository at <a href="https://github.com/awsugid/jakarta" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors">github.com/awsugid/jakarta</a>.</>,
+        description: <>Builds and maintains the AWS UG Bandung website, ensuring it stays up to date with event information, speaker profiles, and community resources.</>,
         skills: ["Web Development", "SEO", "UI/UX"],
     },
 ];
@@ -112,7 +112,7 @@ export function VolunteerRoles() {
                         {"Volunteer Divisions & Roles"}
                     </h2>
                     <p className="text-muted-foreground text-lg leading-relaxed">
-                        Explore the different teams that keep AWS User Group Jakarta running.
+                        Explore the different teams that keep AWS User Group Bandung running.
                         Each division plays a vital role in delivering great experiences for our community.
                     </p>
                 </div>
