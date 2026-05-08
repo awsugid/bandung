@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+import { Hero } from "../components/Hero";
+import { EventList } from "../components/EventList";
+import { CommunityStats } from "../components/CommunityStats";
+import { StatisticsCharts } from "../components/StatisticsCharts";
+import { getCollection } from "astro:content";
+import statisticsData from "../../public/data/statistic.json";
+
+const events = await getCollection("events");
+// Get only upcoming or recent events (top 3)
+const recentEvents = events
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .slice(0, 3);
+---
+
+<Layout title="AWS User Group Jakarta - Community Portal">
+    <Hero client:load kioskUrl={import.meta.env.PUBLIC_IMMICH_KIOSK_URL} />
+    <EventList client:visible events={recentEvents} />
+    <StatisticsCharts client:visible data={statisticsData} />
+    <CommunityStats client:visible />
+</Layout>
