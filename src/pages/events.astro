@@ -25,8 +25,8 @@ import { featuredEvent, meetupGroupUrl, pastEvents } from "@/lib/events";
 
 	<section class="border-y border-border bg-muted py-10 sm:py-12">
 		<div class="site-container">
-			<div class="overflow-hidden rounded-lg border border-border bg-background shadow-[0_22px_56px_hsl(213_28%_11%_/_0.1)]">
-				<figure class="border-b border-border bg-aws-ink">
+			<div class="grid gap-12">
+				<figure class="overflow-hidden rounded-lg bg-aws-ink shadow-[0_18px_40px_hsl(213_28%_11%_/_0.14),0_44px_90px_hsl(213_28%_11%_/_0.16)]">
 					<img
 						src={featuredEvent.imageUrl}
 						alt={featuredEvent.title}
@@ -34,7 +34,7 @@ import { featuredEvent, meetupGroupUrl, pastEvents } from "@/lib/events";
 					/>
 				</figure>
 
-				<div class="p-6 sm:p-8 lg:p-10">
+				<div>
 					<p class="eyebrow">Next up</p>
 					<h2 class="mt-4">
 						{featuredEvent.title}
