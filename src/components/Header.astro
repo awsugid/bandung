@@ -1,24 +1,58 @@
 ---
-import { navItems } from "@/lib/navigation";
+import { joinCommunityUrl, navItems } from "@/lib/navigation";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) => {
+	const normalizedHref = href.replace(/\/$/, "") || "/";
+	return normalizedHref === "/"
+		? currentPath === "/"
+		: currentPath.startsWith(normalizedHref);
+};
 ---
 
-<header class="border-b border-border/70 bg-background/90 backdrop-blur">
-	<div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-		<a href="/" class="flex items-center gap-3" aria-label="AWS User Group Bandung">
-			<img src="/android-chrome-192x192.png" alt="" class="h-9 w-9" />
-			<span class="text-sm font-bold uppercase tracking-[0.18em] text-foreground">
-				AWS UG Bandung
+<header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
+	<div class="h-1 bg-primary"></div>
+	<div class="site-container flex min-h-[calc(var(--header-height)-0.25rem)] items-center justify-between gap-4 py-3">
+		<a href="/" class="group flex min-w-0 items-center gap-3" aria-label="AWS User Group Bandung home">
+			<img src="/android-chrome-192x192.png" alt="" class="h-9 w-9 shrink-0" />
+			<span class="min-w-0">
+				<span class="block text-sm font-bold uppercase tracking-[0.18em] text-foreground">
+					AWS UG Bandung
+				</span>
+				<span class="hidden text-xs font-medium text-muted-foreground sm:block">
+					Learn AWS with local builders
+				</span>
 			</span>
 		</a>
 
-		<nav class="hidden items-center gap-7 text-sm font-medium text-muted-foreground sm:flex">
-			{
-				navItems.map((item) => (
-					<a href={item.href} class="transition-colors hover:text-foreground">
-						{item.name}
-					</a>
-				))
-			}
-		</nav>
+		<div class="flex items-center gap-2 sm:gap-5">
+			<nav class="flex items-center gap-1 rounded-full border border-border bg-muted p-1" aria-label="Primary navigation">
+				{
+					navItems.map((item) => (
+						<a
+							href={item.href}
+							aria-current={isActive(item.href) ? "page" : undefined}
+							class:list={[
+								"rounded-full px-3 py-2 text-sm font-bold transition sm:px-4",
+								isActive(item.href)
+									? "bg-background text-foreground shadow-sm"
+									: "text-muted-foreground hover:text-foreground",
+							]}
+						>
+							{item.name}
+						</a>
+					))
+				}
+			</nav>
+
+			<a
+				href={joinCommunityUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="hidden h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-bold text-primary-foreground transition hover:bg-primary/90 md:inline-flex"
+			>
+				Join the Meetup
+			</a>
+		</div>
 	</div>
 </header>
