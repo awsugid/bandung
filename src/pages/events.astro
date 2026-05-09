@@ -1,25 +1,178 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { EventList } from "../components/EventList";
-import { getCollection } from "astro:content";
+import EventCard from "@/components/EventCard.astro";
+import Layout from "@/layouts/Layout.astro";
+import { featuredEvent, getEventJsonLd, meetupGroupUrl, pastEvents } from "@/lib/events";
+import { absoluteUrl, site } from "@/lib/site";
 
-const events = await getCollection("events");
-events.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const eventsStructuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		name: "AWS User Group Bandung Events",
+		url: absoluteUrl("/events"),
+		description:
+			"Upcoming, current, and past AWS User Group Bandung meetups, speakers, topics, and venue details.",
+		inLanguage: site.language,
+		mainEntity: {
+			"@type": "ItemList",
+			itemListElement: [featuredEvent, ...pastEvents].map((event, index) => ({
+				"@type": "ListItem",
+				position: index + 1,
+				name: event.title,
+				url: event.meetupUrl,
+			})),
+		},
+	},
+	getEventJsonLd(featuredEvent),
+	...pastEvents.map(getEventJsonLd),
+];
 ---
 
-<Layout title="Upcoming Events - AWS User Group Bandung">
-    <div class="py-12 bg-muted/30">
-        <div class="container mx-auto max-w-7xl px-4 md:px-6">
-            <h1 class="text-4xl font-bold mb-4 tracking-tight">
-                Upcoming Events
-            </h1>
-            <p class="text-lg text-muted-foreground">
-                Stay updated with our latest meetups, workshops, and
-                conferences.
-            </p>
-        </div>
-    </div>
-    <div class="bg-background min-h-[50vh]">
-        <EventList client:load events={events} hideHeader={true} />
-    </div>
+<Layout
+	title="Events | AWS User Group Bandung"
+	description="Upcoming, current, and past AWS User Group Bandung meetups, speakers, topics, and venue details."
+	canonicalPath="/events"
+	image="/og/events.png"
+	structuredData={eventsStructuredData}
+>
+	<section class="site-section bg-background">
+		<div class="site-container">
+			<div class="max-w-3xl">
+				<p class="eyebrow">Events</p>
+				<h1 class="mt-5">
+					The AWS Bandung meetup board.
+				</h1>
+				<p class="lead mt-6">
+					Find the next AWS User Group Bandung session and browse previous
+					meetups from the community archive.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="border-y border-border bg-muted py-10 sm:py-12">
+		<div class="site-container">
+			<div class="grid gap-12">
+				<figure class="overflow-hidden rounded-lg bg-aws-ink shadow-[0_18px_40px_hsl(213_28%_11%_/_0.14),0_44px_90px_hsl(213_28%_11%_/_0.16)]">
+					<img
+						src={featuredEvent.imageUrl}
+						alt={featuredEvent.title}
+						class="aspect-[16/9] w-full object-contain"
+					/>
+				</figure>
+
+				<div>
+					<p class="eyebrow">Next up</p>
+					<h2 class="mt-4">
+						{featuredEvent.title}
+					</h2>
+					<p class="lead mt-5">
+						{featuredEvent.description}
+					</p>
+
+					<div class="mt-8 grid gap-4 border-y border-border py-6 text-sm sm:grid-cols-3">
+						<div>
+							<p class="font-bold text-foreground">Date and time</p>
+							<p class="mt-1">
+								{featuredEvent.dateLabel}
+								<br />
+								{featuredEvent.timeLabel}
+							</p>
+						</div>
+						<div>
+							<p class="font-bold text-foreground">Venue</p>
+							<p class="mt-1">
+								{featuredEvent.location}
+							</p>
+						</div>
+						<div>
+							<p class="font-bold text-foreground">Host</p>
+							<p class="mt-1">
+								{featuredEvent.hostDisplayName}
+							</p>
+						</div>
+						<div class="sm:col-span-3">
+							<p class="font-bold text-foreground">Address</p>
+							<p class="mt-1">
+								{featuredEvent.address} · {featuredEvent.city}
+							</p>
+						</div>
+					</div>
+
+					<div class="mt-8 flex flex-col gap-3 sm:flex-row">
+						<a
+							href={featuredEvent.meetupUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="button-primary"
+						>
+							Attend on Meetup
+						</a>
+						<a
+							href={featuredEvent.mapUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="button-secondary"
+						>
+							Open map
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="site-section bg-background">
+		<div class="site-container">
+			<div class="max-w-3xl">
+				<p class="eyebrow">Past events</p>
+				<h2 class="mt-4">
+					What the community has covered.
+				</h2>
+				<p class="lead mt-5">
+					Past sessions make the archive useful for new members: they show the
+					topics, speakers, and venues that shaped the group so far.
+				</p>
+			</div>
+
+			<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+				{
+					pastEvents.map((event) => (
+							<EventCard
+								title={event.title}
+								description={event.description}
+							dateLabel={event.dateLabel}
+							timeLabel={event.timeLabel}
+							location={`${event.location}, ${event.city}`}
+							href={event.meetupUrl}
+							ctaLabel="View on Meetup"
+							imageUrl={event.imageUrl}
+						/>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="site-section bg-muted">
+		<div class="site-container">
+			<div class="sm:flex sm:items-center sm:justify-between sm:gap-6">
+				<div>
+					<h3>Follow the Meetup group</h3>
+					<p class="mt-2 text-sm">
+						Meetup stays the source of truth for RSVP status, attendee changes,
+						venue updates, and future AWS User Group Bandung events.
+					</p>
+				</div>
+				<a
+					href={meetupGroupUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="button-primary mt-5 shrink-0 sm:mt-0"
+				>
+					Open Meetup group
+				</a>
+			</div>
+		</div>
+	</section>
 </Layout>

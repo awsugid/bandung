@@ -1,23 +1,508 @@
 ---
+import EventCard from "@/components/EventCard.astro";
 import Layout from "../layouts/Layout.astro";
+import { featuredEvent, getEventJsonLd } from "@/lib/events";
+import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
+import { absoluteUrl, site } from "@/lib/site";
 
-import { Hero } from "../components/Hero";
-import { EventList } from "../components/EventList";
-import { CommunityStats } from "../components/CommunityStats";
-import { StatisticsCharts } from "../components/StatisticsCharts";
-import { getCollection } from "astro:content";
-import statisticsData from "../../public/data/statistic.json";
-
-const events = await getCollection("events");
-// Get only upcoming or recent events (top 3)
-const recentEvents = events
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-    .slice(0, 3);
+const homeStructuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "WebPage",
+		name: site.name,
+		url: absoluteUrl("/"),
+		description: site.description,
+		inLanguage: site.language,
+		about: ["AWS Cloud", "Cloud computing", "Developer community", "Bandung"],
+	},
+	{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		mainEntity: [
+			{
+				"@type": "Question",
+				name: "What is AWS User Group Bandung?",
+				acceptedAnswer: {
+					"@type": "Answer",
+					text: "AWS User Group Bandung is a community-led group for developers, architects, students, operators, founders, and cloud practitioners learning and building with AWS Cloud in Bandung.",
+				},
+			},
+			{
+				"@type": "Question",
+				name: "How can I join AWS User Group Bandung events?",
+				acceptedAnswer: {
+					"@type": "Answer",
+					text: "Join the AWS User Group Bandung Meetup group to follow upcoming sessions, RSVP, and receive venue or schedule updates.",
+				},
+			},
+		],
+	},
+	getEventJsonLd(featuredEvent),
+];
 ---
 
-<Layout title="AWS User Group Bandung - Community Portal">
-    <Hero client:load kioskUrl={import.meta.env.PUBLIC_IMMICH_KIOSK_URL} />
-    <EventList client:visible events={recentEvents} />
-    <StatisticsCharts client:visible data={statisticsData} />
-    <CommunityStats client:visible />
+<Layout
+	title="AWS User Group Bandung"
+	description="Join AWS User Group Bandung to learn AWS Cloud, meet local builders, and grow with the Bandung tech community."
+	canonicalPath="/"
+	structuredData={homeStructuredData}
+>
+	<section class="relative overflow-hidden bg-background">
+		<div class="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,var(--aws-frost),transparent)]"></div>
+		<div class="site-container relative grid min-h-[calc(100vh-var(--header-height))] items-center gap-12 py-16 lg:grid-cols-[1.08fr_0.92fr] lg:py-20">
+			<div class="max-w-3xl">
+				<p class="eyebrow">AWS User Group Bandung</p>
+				<h1 class="mt-5 max-w-4xl">
+					Learn AWS Cloud with builders in Bandung.
+				</h1>
+				<p class="lead mt-6 max-w-2xl">
+					Join community-led meetups for technical talks, hands-on learning,
+					and practical conversations with local developers, architects,
+					students, and cloud practitioners.
+				</p>
+
+				<div class="mt-9 flex flex-col gap-3 sm:flex-row">
+					<a
+						href={joinCommunityUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="button-primary"
+					>
+						Join the Meetup
+					</a>
+					<a href="/events" class="button-secondary">
+						View events
+					</a>
+				</div>
+			</div>
+
+			<figure class="relative lg:translate-x-3 lg:translate-y-5">
+				<div class="absolute -inset-x-3 -inset-y-2 rotate-[-3deg] rounded-[1.7rem] border border-border bg-muted shadow-[0_10px_28px_hsl(213_28%_11%_/_0.08)] sm:-inset-x-5 sm:-inset-y-4"></div>
+				<div class="absolute -inset-x-2 -inset-y-1 rotate-[2deg] rounded-[1.6rem] border border-border bg-background shadow-[0_16px_36px_hsl(213_28%_11%_/_0.08)] sm:-inset-x-4 sm:-inset-y-3"></div>
+				<div class="relative rounded-[1.35rem] border border-border bg-background p-3 shadow-[0_18px_36px_hsl(213_28%_11%_/_0.12),0_48px_90px_hsl(213_28%_11%_/_0.12)] sm:rotate-[0.6deg] sm:p-4 lg:rotate-[1.1deg]">
+					<div class="relative aspect-[5634/3583] overflow-hidden rounded-[1rem] bg-aws-ink">
+						<img
+							src="/images/community-hero.webp"
+							alt="AWS User Group Bandung members at a community meetup"
+							class="absolute inset-0 h-full w-full object-cover object-center"
+						/>
+						<div class="absolute inset-0 bg-[linear-gradient(180deg,hsl(213_28%_11%_/_0.01),hsl(213_28%_11%_/_0.36))]"></div>
+					</div>
+				</div>
+			</figure>
+		</div>
+	</section>
+
+	<section class="border-b border-border bg-background py-10 sm:py-12">
+		<div class="site-container">
+			<div class="border border-border bg-muted">
+				<div class="border-b border-border p-6 sm:p-7">
+					<p class="eyebrow">Community momentum</p>
+					<h2 class="mt-3 max-w-3xl text-2xl leading-tight sm:text-3xl">
+						A growing Bandung cloud community, built meetup by meetup.
+					</h2>
+				</div>
+
+				<div class="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+					<div class="bg-background p-6 sm:p-7">
+						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
+							200+
+						</p>
+						<h3 class="mt-5 text-lg">members and counting</h3>
+						<p class="mt-2 text-sm">
+							Builders, students, operators, and cloud-curious people following
+							the Bandung group.
+						</p>
+					</div>
+
+					<div class="bg-background p-6 sm:p-7">
+						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
+							3
+						</p>
+						<h3 class="mt-5 text-lg">events so far</h3>
+						<p class="mt-2 text-sm">
+							More sessions are on the way as topics, speakers, and venues are
+							confirmed.
+						</p>
+					</div>
+
+					<div class="bg-background p-6 sm:p-7">
+						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
+							5.0
+						</p>
+						<h3 class="mt-5 text-lg">average rating</h3>
+						<p class="mt-2 text-sm">
+							Based on community ratings from people who joined previous
+							sessions.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="site-section bg-muted">
+		<div class="site-container">
+			<div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+				<div class="max-w-2xl">
+					<p class="eyebrow">About the community</p>
+					<h2 class="mt-4">
+						A local space for people building with AWS.
+					</h2>
+					<p class="lead mt-6">
+						AWS User Group Bandung brings developers, students, operators,
+						architects, founders, and cloud-curious builders into the same
+						conversation, so AWS knowledge does not stay locked inside one
+						company, team, or job title.
+					</p>
+					<p class="mt-5">
+						Expect practical talks, honest questions, local connections, and
+						space to share what you are learning, whether you are deploying
+						your first workload or running production systems.
+					</p>
+
+					<a
+						href={joinCommunityUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="button-secondary mt-8 bg-background"
+					>
+						Join the local group
+					</a>
+				</div>
+
+				<aside class="aws-card overflow-hidden bg-background" aria-label="Community snapshot">
+					<div class="h-2 bg-primary"></div>
+					<div class="p-6 sm:p-8">
+						<div class="flex items-start justify-between gap-6 border-b border-border pb-6">
+							<div>
+								<p class="text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground">
+									What it is for
+								</p>
+								<h2 class="mt-4 text-3xl leading-tight">
+									Make cloud learning local.
+								</h2>
+							</div>
+							<img src="/images/awsug-bandung-logo.png" alt="" class="h-12 w-12 shrink-0" />
+						</div>
+
+						<div class="mt-2 divide-y divide-border">
+							<div class="grid gap-3 py-6 sm:grid-cols-[8.5rem_1fr]">
+								<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+									Ask
+								</p>
+								<div>
+									<h3 class="text-base">Bring the part you are stuck on</h3>
+									<p class="mt-2 text-sm">
+										Architecture choices, service tradeoffs, security basics,
+										cost concerns, migration stories, or where to begin.
+									</p>
+								</div>
+							</div>
+							<div class="grid gap-3 py-6 sm:grid-cols-[8.5rem_1fr]">
+								<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+									Share
+								</p>
+								<div>
+									<h3 class="text-base">Turn real work into useful lessons</h3>
+									<p class="mt-2 text-sm">
+										Short demos, production notes, experiments, failures, and
+										fixes are all useful when they help another builder move.
+									</p>
+								</div>
+							</div>
+							<div class="grid gap-3 py-6 sm:grid-cols-[8.5rem_1fr]">
+								<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+									Meet
+								</p>
+								<div>
+									<h3 class="text-base">Know the builders around Bandung</h3>
+									<p class="mt-2 text-sm">
+										Connect with people from different teams, campuses,
+										startups, agencies, and companies who are learning AWS too.
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<p class="border-t border-border pt-6 text-sm font-medium text-foreground">
+							Open to every experience level. Meetups may be in-person or
+							virtual depending on the session.
+						</p>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</section>
+
+	<section class="site-section bg-aws-ink text-white">
+		<div class="site-container">
+			<div>
+				<div class="max-w-3xl">
+					<p class="text-sm font-bold uppercase tracking-[0.18em] text-primary">
+						What to expect
+					</p>
+					<h2 class="mt-4 max-w-xl text-3xl leading-tight text-white sm:text-4xl">
+						A meetup that feels practical before it feels formal.
+					</h2>
+					<p class="mt-6 max-w-xl text-lg leading-8 text-white/70">
+						Each session is built to help you leave with something useful: a
+						clearer mental model, a service pattern to try, a local contact, or
+						a better question for your next AWS project.
+					</p>
+				</div>
+
+				<div class="mt-12 overflow-hidden border border-white/15 bg-white/[0.03]">
+					<div class="grid gap-4 border-b border-white/15 p-6 sm:grid-cols-[1fr_auto] sm:items-end sm:p-7">
+						<div>
+							<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+								Session board
+							</p>
+							<h3 class="mt-2 text-2xl text-white">The usual shape of a meetup</h3>
+						</div>
+						<p class="text-sm font-medium text-white/55">
+							In-person or virtual
+						</p>
+					</div>
+
+					<div class="grid divide-y divide-white/15 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+						<div class="p-6 sm:p-7">
+							<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+								Technical
+							</p>
+							<div>
+								<h3 class="mt-6 text-xl text-white">Talks that map AWS to real work</h3>
+								<p class="mt-3 text-sm leading-7 text-white/68">
+									Service deep dives, architecture walkthroughs, migration
+									notes, security basics, cost lessons, and production stories
+									from people building in the field.
+								</p>
+							</div>
+						</div>
+
+						<div class="p-6 sm:p-7">
+							<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+								Hands-on
+							</p>
+							<div>
+								<h3 class="mt-6 text-xl text-white">Demos and workshops you can follow</h3>
+								<p class="mt-3 text-sm leading-7 text-white/68">
+									Some sessions are built around guided practice, live demos, or
+									short examples you can take home and try after the meetup.
+								</p>
+							</div>
+						</div>
+
+						<div class="p-6 sm:p-7">
+							<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+								Community
+							</p>
+							<div>
+								<h3 class="mt-6 text-xl text-white">Questions, introductions, and follow-up</h3>
+								<p class="mt-3 text-sm leading-7 text-white/68">
+									Bring the thing you are stuck on, meet local builders, and
+									continue the conversation after the talk while the context is
+									still fresh.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="site-section bg-muted">
+		<div class="site-container">
+			<div>
+				<div class="max-w-3xl">
+					<p class="eyebrow">Events preview</p>
+					<h2 class="mt-4">
+						Upcoming meetups will live here.
+					</h2>
+					<p class="lead mt-6">
+						The next session is already scheduled. Join the Meetup page for
+						registration updates, venue details, and attendee information.
+					</p>
+				</div>
+
+				<div class="mt-10 overflow-hidden rounded-lg border border-border bg-background">
+					<div class="grid gap-0 lg:grid-cols-[0.72fr_1.28fr]">
+						<div class="border-b border-border bg-aws-frost p-6 sm:p-8 lg:border-b-0 lg:border-r">
+							<p class="text-sm font-bold uppercase tracking-[0.18em] text-primary">
+								Featured event
+							</p>
+							<h3 class="mt-4 text-3xl leading-tight">
+								May meetup registration is open.
+							</h3>
+							<p class="mt-4 text-sm">
+								Meet local builders for an AWS Rekognition session with Fauzi
+								Kurniawan from Dicoding Indonesia.
+							</p>
+							<a
+								href={featuredEvent.meetupUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="button-secondary mt-8 bg-background"
+							>
+								Open Meetup event
+							</a>
+						</div>
+
+						<div class="p-4 sm:p-6 lg:p-8">
+							<EventCard
+								title={featuredEvent.title}
+								description={featuredEvent.description}
+								dateLabel={featuredEvent.dateLabel}
+								timeLabel={featuredEvent.timeLabel}
+								location={`${featuredEvent.location}, ${featuredEvent.city}`}
+								href="/events"
+								ctaLabel="View event details"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="site-section bg-background">
+		<div class="site-container">
+			<div>
+				<div class="max-w-3xl">
+					<p class="eyebrow">Ways to participate</p>
+					<h2 class="mt-4">
+						Pick the level of involvement that fits you.
+					</h2>
+					<p class="lead mt-6">
+						You do not need a polished talk or an official role to take part.
+						Start by showing up, then contribute more when you have something
+						useful to share or space to help.
+					</p>
+				</div>
+
+				<div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+					<div class="aws-card aws-card-hover flex min-h-72 flex-col bg-background p-6">
+						<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+							Show up
+						</p>
+						<h3 class="mt-6">Attend a meetup</h3>
+						<p class="mt-3 text-sm">
+							Join a session, meet local AWS builders, and bring questions from
+							your own learning or work.
+						</p>
+						<div class="mt-auto pt-8">
+							<p class="border-t border-border pt-4 text-sm font-bold text-foreground">
+								Best first step
+							</p>
+						</div>
+					</div>
+
+					<div class="aws-card aws-card-hover flex min-h-72 flex-col bg-background p-6">
+						<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+							Share
+						</p>
+						<h3 class="mt-6">Give a short session</h3>
+						<p class="mt-3 text-sm">
+							Turn a demo, architecture decision, migration note, bug fix, or
+							lesson learned into something other builders can use.
+						</p>
+						<div class="mt-auto pt-8">
+							<p class="border-t border-border pt-4 text-sm font-bold text-foreground">
+								Great for builders
+							</p>
+						</div>
+					</div>
+
+					<div class="aws-card aws-card-hover flex min-h-72 flex-col bg-background p-6">
+						<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+							Host
+						</p>
+						<h3 class="mt-6">Offer a place to gather</h3>
+						<p class="mt-3 text-sm">
+							Help with a classroom, office, lab, community room, or workshop
+							space where builders can meet.
+						</p>
+						<div class="mt-auto pt-8">
+							<p class="border-t border-border pt-4 text-sm font-bold text-foreground">
+								Useful for teams
+							</p>
+						</div>
+					</div>
+
+					<div class="aws-card aws-card-hover flex min-h-72 flex-col bg-background p-6">
+						<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+							Support
+						</p>
+						<h3 class="mt-6">Help run the community</h3>
+						<p class="mt-3 text-sm">
+							Support planning, speaker coordination, event operations,
+							documentation, or community communication.
+						</p>
+						<div class="mt-auto pt-8">
+							<p class="border-t border-border pt-4 text-sm font-bold text-foreground">
+								For regulars
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="mt-6 border border-border bg-muted p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
+					<div>
+						<h3 class="text-xl">Not sure where to start?</h3>
+						<p class="mt-2 text-sm">
+							Join the Meetup group first. You can attend quietly, ask a
+							question, or reach out when you are ready to contribute.
+						</p>
+					</div>
+					<a
+						href={joinCommunityUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="button-primary mt-5 shrink-0 sm:mt-0"
+					>
+						Join the Meetup
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="bg-muted py-16 sm:py-20">
+		<div class="site-container">
+			<div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+				<div class="max-w-2xl">
+					<p class="eyebrow">
+						Join the community
+					</p>
+					<h2 class="mt-4">
+						Get notified when the next AWS meetup in Bandung is announced.
+					</h2>
+					<p class="lead mt-5">
+						Join the Meetup group to follow upcoming sessions, registration
+						updates, and ways to take part.
+					</p>
+				</div>
+
+				<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+					<a
+						href={joinCommunityUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="button-primary"
+					>
+						Join the Meetup
+					</a>
+					<a
+						href={instagramUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="button-secondary bg-background"
+					>
+						Follow Instagram
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
 </Layout>
