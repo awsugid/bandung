@@ -3,14 +3,16 @@
   "type": "module",
   "version": "0.1.0",
   "scripts": {
+    "generate:og": "node scripts/generate-og-images.js",
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/generate-og-images.js && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@tailwindcss/vite": "4.2.4",
     "astro": "^6.1.4",
+    "sharp": "^0.34.5",
     "tailwindcss": "4.2.4",
     "typescript": "^5.9.3",
     "vite": "7.3.2"
