@@ -1,14 +1,14 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "../layouts/Layout.astro";
-import { joinCommunityUrl } from "@/lib/navigation";
+import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 ---
 
 <Layout
 	title="AWS User Group Bandung"
 	description="Join AWS User Group Bandung to learn AWS Cloud, meet local builders, and grow with the Bandung tech community."
 >
-	<section class="relative overflow-hidden border-b border-border bg-background">
+	<section class="relative overflow-hidden bg-background">
 		<div class="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,var(--aws-frost),transparent)]"></div>
 		<div class="site-container relative grid min-h-[calc(100vh-var(--header-height))] items-center gap-12 py-16 lg:grid-cols-[1.08fr_0.92fr] lg:py-20">
 			<div class="max-w-3xl">
@@ -45,6 +45,54 @@ import { joinCommunityUrl } from "@/lib/navigation";
 				/>
 				<div class="absolute inset-0 bg-[linear-gradient(180deg,hsl(213_28%_11%_/_0.02),hsl(213_28%_11%_/_0.58))]"></div>
 			</figure>
+		</div>
+	</section>
+
+	<section class="border-b border-border bg-background py-10 sm:py-12">
+		<div class="site-container">
+			<div class="border border-border bg-muted">
+				<div class="border-b border-border p-6 sm:p-7">
+					<p class="eyebrow">Community momentum</p>
+					<h2 class="mt-3 max-w-3xl text-2xl leading-tight sm:text-3xl">
+						A growing Bandung cloud community, built meetup by meetup.
+					</h2>
+				</div>
+
+				<div class="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+					<div class="bg-background p-6 sm:p-7">
+						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
+							200+
+						</p>
+						<h3 class="mt-5 text-lg">members and counting</h3>
+						<p class="mt-2 text-sm">
+							Builders, students, operators, and cloud-curious people following
+							the Bandung group.
+						</p>
+					</div>
+
+					<div class="bg-background p-6 sm:p-7">
+						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
+							3
+						</p>
+						<h3 class="mt-5 text-lg">events so far</h3>
+						<p class="mt-2 text-sm">
+							More sessions are on the way as topics, speakers, and venues are
+							confirmed.
+						</p>
+					</div>
+
+					<div class="bg-background p-6 sm:p-7">
+						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
+							5.0
+						</p>
+						<h3 class="mt-5 text-lg">average rating</h3>
+						<p class="mt-2 text-sm">
+							Based on community ratings from people who joined previous
+							sessions.
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 
@@ -394,14 +442,24 @@ import { joinCommunityUrl } from "@/lib/navigation";
 						</p>
 					</div>
 
-					<a
-						href={joinCommunityUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
-					>
-						Join the Meetup
-					</a>
+					<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+						<a
+							href={joinCommunityUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
+						>
+							Join the Meetup
+						</a>
+						<a
+							href={instagramUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex h-12 items-center justify-center rounded-md border border-white/20 px-6 text-sm font-bold text-white transition hover:bg-white/10"
+						>
+							Follow Instagram
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
