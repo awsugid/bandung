@@ -4,3 +4,4 @@ export const navItems = [
 ];
 
 export const joinCommunityUrl = "https://www.meetup.com/aws-user-group-bandung/";
+export const instagramUrl = "https://www.instagram.com/awsugbandung/";
