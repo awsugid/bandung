@@ -309,10 +309,9 @@ import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 							<EventCard
 								title={featuredEvent.title}
 								description={featuredEvent.description}
-								dateLabel={`${featuredEvent.dateLabel}, ${featuredEvent.timeLabel}`}
+								dateLabel={featuredEvent.dateLabel}
+								timeLabel={featuredEvent.timeLabel}
 								location={`${featuredEvent.location}, ${featuredEvent.city}`}
-								type={featuredEvent.type}
-								statusLabel={featuredEvent.statusLabel}
 								href="/events"
 								ctaLabel="View event details"
 							/>

@@ -35,19 +35,7 @@ import { featuredEvent, meetupGroupUrl, pastEvents } from "@/lib/events";
 				</figure>
 
 				<div class="p-6 sm:p-8 lg:p-10">
-					<div class="flex flex-wrap items-center gap-2">
-						<span class="rounded-full bg-primary/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-foreground">
-							{featuredEvent.type}
-						</span>
-						<span class="rounded-full border border-border bg-muted px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-							{featuredEvent.statusLabel}
-						</span>
-						<span class="rounded-full border border-border bg-muted px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-							{featuredEvent.priceLabel}
-						</span>
-					</div>
-
-					<p class="eyebrow mt-8">Next up</p>
+					<p class="eyebrow">Next up</p>
 					<h2 class="mt-4">
 						{featuredEvent.title}
 					</h2>
@@ -120,16 +108,15 @@ import { featuredEvent, meetupGroupUrl, pastEvents } from "@/lib/events";
 				</p>
 			</div>
 
-			<div class="mt-10 grid gap-5 md:grid-cols-2">
+			<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
 				{
 					pastEvents.map((event) => (
-						<EventCard
-							title={event.title}
-							description={event.description}
-							dateLabel={`${event.dateLabel}, ${event.timeLabel}`}
+							<EventCard
+								title={event.title}
+								description={event.description}
+							dateLabel={event.dateLabel}
+							timeLabel={event.timeLabel}
 							location={`${event.location}, ${event.city}`}
-							type={event.type}
-							statusLabel={event.statusLabel}
 							href={event.meetupUrl}
 							ctaLabel="View on Meetup"
 							imageUrl={event.imageUrl}
