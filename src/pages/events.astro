@@ -1,12 +1,39 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "@/layouts/Layout.astro";
-import { featuredEvent, meetupGroupUrl, pastEvents } from "@/lib/events";
+import { featuredEvent, getEventJsonLd, meetupGroupUrl, pastEvents } from "@/lib/events";
+import { absoluteUrl, site } from "@/lib/site";
+
+const eventsStructuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		name: "AWS User Group Bandung Events",
+		url: absoluteUrl("/events"),
+		description:
+			"Upcoming, current, and past AWS User Group Bandung meetups, speakers, topics, and venue details.",
+		inLanguage: site.language,
+		mainEntity: {
+			"@type": "ItemList",
+			itemListElement: [featuredEvent, ...pastEvents].map((event, index) => ({
+				"@type": "ListItem",
+				position: index + 1,
+				name: event.title,
+				url: event.meetupUrl,
+			})),
+		},
+	},
+	getEventJsonLd(featuredEvent),
+	...pastEvents.map(getEventJsonLd),
+];
 ---
 
 <Layout
 	title="Events | AWS User Group Bandung"
 	description="Upcoming, current, and past AWS User Group Bandung meetups, speakers, topics, and venue details."
+	canonicalPath="/events"
+	image="/og/events.png"
+	structuredData={eventsStructuredData}
 >
 	<section class="site-section bg-background">
 		<div class="site-container">

@@ -1,13 +1,51 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "../layouts/Layout.astro";
-import { featuredEvent } from "@/lib/events";
+import { featuredEvent, getEventJsonLd } from "@/lib/events";
 import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
+import { absoluteUrl, site } from "@/lib/site";
+
+const homeStructuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "WebPage",
+		name: site.name,
+		url: absoluteUrl("/"),
+		description: site.description,
+		inLanguage: site.language,
+		about: ["AWS Cloud", "Cloud computing", "Developer community", "Bandung"],
+	},
+	{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		mainEntity: [
+			{
+				"@type": "Question",
+				name: "What is AWS User Group Bandung?",
+				acceptedAnswer: {
+					"@type": "Answer",
+					text: "AWS User Group Bandung is a community-led group for developers, architects, students, operators, founders, and cloud practitioners learning and building with AWS Cloud in Bandung.",
+				},
+			},
+			{
+				"@type": "Question",
+				name: "How can I join AWS User Group Bandung events?",
+				acceptedAnswer: {
+					"@type": "Answer",
+					text: "Join the AWS User Group Bandung Meetup group to follow upcoming sessions, RSVP, and receive venue or schedule updates.",
+				},
+			},
+		],
+	},
+	getEventJsonLd(featuredEvent),
+];
 ---
 
 <Layout
 	title="AWS User Group Bandung"
 	description="Join AWS User Group Bandung to learn AWS Cloud, meet local builders, and grow with the Bandung tech community."
+	canonicalPath="/"
+	structuredData={homeStructuredData}
 >
 	<section class="relative overflow-hidden bg-background">
 		<div class="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,var(--aws-frost),transparent)]"></div>
