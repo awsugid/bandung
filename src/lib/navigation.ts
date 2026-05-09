@@ -1,5 +1,6 @@
 export const navItems = [
 	{ name: "Home", href: "/" },
-	{ name: "About", href: "#about" },
-	{ name: "Start", href: "#start" },
+	{ name: "Events", href: "/events" },
 ];
+
+export const joinCommunityUrl = "https://www.meetup.com/aws-user-group-bandung/";
