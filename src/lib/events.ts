@@ -1,3 +1,5 @@
+import { absoluteUrl, site } from "@/lib/site";
+
 export const meetupGroupUrl = "https://www.meetup.com/aws-user-group-bandung/";
 
 export const events = [
@@ -9,6 +11,8 @@ export const events = [
 		statusLabel: "Next event",
 		dateLabel: "Saturday, May 16, 2026",
 		timeLabel: "4:00 PM - 6:00 PM WIB",
+		startDate: "2026-05-16T16:00:00+07:00",
+		endDate: "2026-05-16T18:00:00+07:00",
 		location: "MIRE HUB - Creative Hub & Event Space",
 		address:
 			"Jl. Brigadir Jend. Katamso No.19B, Cihaur Geulis, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40122",
@@ -56,6 +60,8 @@ export const events = [
 		statusLabel: "Past event",
 		dateLabel: "Saturday, February 28, 2026",
 		timeLabel: "4:00 PM - 6:00 PM WIB",
+		startDate: "2026-02-28T16:00:00+07:00",
+		endDate: "2026-02-28T18:00:00+07:00",
 		location: "MIRE HUB - Creative Hub & Event Space",
 		address:
 			"Jl. Brigadir Jend. Katamso No.19B, Cihaur Geulis, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40122",
@@ -101,6 +107,8 @@ export const events = [
 		statusLabel: "Past event",
 		dateLabel: "Monday, December 22, 2025",
 		timeLabel: "6:30 PM - 8:30 PM WIB",
+		startDate: "2025-12-22T18:30:00+07:00",
+		endDate: "2025-12-22T20:30:00+07:00",
 		location: "BLOCK71 Bandung",
 		address: "Innovation Factory, Jl. Ir. H. Djuanda No.108, Lebakgede",
 		city: "Bandung",
@@ -148,3 +156,49 @@ export const nextEvents = events.filter((event) => event.phase === "next");
 export const currentEvents = events.filter((event) => event.phase === "current");
 export const pastEvents = events.filter((event) => event.phase === "past");
 export const featuredEvent = nextEvents[0] ?? events[0];
+
+export type CommunityEvent = (typeof events)[number];
+
+export const getEventJsonLd = (event: CommunityEvent) => ({
+	"@context": "https://schema.org",
+	"@type": "Event",
+	name: event.title,
+	description: event.description,
+	startDate: event.startDate,
+	endDate: event.endDate,
+	eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+	eventStatus:
+		event.phase === "past"
+			? "https://schema.org/EventCompleted"
+			: "https://schema.org/EventScheduled",
+	image: [event.imageUrl],
+	url: event.meetupUrl,
+	isAccessibleForFree: event.priceLabel === "Free",
+	location: {
+		"@type": "Place",
+		name: event.location,
+		address: {
+			"@type": "PostalAddress",
+			streetAddress: event.address,
+			addressLocality: event.city,
+			addressRegion: "West Java",
+			addressCountry: "ID",
+		},
+		geo: {
+			"@type": "GeoCoordinates",
+			latitude: event.coordinates.latitude,
+			longitude: event.coordinates.longitude,
+		},
+	},
+	organizer: {
+		"@type": "Organization",
+		name: site.name,
+		url: absoluteUrl("/"),
+	},
+	performer: event.speakers.map((speaker) => ({
+		"@type": "Person",
+		name: speaker.name,
+		jobTitle: speaker.role,
+		description: speaker.topic,
+	})),
+});
