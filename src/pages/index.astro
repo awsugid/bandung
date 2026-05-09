@@ -1,6 +1,7 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "../layouts/Layout.astro";
+import { featuredEvent } from "@/lib/events";
 import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 ---
 
@@ -276,8 +277,8 @@ import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 						Upcoming meetups will live here.
 					</h2>
 					<p class="lead mt-6">
-						This preview shows how new sessions will be announced once the
-						topic, venue, and registration details are ready.
+						The next session is already scheduled. Join the Meetup page for
+						registration updates, venue details, and attendee information.
 					</p>
 				</div>
 
@@ -285,35 +286,35 @@ import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 					<div class="grid gap-0 lg:grid-cols-[0.72fr_1.28fr]">
 						<div class="border-b border-border bg-aws-frost p-6 sm:p-8 lg:border-b-0 lg:border-r">
 							<p class="text-sm font-bold uppercase tracking-[0.18em] text-primary">
-								Preview event
+								Featured event
 							</p>
 							<h3 class="mt-4 text-3xl leading-tight">
-								A reusable card for future sessions.
+								May meetup registration is open.
 							</h3>
 							<p class="mt-4 text-sm">
-								The first real meetup listing can replace this draft once the
-								organizers confirm the session details.
+								Meet local builders for an AWS Rekognition session with Fauzi
+								Kurniawan from Dicoding Indonesia.
 							</p>
 							<a
-								href={joinCommunityUrl}
+								href={featuredEvent.meetupUrl}
 								target="_blank"
 								rel="noopener noreferrer"
 								class="button-secondary mt-8 bg-background"
 							>
-								Get notified on Meetup
+								Open Meetup event
 							</a>
 						</div>
 
 						<div class="p-4 sm:p-6 lg:p-8">
 							<EventCard
-								title="AWS Builder Night: Deploy Your First Cloud Workload"
-								description="A beginner-friendly community session for Bandung builders who want a practical path from local development to a small AWS deployment."
-								dateLabel="June 2026"
-								location="Bandung, venue to be announced"
-								type="Builder night"
-								statusLabel="Draft"
+								title={featuredEvent.title}
+								description={featuredEvent.description}
+								dateLabel={`${featuredEvent.dateLabel}, ${featuredEvent.timeLabel}`}
+								location={`${featuredEvent.location}, ${featuredEvent.city}`}
+								type={featuredEvent.type}
+								statusLabel={featuredEvent.statusLabel}
 								href="/events"
-								ctaLabel="Preview events page"
+								ctaLabel="View event details"
 							/>
 						</div>
 					</div>
