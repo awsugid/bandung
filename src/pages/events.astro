@@ -1,23 +1,23 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "@/layouts/Layout.astro";
-import { events, featuredEvent, meetupGroupUrl } from "@/lib/events";
+import { featuredEvent, meetupGroupUrl, pastEvents } from "@/lib/events";
 ---
 
 <Layout
 	title="Events | AWS User Group Bandung"
-	description="Upcoming AWS User Group Bandung events, meetups, speakers, topics, and venue details."
+	description="Upcoming, current, and past AWS User Group Bandung meetups, speakers, topics, and venue details."
 >
 	<section class="site-section bg-background">
 		<div class="site-container">
 			<div class="max-w-3xl">
 				<p class="eyebrow">Events</p>
 				<h1 class="mt-5">
-					Meetups for AWS builders in Bandung.
+					The AWS Bandung meetup board.
 				</h1>
 				<p class="lead mt-6">
-					Find upcoming AWS User Group Bandung sessions, speaker topics,
-					venues, and registration links.
+					Find the next AWS User Group Bandung session and browse previous
+					meetups from the community archive.
 				</p>
 			</div>
 		</div>
@@ -25,12 +25,12 @@ import { events, featuredEvent, meetupGroupUrl } from "@/lib/events";
 
 	<section class="border-y border-border bg-muted py-10 sm:py-12">
 		<div class="site-container">
-			<div class="overflow-hidden rounded-lg border border-border bg-background">
-				<figure class="overflow-hidden bg-aws-ink">
+			<div class="overflow-hidden rounded-lg border border-border bg-background shadow-[0_22px_56px_hsl(213_28%_11%_/_0.1)]">
+				<figure class="border-b border-border bg-aws-ink">
 					<img
 						src={featuredEvent.imageUrl}
 						alt={featuredEvent.title}
-						class="aspect-[16/9] w-full object-cover"
+						class="aspect-[16/9] w-full object-contain"
 					/>
 				</figure>
 
@@ -47,7 +47,8 @@ import { events, featuredEvent, meetupGroupUrl } from "@/lib/events";
 						</span>
 					</div>
 
-					<h2 class="mt-6">
+					<p class="eyebrow mt-8">Next up</p>
+					<h2 class="mt-4">
 						{featuredEvent.title}
 					</h2>
 					<p class="lead mt-5">
@@ -108,112 +109,44 @@ import { events, featuredEvent, meetupGroupUrl } from "@/lib/events";
 
 	<section class="site-section bg-background">
 		<div class="site-container">
-			<div class="grid gap-10 lg:grid-cols-[0.72fr_1.28fr]">
-				<div>
-					<p class="eyebrow">Session details</p>
-					<h2 class="mt-4">
-						What this meetup covers.
-					</h2>
-				</div>
+			<div class="max-w-3xl">
+				<p class="eyebrow">Past events</p>
+				<h2 class="mt-4">
+					What the community has covered.
+				</h2>
+				<p class="lead mt-5">
+					Past sessions make the archive useful for new members: they show the
+					topics, speakers, and venues that shaped the group so far.
+				</p>
+			</div>
 
-				<div class="grid gap-6">
-					<div class="aws-card bg-background p-6 sm:p-8">
-						<h3>Speaker</h3>
-						<div class="mt-6 grid gap-6">
-							{
-								featuredEvent.speakers.map((speaker) => (
-									<div class="border-t border-border pt-6 first:border-t-0 first:pt-0">
-										<p class="text-lg font-bold text-foreground">{speaker.name}</p>
-										<p class="mt-1 text-sm">{speaker.role}</p>
-										<p class="mt-4 text-sm font-bold text-foreground">Topic</p>
-										<p class="mt-1 text-sm">{speaker.topic}</p>
-									</div>
-								))
-							}
-						</div>
-					</div>
-
-					<div class="aws-card bg-muted p-6 sm:p-8">
-						<h3>Event notes</h3>
-						<div class="mt-5 grid gap-4">
-							{
-								featuredEvent.details.map((detail) => (
-									<p class="text-sm">{detail}</p>
-								))
-							}
-						</div>
-					</div>
-
-					<div class="grid gap-4 sm:grid-cols-3">
-						<div class="aws-card bg-background p-5">
-							<p class="text-sm font-bold text-primary">Group rating</p>
-							<p class="mt-4 text-3xl font-bold text-foreground">
-								{featuredEvent.groupRating}
-							</p>
-							<p class="mt-2 text-sm">
-								{featuredEvent.groupReviewCount} reviews on Meetup.
-							</p>
-						</div>
-						<div class="aws-card bg-background p-5">
-							<p class="text-sm font-bold text-primary">Attendees</p>
-							<p class="mt-4 text-3xl font-bold text-foreground">
-								{featuredEvent.attendeeCount}
-							</p>
-							<p class="mt-2 text-sm">
-								Current attendee count shown on Meetup.
-							</p>
-						</div>
-						<div class="aws-card bg-background p-5">
-							<p class="text-sm font-bold text-primary">Related topics</p>
-							<div class="mt-4 flex flex-wrap gap-2">
-								{
-									featuredEvent.topics.map((topic) => (
-										<span class="rounded-full border border-border bg-muted px-3 py-1 text-xs font-bold text-foreground">
-											{topic}
-										</span>
-									))
-								}
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="mt-10 grid gap-5 md:grid-cols-2">
+				{
+					pastEvents.map((event) => (
+						<EventCard
+							title={event.title}
+							description={event.description}
+							dateLabel={`${event.dateLabel}, ${event.timeLabel}`}
+							location={`${event.location}, ${event.city}`}
+							type={event.type}
+							statusLabel={event.statusLabel}
+							href={event.meetupUrl}
+							ctaLabel="View on Meetup"
+							imageUrl={event.imageUrl}
+						/>
+					))
+				}
 			</div>
 		</div>
 	</section>
 
 	<section class="site-section bg-muted">
 		<div class="site-container">
-			<div class="grid gap-10 lg:grid-cols-[0.72fr_1.28fr]">
-				<div>
-					<p class="eyebrow">All events</p>
-					<h2 class="mt-4">
-						Upcoming sessions.
-					</h2>
-				</div>
-
-				<div class="grid gap-4">
-					{
-						events.map((event) => (
-							<EventCard
-								title={event.title}
-								description={event.description}
-								dateLabel={`${event.dateLabel}, ${event.timeLabel}`}
-								location={`${event.location}, ${event.city}`}
-								type={event.type}
-								statusLabel={event.statusLabel}
-								href={event.meetupUrl}
-								ctaLabel="Attend on Meetup"
-							/>
-						))
-					}
-				</div>
-			</div>
-
-			<div class="mt-10 border border-border bg-background p-6 sm:flex sm:items-center sm:justify-between sm:gap-6">
+			<div class="sm:flex sm:items-center sm:justify-between sm:gap-6">
 				<div>
 					<h3>Follow the Meetup group</h3>
 					<p class="mt-2 text-sm">
-						Meetup is the source of truth for RSVP status, attendee count,
+						Meetup stays the source of truth for RSVP status, attendee changes,
 						venue updates, and future AWS User Group Bandung events.
 					</p>
 				</div>
