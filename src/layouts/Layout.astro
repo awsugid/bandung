@@ -10,7 +10,7 @@ interface Props {
 
 const {
 	title = "AWS User Group Bandung",
-	description = "A clean starter for the AWS User Group Bandung community site.",
+	description = "Meet builders, developers, architects, and cloud enthusiasts in the AWS User Group Bandung community.",
 } = Astro.props;
 ---
 
@@ -20,6 +20,7 @@ const {
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#ffffff" />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -29,8 +30,14 @@ const {
 		<title>{title}</title>
 	</head>
 	<body class="min-h-screen bg-background font-sans text-foreground antialiased">
+		<a
+			href="#main-content"
+			class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-primary-foreground"
+		>
+			Skip to main content
+		</a>
 		<Header />
-		<main>
+		<main id="main-content" class="min-h-[calc(100vh-var(--header-height))]">
 			<slot />
 		</main>
 		<Footer />
