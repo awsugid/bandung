@@ -1,31 +1,5 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: hsl(42 33% 96%);
-    --foreground: hsl(220 22% 12%);
-    --card: hsl(0 0% 100%);
-    --card-foreground: hsl(220 22% 12%);
-    --popover: hsl(0 0% 100%);
-    --popover-foreground: hsl(220 22% 12%);
-    --primary-hsl: 36 100% 50%;
-    --primary: hsl(36 100% 50%);
-    --primary-foreground: hsl(220 22% 12%);
-    --secondary: hsl(210 18% 88%);
-    --secondary-foreground: hsl(220 22% 12%);
-    --muted: hsl(39 21% 90%);
-    --muted-foreground: hsl(220 10% 39%);
-    --accent: hsl(199 82% 42%);
-    --accent-foreground: hsl(0 0% 100%);
-    --destructive: hsl(0 70% 45%);
-    --destructive-foreground: hsl(0 0% 100%);
-    --border: hsl(37 18% 78%);
-    --input: hsl(37 18% 78%);
-    --ring: hsl(36 100% 50%);
-    --radius: 0.5rem;
-  }
-}
-
 @font-face {
   font-family: "Amazon Ember";
   src: url("/Amazon Ember.woff2") format("woff2");
@@ -44,10 +18,71 @@
 
 @font-face {
   font-family: "Amazon Ember";
+  src: url("/Amazon Ember Medium Italic.woff2") format("woff2");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Amazon Ember";
   src: url("/Amazon Ember Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+}
+
+@font-face {
+  font-family: "Amazon Ember";
+  src: url("/Amazon Ember Bold Italic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --aws-squid-ink: hsl(213 28% 11%);
+    --aws-squid-ink-soft: hsl(213 22% 17%);
+    --aws-smile-orange: hsl(36 100% 50%);
+    --aws-link-blue: hsl(207 100% 32%);
+    --aws-link-blue-hover: hsl(207 100% 24%);
+    --aws-paper: hsl(0 0% 100%);
+    --aws-frost: hsl(210 20% 98%);
+    --aws-cloud: hsl(220 17% 93%);
+    --aws-line: hsl(214 13% 82%);
+    --aws-muted: hsl(215 11% 42%);
+    --aws-success: hsl(148 66% 28%);
+    --aws-warning: hsl(33 100% 43%);
+    --aws-danger: hsl(0 72% 42%);
+
+    --background: var(--aws-paper);
+    --foreground: var(--aws-squid-ink);
+    --card: var(--aws-frost);
+    --card-foreground: var(--aws-squid-ink);
+    --popover: var(--aws-paper);
+    --popover-foreground: var(--aws-squid-ink);
+    --primary: var(--aws-smile-orange);
+    --primary-foreground: var(--aws-squid-ink);
+    --secondary: var(--aws-cloud);
+    --secondary-foreground: var(--aws-squid-ink);
+    --muted: var(--aws-frost);
+    --muted-foreground: var(--aws-muted);
+    --accent: var(--aws-link-blue);
+    --accent-foreground: var(--aws-paper);
+    --destructive: var(--aws-danger);
+    --destructive-foreground: var(--aws-paper);
+    --border: var(--aws-line);
+    --input: var(--aws-line);
+    --ring: var(--aws-smile-orange);
+
+    --radius: 0.5rem;
+    --container: 70rem;
+    --section-y: clamp(4rem, 8vw, 7.5rem);
+    --header-height: 4rem;
+  }
 }
 
 @theme inline {
@@ -73,9 +108,17 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-aws-ink: var(--aws-squid-ink);
+  --color-aws-ink-soft: var(--aws-squid-ink-soft);
+  --color-aws-orange: var(--aws-smile-orange);
+  --color-aws-blue: var(--aws-link-blue);
+  --color-aws-cloud: var(--aws-cloud);
+  --color-aws-frost: var(--aws-frost);
 }
 
 @layer base {
@@ -85,9 +128,130 @@
 
   html {
     scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground antialiased;
+    min-width: 320px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 35%, transparent);
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 0.18em;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold tracking-normal text-foreground;
+  }
+
+  h1 {
+    @apply text-5xl leading-[0.98] sm:text-6xl lg:text-7xl;
+  }
+
+  h2 {
+    @apply text-3xl leading-tight sm:text-4xl;
+  }
+
+  h3 {
+    @apply text-xl leading-snug;
+  }
+
+  p {
+    @apply leading-7 text-muted-foreground;
+  }
+}
+
+@layer components {
+  .site-container {
+    width: min(100% - 2rem, var(--container));
+    margin-inline: auto;
+  }
+
+  .site-section {
+    padding-block: var(--section-y);
+  }
+
+  .section-grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  @media (min-width: 900px) {
+    .section-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+
+  .eyebrow {
+    @apply text-sm font-bold uppercase text-primary;
+    letter-spacing: 0.18em;
+  }
+
+  .lead {
+    @apply text-lg leading-8 text-muted-foreground sm:text-xl sm:leading-9;
+  }
+
+  .aws-card {
+    @apply rounded-lg border border-border bg-card text-card-foreground;
+    box-shadow: 0 1px 2px hsl(213 28% 11% / 0.06);
+  }
+
+  .aws-card-hover {
+    @apply transition;
+  }
+
+  .aws-card-hover:hover {
+    border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+    box-shadow: 0 10px 30px hsl(213 28% 11% / 0.08);
+    transform: translateY(-2px);
+  }
+
+  .button-primary,
+  .button-secondary {
+    @apply inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-bold transition;
+  }
+
+  .button-primary {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .button-primary:hover {
+    background: color-mix(in oklab, var(--primary) 88%, black);
+  }
+
+  .button-secondary {
+    @apply border border-border bg-background text-foreground;
+  }
+
+  .button-secondary:hover {
+    @apply bg-muted;
+  }
+
+  .text-link {
+    color: var(--aws-link-blue);
+    font-weight: 700;
+    text-decoration-line: underline;
+  }
+
+  .text-link:hover {
+    color: var(--aws-link-blue-hover);
   }
 }
