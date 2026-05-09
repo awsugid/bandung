@@ -426,40 +426,37 @@ import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 
 	<section class="bg-muted py-16 sm:py-20">
 		<div class="site-container">
-			<div class="relative overflow-hidden rounded-lg border border-border bg-aws-ink p-8 text-white sm:p-10 lg:p-12">
-				<div class="absolute inset-x-0 top-0 h-2 bg-primary"></div>
-				<div class="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-					<div class="max-w-2xl">
-						<p class="text-sm font-bold uppercase tracking-[0.18em] text-primary">
-							Join the community
-						</p>
-						<h2 class="mt-4 text-3xl leading-tight text-white sm:text-4xl">
-							Get notified when the next AWS meetup in Bandung is announced.
-						</h2>
-						<p class="mt-5 text-base leading-7 text-white/70">
-							Join the Meetup group to follow upcoming sessions, registration
-							updates, and ways to take part.
-						</p>
-					</div>
+			<div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+				<div class="max-w-2xl">
+					<p class="eyebrow">
+						Join the community
+					</p>
+					<h2 class="mt-4">
+						Get notified when the next AWS meetup in Bandung is announced.
+					</h2>
+					<p class="lead mt-5">
+						Join the Meetup group to follow upcoming sessions, registration
+						updates, and ways to take part.
+					</p>
+				</div>
 
-					<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-						<a
-							href={joinCommunityUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex h-12 items-center justify-center rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
-						>
-							Join the Meetup
-						</a>
-						<a
-							href={instagramUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex h-12 items-center justify-center rounded-md border border-white/20 px-6 text-sm font-bold text-white transition hover:bg-white/10"
-						>
-							Follow Instagram
-						</a>
-					</div>
+				<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+					<a
+						href={joinCommunityUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="button-primary"
+					>
+						Join the Meetup
+					</a>
+					<a
+						href={instagramUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="button-secondary bg-background"
+					>
+						Follow Instagram
+					</a>
 				</div>
 			</div>
 		</div>
