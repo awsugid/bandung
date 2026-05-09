@@ -1,0 +1,73 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	dateLabel?: string;
+	location?: string;
+	type?: string;
+	href?: string;
+	ctaLabel?: string;
+	statusLabel?: string;
+}
+
+const {
+	title,
+	description,
+	dateLabel = "Date to be announced",
+	location = "Bandung",
+	type = "Meetup",
+	href,
+	ctaLabel = "View details",
+	statusLabel,
+} = Astro.props;
+
+const Tag = href ? "a" : "article";
+---
+
+<Tag
+	href={href}
+	class:list={[
+		"aws-card group block overflow-hidden bg-background transition",
+		href && "aws-card-hover",
+	]}
+>
+	<div class="flex min-h-full flex-col p-6">
+		<div class="flex flex-wrap items-center gap-2">
+			<span class="rounded-full bg-primary/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-foreground">
+				{type}
+			</span>
+			{
+				statusLabel && (
+					<span class="rounded-full border border-border bg-muted px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+						{statusLabel}
+					</span>
+				)
+			}
+		</div>
+
+		<h3 class="mt-6 text-2xl leading-tight">{title}</h3>
+		<p class="mt-3 text-sm">{description}</p>
+
+		<div class="mt-8 grid gap-3 border-t border-border pt-5 text-sm text-muted-foreground">
+			<div class="flex items-center gap-3">
+				<span class="h-2 w-2 rounded-full bg-primary"></span>
+				<span>{dateLabel}</span>
+			</div>
+			<div class="flex items-center gap-3">
+				<span class="h-2 w-2 rounded-full bg-aws-blue"></span>
+				<span>{location}</span>
+			</div>
+		</div>
+
+		{
+			href && (
+				<div class="mt-8 flex items-center text-sm font-bold text-foreground">
+					<span>{ctaLabel}</span>
+					<span class="ml-2 transition group-hover:translate-x-1" aria-hidden="true">
+						-&gt;
+					</span>
+				</div>
+			)
+		}
+	</div>
+</Tag>
