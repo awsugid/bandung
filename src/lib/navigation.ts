@@ -1,8 +1,7 @@
 export const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Events', href: '/events' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Volunteer', href: '/volunteer' },
-    { name: 'Speakers', href: '/speakers' },
-    { name: 'Sponsors', href: '/sponsor' },
+	{ name: "Home", href: "/" },
+	{ name: "Events", href: "/events" },
 ];
+
+export const joinCommunityUrl = "https://www.meetup.com/aws-user-group-bandung/";
+export const instagramUrl = "https://www.instagram.com/awsugbandung/";

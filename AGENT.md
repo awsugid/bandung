@@ -1,168 +1,134 @@
 # AGENT.md
 
-Unified guidance for any AI coding agent (Droid, Claude, Cursor, etc.) working in this repository. Keep responses concise, follow the existing conventions, and always validate changes before considering them done.
+Guidance for agents working in this repository.
 
-## 1. Project Overview
+## Project
 
-Event management and community portal for **AWS User Group Jakarta**. The site introduces community activities, promotes monthly meetups and yearly Community Days, and drives speaker/volunteer recruitment plus sponsor collaboration. Audience is primarily mobile, so **mobile-first** is non-negotiable.
+This is the **AWS User Group Bandung** website. It is a small Astro landing site for the local AWS community, with two public routes:
 
-## 2. Tech Stack (authoritative — check `package.json` before adding anything)
+- `/` for the homepage
+- `/events` for the next Meetup event and past event archive
 
-| Concern               | Tool / Version                                                                  |
-| --------------------- | ------------------------------------------------------------------------------- |
-| Framework             | Astro `^6.1.4` (static output)                                                  |
-| UI runtime            | React `^19.2.3` + `react-dom` (via `@astrojs/react`)                            |
-| Content               | `@astrojs/mdx` + `astro:content` collections (Zod validated)                    |
-| Styling               | Tailwind CSS v4 (`tailwindcss@^4.1.18` + `@tailwindcss/vite`) + `tw-animate-css`|
-| Design system         | shadcn/ui (style `default`, baseColor `slate`) + Radix primitives               |
-| Icons                 | `lucide-react`                                                                  |
-| Charts                | `recharts@2.15.4`                                                               |
-| Utils                 | `clsx`, `tailwind-merge`, `class-variance-authority`                            |
-| Language              | TypeScript `^5.9.3`, strict mode (`astro/tsconfigs/strict`)                     |
-| Package Manager       | **Bun** (canonical; `bun.lock` committed)                                       |
-| Runtime (prod)        | Cloudflare Pages (static site + Pages Functions)                                |
-| Email backend         | BillionMail (`mail.awscommunity.id`)                                            |
-| Analytics             | Google Analytics via `PUBLIC_GA_MEASUREMENT_ID`                                 |
+The content is intentionally local and static for now. Meetup remains the source of truth for RSVP status, availability, venue updates, and future schedule changes.
 
-> Node.js **>= 22.12** is required by Astro 6. This machine's default `node` is v21, which will fail. Always `nvm use 22` before `bun run build` or `bunx astro check`.
+## Stack
 
-## 3. Directory Layout
+- Astro 6
+- Tailwind CSS 4 through `@tailwindcss/vite`
+- TypeScript strict mode
+- Bun as the package manager
 
-```
-.
-├── astro.config.mjs              # Astro integrations (react, mdx) + tailwind vite plugin
-├── components.json               # shadcn/ui config (style: default, baseColor: slate)
-├── tsconfig.json                 # extends astro/tsconfigs/strict; @/* -> src/*
-├── CLAUDE.md                     # Legacy agent notes (retained for historical context)
-├── AGENT.md                      # You are here
-├── functions/
-│   └── api/subscribe.ts          # Cloudflare Pages Function -> BillionMail
-├── public/                       # Static assets (favicons, Amazon Ember fonts, data/*.json)
-├── src/
-│   ├── assets/
-│   ├── content.config.ts         # Zod collections: events, blog (MDX)
-│   ├── content/
-│   │   ├── events/*.mdx
-│   │   └── blog/*.mdx
-│   ├── layouts/Layout.astro      # html.dark hard-coded; GA + Header/Footer
-│   ├── lib/utils.ts              # cn() = clsx + tailwind-merge
-│   ├── styles/global.css         # Tailwind v4 @theme, OKLCH tokens, .dark variant
-│   ├── pages/                    # File-based routes (index, events, blog, speakers, volunteer, sponsor, ...)
-│   │   └── api/                  # Empty — API lives in /functions/api (Cloudflare)
-│   └── components/
-│       ├── ui/                   # shadcn primitives
-│       ├── speakers/             # SpeakerHero, SpeakerBenefits, CFPForm (SpeakerNotify)
-│       ├── volunteer/            # VolunteerHero, VolunteerRoles, VolunteerNotify
-│       ├── sponsor/              # SponsorHero, SponsorBenefits, SponsorTiers, SponsorCTA
-│       ├── blog/
-│       ├── Hero.tsx, EventList.tsx, CommunityStats.tsx, StatisticsCharts.tsx, ScheduleTable.tsx, PretixWidget.tsx, MobileNav.tsx, Sponsors.tsx, Footer.astro, Header.astro, GoogleAnalytics.astro, Welcome.astro, EventFAQ.tsx
-└── plans/                        # Design docs / internal plans (do not commit unless asked)
+Astro 6 requires Node.js 22 or newer.
+
+## Structure
+
+```txt
+public/
+  images/
+    community-hero.webp
+src/
+  components/
+    EventCard.astro
+    Footer.astro
+    Header.astro
+  layouts/
+    Layout.astro
+  lib/
+    events.ts
+    navigation.ts
+  pages/
+    events.astro
+    index.astro
+  styles/
+    global.css
 ```
 
-## 4. Commands
+## Current App State
 
-Always run from the project root.
+- `src/pages/index.astro` renders the homepage sections: hero, community momentum, about, what to expect, event preview, ways to participate, and final CTA.
+- `src/pages/events.astro` renders the event page: page intro, next event feature, past events archive, and a simple Meetup group CTA.
+- `src/components/EventCard.astro` is the reusable event card used by home and events pages. It supports optional images and keeps event metadata/CTA aligned at the bottom.
+- `src/lib/events.ts` owns event data and exports:
+  - `events`
+  - `nextEvents`
+  - `currentEvents`
+  - `pastEvents`
+  - `featuredEvent`
+  - `meetupGroupUrl`
+- `src/lib/navigation.ts` owns navigation and external community URLs, including Meetup and Instagram.
+- `src/styles/global.css` defines the AWS-inspired design tokens, Amazon Ember font faces, base typography, layout helpers, cards, and button styles.
 
-```bash
-# One-time per shell (needed because default node is v21)
-nvm use 22
+## Commands
 
-# Day-to-day
+```sh
 bun install
-bun dev                 # http://localhost:4321
-bun run build           # -> ./dist
+bun dev
+ASTRO_TELEMETRY_DISABLED=1 bun run build
 bun preview
-bun astro <...>         # Astro CLI passthrough
-
-# Verification
-bunx astro check        # Content + type checks (requires Node 22)
-bunx tsc --noEmit       # TypeScript only (ignore pre-existing PagesFunction errors in functions/api/subscribe.ts)
-
-# shadcn
-npx shadcn@latest add <component>   # lands in src/components/ui/
 ```
 
-## 5. Environment Variables
+Use `ASTRO_TELEMETRY_DISABLED=1 bun run build` for verification before handing off layout or data changes.
 
-Copy `.env.example` → `.env`. `.env` is gitignored and **must never be committed**.
+## Adding Events
 
+Events are currently added manually from Meetup into `src/lib/events.ts`. Do not store volatile availability such as spots left unless the app starts syncing from an API.
+
+### Where To Get Event Information
+
+Use the public Meetup event page, for example:
+
+```txt
+https://www.meetup.com/aws-user-group-bandung/events/<event-id>/
 ```
-PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
-BILLIONMAIL_API_URL=https://mail.awscommunity.id
-BILLIONMAIL_API_KEY=your_api_key_here
-BILLIONMAIL_SPEAKERS_GROUP_ID=2
-BILLIONMAIL_VOLUNTEERS_GROUP_ID=1
+
+If the page content is hard to inspect visually, fetch the HTML and read the embedded event data:
+
+```sh
+curl -s 'https://www.meetup.com/aws-user-group-bandung/events/<event-id>/?eventOrigin=group_featured_event'
+curl -s 'https://www.meetup.com/aws-user-group-bandung/events/<event-id>/?eventOrigin=group_past_events'
 ```
 
-`BILLIONMAIL_API_KEY` is sensitive — treat it like a credential.
+Meetup pages usually include useful fields in page metadata, JSON-LD, and `__NEXT_DATA__`.
 
-## 6. Coding Conventions
+### What To Gather
 
-### TypeScript
-- Strict mode is enabled. No implicit `any`, no silent `// @ts-ignore` without justification.
-- Use explicit types for component props and data shapes. Zod schemas in `src/content.config.ts` are the source of truth for content.
+For each event, gather:
 
-### React / Astro
-- Use **Astro components** (`.astro`) for layouts, pages, and static sections.
-- Use **React components** (`.tsx`) only when interactivity is required.
-- Functional components only. Keep state local with `useState`.
-- Hydration directives in `.astro` files: prefer the least-eager that works — `client:visible` > `client:idle` > `client:load`.
+- `id`: Meetup event id from the URL
+- `title`
+- `phase`: `next`, `current`, or `past`
+- `statusLabel`: user-facing label such as `Next event` or `Past event`
+- `dateLabel`
+- `timeLabel`
+- `location`
+- `address`
+- `city`
+- `priceLabel`
+- `host`
+- `hostDisplayName`
+- `imageUrl`: prefer the high resolution Meetup event image when available
+- `meetupUrl`: canonical public event URL, keeping useful `eventOrigin` when relevant
+- `mapUrl`: Google Maps search URL, preferably from venue coordinates
+- `coordinates`: latitude and longitude when available
+- `speakers`: name, role, and topic
+- `topics`: Meetup topic names
+- `description`: short polished summary for cards and previews
+- `details`: short notes summarizing what the session covers
+- `attendeeCount`: okay for past events as historical context; avoid presenting it as live for future events
 
-### Styling
-- Tailwind CSS v4 is configured inline in `src/styles/global.css` via `@theme`. There is **no** `tailwind.config.*` despite what `components.json` says.
-- Use token classes (`bg-background`, `text-foreground`, `text-primary`, `border-border`, etc.). Avoid raw hex values.
-- Dark mode is default — `<html class="dark">` is hard-coded in `Layout.astro`. Components must look correct on dark backgrounds first.
-- Combine classes with `cn()` from `@/lib/utils`.
-- Animations: use `tw-animate-css` utilities (`animate-in fade-in slide-in-from-bottom-5 duration-700`). Match the cadence used in existing hero sections.
+### Event Page Behavior
 
-### Mobile-First
-- Start at 360–414 px. Progressively enhance with `sm:`, `md:`, `lg:`, `xl:`.
-- Existing heroes use `text-4xl sm:text-5xl md:text-6xl lg:text-7xl` — mirror that rhythm.
+- The next event is shown as the featured event through `featuredEvent`.
+- Past events render from `pastEvents`.
+- Current events are supported in data but not currently rendered as a separate section.
+- The Meetup page should stay the source of truth for RSVP, availability, and late venue changes.
 
-### shadcn/ui
-- `components.json` settings: `style: default`, `rsc: false`, `tsx: true`, `cssVariables: true`, `baseColor: slate`.
-- Aliases: `@/components`, `@/lib/utils`.
-- Add new components via `npx shadcn@latest add <name>`; they land in `src/components/ui/`.
+## Conventions
 
-### Naming & Imports
-- PascalCase for React component files and exports.
-- Kebab-case for Astro pages and MDX filenames (slug = filename).
-- Always import via aliases (`@/components/...`, `@/lib/utils`) — never long `../../..` chains.
-- Import order: third-party, `@/` alias imports, then relative.
-
-### Comments
-- Keep code self-explanatory. Only comment the **why**, not the **what**. Example of an acceptable comment: the customization hints at the top of `src/components/speakers/SpeakerBenefits.tsx` describing `isOpen` / `slotsNeeded`.
-
-## 7. Feature Modules Cheat-Sheet
-
-- **Events (`/events`)** — MDX in `src/content/events/`, validated by `content.config.ts` (fields: `title`, `date`, `location`, `type`, `description`, optional image/registration/pretix fields).
-- **Blog (`/blog`)** — MDX in `src/content/blog/` (`title`, `pubDate`, `description`, `author`, optional `image`, `tags`).
-- **Speakers (`/speakers`)** — `SpeakerBenefits.tsx` declares talk formats; each entry has `isOpen: boolean` and `slotsNeeded: number`. Toggle/edit those to change what shows on the page; no code elsewhere needs to change.
-- **Volunteer (`/volunteer`)** — Divisions declared in `VolunteerRoles.tsx`. Subscription CTA in `VolunteerNotify.tsx`.
-- **Sponsor (`/sponsor`)** — `SponsorHero`, `SponsorTiers`, `SponsorBenefits`, `SponsorCTA`.
-- **Subscription (`POST /api/subscribe`)** — Cloudflare Pages Function at `functions/api/subscribe.ts`; proxies to BillionMail. Accepts `{ email, type }` where `type ∈ { "speakers", "volunteers" }`.
-- **Pretix widget** — `src/components/PretixWidget.tsx` for ticketing.
-- **Statistics / Schedule** — `StatisticsCharts.tsx`, `ScheduleTable.tsx` (recharts), fed by `public/data/statistic.json`.
-
-## 8. Agent Workflow
-
-Before completing any task:
-
-1. Switch Node: `nvm use 22`.
-2. Build once: `bun run build` — confirms static routes still generate.
-3. (Optional) `bunx tsc --noEmit` — ignore pre-existing `PagesFunction` TS errors in `functions/api/subscribe.ts` unless you change that file.
-4. Review `git status` + `git diff` and scan for secrets before committing.
-5. Never push or commit without explicit user instruction.
-
-When uncertain:
-- Re-read this file and the feature-local components.
-- Check `package.json` before introducing new libraries.
-- Ask via a focused question rather than guessing API contracts.
-
-## 9. Known Pitfalls
-
-- Default `node` is v21 on this machine → Astro 6 refuses to build. Always `nvm use 22` first.
-- `functions/api/subscribe.ts` uses `PagesFunction<Env>` which isn't typed globally. Pre-existing `tsc` errors exist for that file; ignore unless you add `@cloudflare/workers-types`.
-- `components.json` still references `tailwind.config.mjs` that doesn't exist. Tailwind v4 inline config in `global.css` is authoritative.
-- `bun.lock` and `package-lock.json` both exist. Bun is canonical; avoid running `npm install` which will overwrite the lockfile.
-- Hero components already include a badge-style "Subscribe for …" CTA; do not reintroduce "Registration Closed" messaging. Role availability is communicated per-row via `isOpen` / `slotsNeeded`.
+- Prefer Astro components for static pages and sections.
+- Add React islands only when interactivity is actually needed.
+- Keep styling in Tailwind token classes backed by tokens in `src/styles/global.css`.
+- Keep new features small and owned. Add content collections, API routes, analytics, or third-party services only when their workflow is clear.
+- Keep copy concise, practical, and community-oriented.
+- Avoid adding live-looking claims unless the app is actually syncing the source.
+- Do not commit or push unless explicitly asked.

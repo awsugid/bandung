@@ -1,48 +1,65 @@
-<footer
-    class="border-t border-white/5 py-8 md:py-12 bg-background relative overflow-hidden"
->
-    <div
-        class="absolute inset-0 bg-primary/5 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_100%,#000_0%,transparent_100%)] pointer-events-none"
-    >
-    </div>
-    <div
-        class="container mx-auto max-w-7xl flex flex-col items-center justify-between gap-6 md:flex-row relative z-10 px-4 md:px-6"
-    >
-        <div class="flex flex-col items-center gap-4 md:flex-row md:gap-8">
-            <span
-                class="font-bold text-lg bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent"
-                >AWS UG Bandung</span
-            >
-            <p class="text-center text-sm text-muted-foreground md:text-left">
-                &copy; {new Date().getFullYear()} AWS User Group Bandung. All rights
-                reserved.
-            </p>
-        </div>
-        <div class="flex gap-6">
-            <a
-                href="https://www.instagram.com/awsugbandung/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-muted-foreground hover:text-primary transition-colors text-sm font-medium"
-            >
-                Instagram
-            </a>
-            <a
-                href="https://www.meetup.com/aws-user-group-bandung/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-muted-foreground hover:text-primary transition-colors text-sm font-medium"
-            >
-                Meetup
-            </a>
-            <a
-                href="https://github.com/awsugid"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-muted-foreground hover:text-primary transition-colors text-sm font-medium"
-            >
-                GitHub
-            </a>
-        </div>
-    </div>
+---
+import { instagramUrl, joinCommunityUrl, navItems } from "@/lib/navigation";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-aws-ink text-white">
+	<div class="site-container py-12 sm:py-14">
+		<div class="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+			<div>
+				<div class="flex items-center gap-3">
+					<img src="/images/awsug-bandung-logo.png" alt="" class="h-10 w-10" />
+					<p class="text-sm font-bold uppercase tracking-[0.18em] text-white">
+						AWS UG Bandung
+					</p>
+				</div>
+				<p class="mt-5 max-w-md text-sm leading-6 text-white/70">
+					Community-led meetups for Bandung builders to learn AWS Cloud,
+					share practical skills, and connect with peers across the local
+					tech community.
+				</p>
+			</div>
+
+			<div>
+				<h2 class="text-sm font-bold text-white">Pages</h2>
+				<nav class="mt-4 grid gap-3 text-sm text-white/70" aria-label="Footer navigation">
+					{
+						navItems.map((item) => (
+							<a href={item.href} class="transition hover:text-white">
+								{item.name}
+							</a>
+						))
+					}
+				</nav>
+			</div>
+
+			<div>
+				<h2 class="text-sm font-bold text-white">Community</h2>
+				<div class="mt-4 grid gap-3 text-sm text-white/70">
+					<a
+						href={joinCommunityUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="transition hover:text-white"
+					>
+						Join the Meetup
+					</a>
+					<a
+						href={instagramUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="transition hover:text-white"
+					>
+						Follow on Instagram
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between">
+			<p>&copy; {year} AWS User Group Bandung. Community-led and builder-focused.</p>
+			<p>Independent community group. AWS is a trademark of Amazon Web Services, Inc.</p>
+		</div>
+	</div>
 </footer>

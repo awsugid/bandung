@@ -1,60 +1,4 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
-@import "tw-animate-css";
-
-@layer base {
-  :root {
-    --background: #1B1827;
-    /* #1B1827 - Custom dark background */
-    --foreground: hsl(210 40% 98%);
-    --card: hsl(222 27% 22%);
-    --card-foreground: hsl(210 40% 98%);
-    --popover: hsl(222 27% 19%);
-    --popover-foreground: hsl(210 40% 98%);
-    --primary: hsl(36 100% 50%);
-    --primary-foreground: hsl(222 47.4% 11.2%);
-    --secondary: hsl(217.2 32.6% 17.5%);
-    --secondary-foreground: hsl(210 40% 98%);
-    --muted: hsl(217.2 32.6% 17.5%);
-    --muted-foreground: hsl(215 20.2% 65.1%);
-    --accent: hsl(217.2 32.6% 17.5%);
-    --accent-foreground: hsl(210 40% 98%);
-    --destructive: hsl(0 62.8% 30.6%);
-    --destructive-foreground: hsl(210 40% 98%);
-    --border: hsl(217.2 32.6% 17.5%);
-    --input: hsl(217.2 32.6% 17.5%);
-    --ring: hsl(36 100% 50%);
-    --radius: 0.5rem;
-    --chart-1: hsl(12 76% 61%);
-    --chart-2: hsl(173 58% 39%);
-    --chart-3: hsl(197 37% 24%);
-    --chart-4: hsl(43 74% 66%);
-    --chart-5: hsl(27 87% 67%);
-  }
-
-  .dark {
-    --background: #1B1827;
-    /* #1B1827 - Custom dark background */
-    --foreground: hsl(210 40% 98%);
-    --card: hsl(222 27% 22%);
-    --card-foreground: hsl(210 40% 98%);
-    --popover: hsl(222 27% 19%);
-    --popover-foreground: hsl(210 40% 98%);
-    --primary: hsl(36 100% 50%);
-    --primary-foreground: hsl(222 47.4% 11.2%);
-    --secondary: hsl(217.2 32.6% 17.5%);
-    --secondary-foreground: hsl(210 40% 98%);
-    --muted: hsl(217.2 32.6% 17.5%);
-    --muted-foreground: hsl(215 20.2% 65.1%);
-    --accent: hsl(217.2 32.6% 17.5%);
-    --accent-foreground: hsl(210 40% 98%);
-    --destructive: hsl(0 62.8% 30.6%);
-    --destructive-foreground: hsl(210 40% 98%);
-    --border: hsl(217.2 32.6% 17.5%);
-    --input: hsl(217.2 32.6% 17.5%);
-    --ring: hsl(36 100% 50%);
-  }
-}
 
 @font-face {
   font-family: "Amazon Ember";
@@ -96,8 +40,53 @@
   font-display: swap;
 }
 
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --aws-squid-ink: hsl(213 28% 11%);
+    --aws-squid-ink-soft: hsl(213 22% 17%);
+    --aws-smile-orange: hsl(36 100% 50%);
+    --aws-link-blue: hsl(207 100% 32%);
+    --aws-link-blue-hover: hsl(207 100% 24%);
+    --aws-paper: hsl(0 0% 100%);
+    --aws-frost: hsl(210 20% 98%);
+    --aws-cloud: hsl(220 17% 93%);
+    --aws-line: hsl(214 13% 82%);
+    --aws-muted: hsl(215 11% 42%);
+    --aws-success: hsl(148 66% 28%);
+    --aws-warning: hsl(33 100% 43%);
+    --aws-danger: hsl(0 72% 42%);
+
+    --background: var(--aws-paper);
+    --foreground: var(--aws-squid-ink);
+    --card: var(--aws-frost);
+    --card-foreground: var(--aws-squid-ink);
+    --popover: var(--aws-paper);
+    --popover-foreground: var(--aws-squid-ink);
+    --primary: var(--aws-smile-orange);
+    --primary-foreground: var(--aws-squid-ink);
+    --secondary: var(--aws-cloud);
+    --secondary-foreground: var(--aws-squid-ink);
+    --muted: var(--aws-frost);
+    --muted-foreground: var(--aws-muted);
+    --accent: var(--aws-link-blue);
+    --accent-foreground: var(--aws-paper);
+    --destructive: var(--aws-danger);
+    --destructive-foreground: var(--aws-paper);
+    --border: var(--aws-line);
+    --input: var(--aws-line);
+    --ring: var(--aws-smile-orange);
+
+    --radius: 0.5rem;
+    --container: 70rem;
+    --section-y: clamp(4rem, 8vw, 7.5rem);
+    --header-height: 4rem;
+  }
+}
+
 @theme inline {
-  --font-sans: "Amazon Ember", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "Amazon Ember", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -119,22 +108,17 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --color-aws-ink: var(--aws-squid-ink);
+  --color-aws-ink-soft: var(--aws-squid-ink-soft);
+  --color-aws-orange: var(--aws-smile-orange);
+  --color-aws-blue: var(--aws-link-blue);
+  --color-aws-cloud: var(--aws-cloud);
+  --color-aws-frost: var(--aws-frost);
 }
 
 @layer base {
@@ -142,7 +126,132 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground antialiased;
+    min-width: 320px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 35%, transparent);
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 0.18em;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold tracking-normal text-foreground;
+  }
+
+  h1 {
+    @apply text-5xl leading-[0.98] sm:text-6xl lg:text-7xl;
+  }
+
+  h2 {
+    @apply text-3xl leading-tight sm:text-4xl;
+  }
+
+  h3 {
+    @apply text-xl leading-snug;
+  }
+
+  p {
+    @apply leading-7 text-muted-foreground;
+  }
+}
+
+@layer components {
+  .site-container {
+    width: min(100% - 2rem, var(--container));
+    margin-inline: auto;
+  }
+
+  .site-section {
+    padding-block: var(--section-y);
+  }
+
+  .section-grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  @media (min-width: 900px) {
+    .section-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+
+  .eyebrow {
+    @apply text-sm font-bold uppercase text-primary;
+    letter-spacing: 0.18em;
+  }
+
+  .lead {
+    @apply text-lg leading-8 text-muted-foreground sm:text-xl sm:leading-9;
+  }
+
+  .aws-card {
+    @apply rounded-lg border border-border bg-card text-card-foreground;
+    box-shadow: 0 1px 2px hsl(213 28% 11% / 0.06);
+  }
+
+  .aws-card-hover {
+    @apply transition;
+  }
+
+  .aws-card-hover:hover {
+    border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+    box-shadow: 0 10px 30px hsl(213 28% 11% / 0.08);
+    transform: translateY(-2px);
+  }
+
+  .button-primary,
+  .button-secondary {
+    @apply inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-bold transition;
+  }
+
+  .button-primary {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .button-primary:hover {
+    background: color-mix(in oklab, var(--primary) 88%, black);
+  }
+
+  .button-secondary {
+    @apply border border-border bg-background text-foreground;
+  }
+
+  .button-secondary:hover {
+    @apply bg-muted;
+  }
+
+  .text-link {
+    color: var(--aws-link-blue);
+    font-weight: 700;
+    text-decoration-line: underline;
+  }
+
+  .text-link:hover {
+    color: var(--aws-link-blue-hover);
   }
 }
