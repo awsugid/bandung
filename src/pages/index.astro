@@ -349,16 +349,36 @@ const homeStructuredData = [
 							</a>
 						</div>
 
-						<div class="p-4 sm:p-6 lg:p-8">
-							<EventCard
-								title={featuredEvent.title}
-								description={featuredEvent.description}
-								dateLabel={featuredEvent.dateLabel}
-								timeLabel={featuredEvent.timeLabel}
-								location={`${featuredEvent.location}, ${featuredEvent.city}`}
-								href="/events"
-								ctaLabel="View event details"
-							/>
+						<div class="flex flex-col p-6 sm:p-8 lg:p-10">
+							<p class="text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground">
+								{featuredEvent.statusLabel}
+							</p>
+							<h3 class="mt-4 max-w-2xl text-3xl leading-tight">
+								{featuredEvent.title}
+							</h3>
+							<p class="mt-4 max-w-2xl text-sm">
+								{featuredEvent.description}
+							</p>
+
+							<div class="mt-8 grid gap-4 border-y border-border py-6 text-sm sm:grid-cols-2">
+								<div>
+									<p class="font-bold text-foreground">Date</p>
+									<p class="mt-1">{featuredEvent.dateLabel}</p>
+								</div>
+								<div>
+									<p class="font-bold text-foreground">Time</p>
+									<p class="mt-1">{featuredEvent.timeLabel}</p>
+								</div>
+								<div class="sm:col-span-2">
+									<p class="font-bold text-foreground">Venue</p>
+									<p class="mt-1">{featuredEvent.location}, {featuredEvent.city}</p>
+								</div>
+							</div>
+
+							<a href="/events" class="mt-8 text-sm font-bold text-foreground">
+								View event details
+								<span class="ml-2" aria-hidden="true">-&gt;</span>
+							</a>
 						</div>
 					</div>
 				</div>
