@@ -324,6 +324,17 @@ export const getEventJsonLd = (event: CommunityEvent) => ({
 	image: [event.imageUrl],
 	url: event.meetupUrl,
 	isAccessibleForFree: event.priceLabel === "Free",
+	offers: {
+		"@type": "Offer",
+		url: event.meetupUrl,
+		price: event.priceLabel === "Free" ? "0" : event.priceLabel,
+		priceCurrency: "IDR",
+		availability:
+			event.phase === "past"
+				? "https://schema.org/SoldOut"
+				: "https://schema.org/InStock",
+		validFrom: event.startDate,
+	},
 	location: {
 		"@type": "Place",
 		name: event.location,
