@@ -1,7 +1,7 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "../layouts/Layout.astro";
-import { featuredEvent, getEventJsonLd } from "@/lib/events";
+import { events, featuredEvent, getEventJsonLd, hasUpcomingEvent } from "@/lib/events";
 import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 import { absoluteUrl, site } from "@/lib/site";
 
@@ -117,7 +117,7 @@ const homeStructuredData = [
 
 					<div class="bg-background p-6 sm:p-7">
 						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
-							3
+							{events.length}
 						</p>
 						<h3 class="mt-5 text-lg">events so far</h3>
 						<p class="mt-2 text-sm">
@@ -321,8 +321,11 @@ const homeStructuredData = [
 						Upcoming meetups will live here.
 					</h2>
 					<p class="lead mt-6">
-						The next session is already scheduled. Join the Meetup page for
-						registration updates, venue details, and attendee information.
+						{
+							hasUpcomingEvent
+								? "The next session is already scheduled. Join the Meetup page for registration updates, venue details, and attendee information."
+								: "The next session is being planned. Follow the Meetup page to be notified when registration opens, and browse the most recent meetup below."
+						}
 					</p>
 				</div>
 
@@ -333,11 +336,18 @@ const homeStructuredData = [
 								Featured event
 							</p>
 							<h3 class="mt-4 text-3xl leading-tight">
-								May meetup registration is open.
+								{
+									hasUpcomingEvent
+										? "Registration is open."
+										: "Catch up on the latest meetup."
+								}
 							</h3>
 							<p class="mt-4 text-sm">
-								Meet local builders for an AWS Rekognition session with Fauzi
-								Kurniawan from Dicoding Indonesia.
+								{
+									featuredEvent.speakers.length > 0
+										? `Featuring ${featuredEvent.speakers.map((speaker) => speaker.name).join(" and ")}.`
+										: "An open community session for Bandung builders."
+								}
 							</p>
 							<a
 								href={featuredEvent.meetupUrl}
