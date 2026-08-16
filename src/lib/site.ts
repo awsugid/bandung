@@ -24,6 +24,9 @@ export const siteUrl = new URL(site.url);
 
 export const absoluteUrl = (path = "/") => new URL(path, siteUrl).toString();
 
+// Bump when page content or event data changes; consumed by sitemap.xml.
+export const contentLastModified = "2026-08-16";
+
 export const publicRoutes = [
 	{
 		path: "/",
@@ -31,7 +34,7 @@ export const publicRoutes = [
 		description: site.description,
 		changefreq: "weekly",
 		priority: "1.0",
-		lastmod: "2026-05-09",
+		lastmod: contentLastModified,
 	},
 	{
 		path: "/events",
@@ -40,7 +43,7 @@ export const publicRoutes = [
 			"Upcoming, current, and past AWS User Group Bandung meetups, speakers, topics, and venue details.",
 		changefreq: "daily",
 		priority: "0.9",
-		lastmod: "2026-05-09",
+		lastmod: contentLastModified,
 	},
 ] as const;
 

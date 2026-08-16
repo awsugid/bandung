@@ -1,9 +1,37 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "../layouts/Layout.astro";
-import { featuredEvent, getEventJsonLd } from "@/lib/events";
+import { events, featuredEvent, getEventJsonLd, hasUpcomingEvent } from "@/lib/events";
 import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 import { absoluteUrl, site } from "@/lib/site";
+
+const faqs = [
+	{
+		question: "What is AWS User Group Bandung?",
+		answer:
+			"AWS User Group Bandung is a community-led group for developers, architects, students, operators, founders, and cloud practitioners learning and building with AWS Cloud in Bandung, West Java, Indonesia.",
+	},
+	{
+		question: "How can I join AWS User Group Bandung events?",
+		answer:
+			"Join the AWS User Group Bandung Meetup group to follow upcoming sessions, RSVP, and receive venue or schedule updates. Meetups are free to attend.",
+	},
+	{
+		question: "Who can attend the meetups?",
+		answer:
+			"Anyone interested in AWS Cloud is welcome, from students and people just starting out to experienced engineers and architects. You do not need prior AWS experience or a paid AWS account to attend.",
+	},
+	{
+		question: "How often does the community meet?",
+		answer:
+			"The group typically meets roughly once a month on a Saturday at venues around Bandung such as campuses, coworking spaces, and cafes. Exact dates are announced on Meetup.",
+	},
+	{
+		question: "Can I speak at or host an AWS User Group Bandung meetup?",
+		answer:
+			"Yes. Community members are encouraged to give short technical sessions, share demos, or offer a venue. Reach out through the Meetup group or Instagram to propose a talk or space.",
+	},
+];
 
 const homeStructuredData = [
 	{
@@ -18,24 +46,14 @@ const homeStructuredData = [
 	{
 		"@context": "https://schema.org",
 		"@type": "FAQPage",
-		mainEntity: [
-			{
-				"@type": "Question",
-				name: "What is AWS User Group Bandung?",
-				acceptedAnswer: {
-					"@type": "Answer",
-					text: "AWS User Group Bandung is a community-led group for developers, architects, students, operators, founders, and cloud practitioners learning and building with AWS Cloud in Bandung.",
-				},
+		mainEntity: faqs.map((faq) => ({
+			"@type": "Question",
+			name: faq.question,
+			acceptedAnswer: {
+				"@type": "Answer",
+				text: faq.answer,
 			},
-			{
-				"@type": "Question",
-				name: "How can I join AWS User Group Bandung events?",
-				acceptedAnswer: {
-					"@type": "Answer",
-					text: "Join the AWS User Group Bandung Meetup group to follow upcoming sessions, RSVP, and receive venue or schedule updates.",
-				},
-			},
-		],
+		})),
 	},
 	getEventJsonLd(featuredEvent),
 ];
@@ -117,7 +135,7 @@ const homeStructuredData = [
 
 					<div class="bg-background p-6 sm:p-7">
 						<p class="text-5xl font-bold leading-none text-foreground sm:text-6xl">
-							3
+							{events.length}
 						</p>
 						<h3 class="mt-5 text-lg">events so far</h3>
 						<p class="mt-2 text-sm">
@@ -321,8 +339,11 @@ const homeStructuredData = [
 						Upcoming meetups will live here.
 					</h2>
 					<p class="lead mt-6">
-						The next session is already scheduled. Join the Meetup page for
-						registration updates, venue details, and attendee information.
+						{
+							hasUpcomingEvent
+								? "The next session is already scheduled. Join the Meetup page for registration updates, venue details, and attendee information."
+								: "The next session is being planned. Follow the Meetup page to be notified when registration opens, and browse the most recent meetup below."
+						}
 					</p>
 				</div>
 
@@ -333,11 +354,18 @@ const homeStructuredData = [
 								Featured event
 							</p>
 							<h3 class="mt-4 text-3xl leading-tight">
-								May meetup registration is open.
+								{
+									hasUpcomingEvent
+										? "Registration is open."
+										: "Catch up on the latest meetup."
+								}
 							</h3>
 							<p class="mt-4 text-sm">
-								Meet local builders for an AWS Rekognition session with Fauzi
-								Kurniawan from Dicoding Indonesia.
+								{
+									featuredEvent.speakers.length > 0
+										? `Featuring ${featuredEvent.speakers.map((speaker) => speaker.name).join(" and ")}.`
+										: "An open community session for Bandung builders."
+								}
 							</p>
 							<a
 								href={featuredEvent.meetupUrl}
@@ -485,6 +513,28 @@ const homeStructuredData = [
 					</a>
 				</div>
 			</div>
+		</div>
+	</section>
+
+	<section class="site-section bg-background">
+		<div class="site-container">
+			<div class="max-w-3xl">
+				<p class="eyebrow">FAQ</p>
+				<h2 class="mt-4">
+					Common questions about the community.
+				</h2>
+			</div>
+
+			<dl class="mt-10 grid gap-x-8 gap-y-8 md:grid-cols-2">
+				{
+					faqs.map((faq) => (
+						<div class="border-t border-border pt-5">
+							<dt class="text-lg font-bold text-foreground">{faq.question}</dt>
+							<dd class="mt-3 text-sm">{faq.answer}</dd>
+						</div>
+					))
+				}
+			</dl>
 		</div>
 	</section>
 

@@ -1,7 +1,13 @@
 ---
 import EventCard from "@/components/EventCard.astro";
 import Layout from "@/layouts/Layout.astro";
-import { featuredEvent, getEventJsonLd, meetupGroupUrl, pastEvents } from "@/lib/events";
+import {
+	archivedEvents,
+	featuredEvent,
+	getEventJsonLd,
+	hasUpcomingEvent,
+	meetupGroupUrl,
+} from "@/lib/events";
 import { absoluteUrl, site } from "@/lib/site";
 
 const eventsStructuredData = [
@@ -15,7 +21,7 @@ const eventsStructuredData = [
 		inLanguage: site.language,
 		mainEntity: {
 			"@type": "ItemList",
-			itemListElement: [featuredEvent, ...pastEvents].map((event, index) => ({
+			itemListElement: [featuredEvent, ...archivedEvents].map((event, index) => ({
 				"@type": "ListItem",
 				position: index + 1,
 				name: event.title,
@@ -24,7 +30,7 @@ const eventsStructuredData = [
 		},
 	},
 	getEventJsonLd(featuredEvent),
-	...pastEvents.map(getEventJsonLd),
+	...archivedEvents.map(getEventJsonLd),
 ];
 ---
 
@@ -62,7 +68,7 @@ const eventsStructuredData = [
 				</figure>
 
 				<div>
-					<p class="eyebrow">Next up</p>
+					<p class="eyebrow">{hasUpcomingEvent ? "Next up" : "Most recent meetup"}</p>
 					<h2 class="mt-4">
 						{featuredEvent.title}
 					</h2>
@@ -106,7 +112,7 @@ const eventsStructuredData = [
 							rel="noopener noreferrer"
 							class="button-primary"
 						>
-							Attend on Meetup
+							{hasUpcomingEvent ? "Attend on Meetup" : "View on Meetup"}
 						</a>
 						<a
 							href={featuredEvent.mapUrl}
@@ -137,7 +143,7 @@ const eventsStructuredData = [
 
 			<div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
 				{
-					pastEvents.map((event) => (
+					archivedEvents.map((event) => (
 							<EventCard
 								title={event.title}
 								description={event.description}
