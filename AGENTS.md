@@ -58,6 +58,7 @@ src/
 - `src/pages/events.astro` renders the event page: page intro, next event feature, past events archive, and a simple Meetup group CTA.
 - `src/components/EventCard.astro` is the reusable event card used by home and events pages. It supports optional images and keeps event metadata/CTA aligned at the bottom.
 - `src/lib/meetup-feed.ts` fetches the public Meetup iCal feed (`/events/ical/`) at build time. The feed lists upcoming events only. The banner image is read from each event page's `og:image`. On any failure it logs a warning and returns no events (or no image), so the build never breaks.
+- `src/data/meetup-events.json` stores every event the feed has returned, so past meetups stay after Meetup drops them from the feed. It is updated by `scripts/sync-meetup-events.ts` (run with `bun`), which the `Sync Meetup events` GitHub Action runs every Monday at 07:00 WIB and commits straight to `main` when the file changes. Entries are updated but never removed.
 - `src/lib/events.ts` merges hand-curated events with feed events (local data wins for the same id), derives `phase` and `statusLabel` from the end time at build time, and exports:
   - `events` (newest first)
   - `nextEvents` (soonest first)
@@ -82,7 +83,7 @@ Use `ASTRO_TELEMETRY_DISABLED=1 bun run build` for verification before handing o
 
 ## Adding Events
 
-Upcoming events appear automatically from the Meetup feed on the next build. Feed events show the Meetup description as written; do not parse venue, speakers, or other fields out of that free text. To add structured details (venue, address, speakers, map), or to keep an event in the archive after it leaves the feed, add it manually to `localEvents` in `src/lib/events.ts` with the same Meetup `id`. Do not store volatile availability such as spots left.
+Upcoming events appear automatically from the Meetup feed on the next build. Feed events show the Meetup description as written; do not parse venue, speakers, or other fields out of that free text. To add structured details (venue, address, speakers, map), add it manually to `localEvents` in `src/lib/events.ts` with the same Meetup `id`. Do not store volatile availability such as spots left.
 
 ### Where To Get Event Information
 
@@ -129,7 +130,8 @@ For each event, gather:
 
 - The soonest upcoming event is shown as the featured event through `featuredEvent`, falling back to the most recent past event.
 - Past events render from `archivedEvents`.
-- `phase` is not stored: an event is `next` until its `endDate` passes at build time, so the site only moves events to the archive when it is rebuilt.
+- `phase` is not stored: an event is `next` until its `endDate` passes at build time.
+- Between rebuilds, the inline script in `src/layouts/Layout.astro` hides elements marked `data-until` and reveals elements marked `data-after` (both ISO dates) once that time passes, and keeps at most `data-limit` visible children in a list. The pages use it to swap the next event to its ended state without a rebuild.
 - The Meetup page should stay the source of truth for RSVP, availability, and late venue changes.
 
 ## Conventions
