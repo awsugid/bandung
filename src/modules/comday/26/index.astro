@@ -1,5 +1,6 @@
 ---
 import ComdayLayout from "@/layouts/ComdayLayout.astro";
+import About from "./About.astro";
 import Closing from "./Closing.astro";
 import Day from "./Day.astro";
 import { event } from "./event";
@@ -11,6 +12,7 @@ import Topics from "./Topics.astro";
 
 <ComdayLayout startDate={event.startDate} endDate={event.endDate}>
 	<Hero />
+	<About />
 	<Ticket />
 	<Topics />
 	<Speakers />

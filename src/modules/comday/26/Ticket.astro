@@ -2,54 +2,48 @@
 import { event } from "./event";
 ---
 
-<section class="relative bg-muted py-16 sm:py-24">
+<section class="relative isolate overflow-hidden bg-muted py-16 sm:py-24">
 	<div class="site-container">
-		<div class="overflow-hidden rounded-2xl border border-border bg-card">
-			<div class="h-1 bg-[image:var(--comday-gradient)]"></div>
+		<p class="date-numeral w-fit font-bold leading-[0.8] tracking-tight" aria-label="7 November 2026">
+			07<span class="text-primary">.</span>11<span class="text-primary">.</span>26
+		</p>
 
-			<dl class="grid divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-				<div class="p-6 sm:p-8">
-					<dt class="label">Date</dt>
-					<dd class="mt-4">
-						<span class="block text-5xl font-bold leading-none text-white sm:text-6xl lg:text-7xl">07</span>
-						<span class="mt-2 block text-lg font-bold uppercase tracking-[0.2em] text-primary">Nov 2026</span>
-						<span class="mt-1 block text-sm text-muted-foreground">Saturday</span>
-					</dd>
-				</div>
-				<div class="p-6 sm:p-8">
-					<dt class="label">Time</dt>
-					<dd class="mt-4">
-						<span class="block text-5xl font-bold leading-none text-white sm:text-6xl lg:text-7xl">09<span class="text-primary">.</span>00</span>
-						<span class="mt-2 block text-lg font-bold uppercase tracking-[0.2em] text-primary">to 16.00</span>
-						<span class="mt-1 block text-sm text-muted-foreground">Western Indonesia Time</span>
-					</dd>
-				</div>
-				<div class="p-6 sm:p-8">
-					<dt class="label">Venue</dt>
-					<dd class="mt-4">
-						<span class="block text-5xl font-bold leading-none text-white sm:text-6xl lg:text-7xl">SBM</span>
-						<span class="mt-2 block text-lg font-bold uppercase tracking-[0.2em] text-primary">ITB</span>
-						<a
-							href={event.mapUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="mt-1 block text-sm text-muted-foreground underline decoration-border underline-offset-4 hover:text-white hover:decoration-primary"
-						>
-							{event.venue}, {event.address}
-						</a>
-					</dd>
-				</div>
-			</dl>
-		</div>
+		<div class="mt-10 h-0.5 bg-primary sm:mt-12"></div>
+
+		<dl class="mt-8 grid gap-8 sm:mt-10 sm:grid-cols-2 sm:gap-16">
+			<div>
+				<dt class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Saturday</dt>
+				<dd class="mt-2 text-2xl font-bold uppercase text-white sm:text-3xl">09.00 – 16.00 WIB</dd>
+			</div>
+			<div>
+				<dt class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Venue</dt>
+				<dd class="mt-2">
+					<span class="block text-2xl font-bold uppercase text-white sm:text-3xl">Auditorium SBM ITB</span>
+					<span class="mt-1 block text-muted-foreground">Gedung Freeport Lt. 6, {event.address}</span>
+					<a
+						href={event.mapUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="mt-4 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-primary hover:text-white"
+					>
+						Map <span aria-hidden="true">→</span>
+					</a>
+				</dd>
+			</div>
+		</dl>
 	</div>
 </section>
 
 <style>
-	.label {
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.18em;
-		text-transform: uppercase;
-		color: var(--muted-foreground);
+	.date-numeral {
+		font-size: clamp(4.5rem, 20vw, 20rem);
+		background: var(--comday-gradient);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	.date-numeral span {
+		-webkit-text-fill-color: var(--primary);
 	}
 </style>
