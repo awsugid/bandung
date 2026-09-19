@@ -1,0 +1,93 @@
+---
+import ComingSoonButton from "./ComingSoonButton.astro";
+import { event } from "./event";
+---
+
+<section class="relative isolate overflow-hidden">
+	<div class="glow" aria-hidden="true"></div>
+	<img src="/images/comday/2026/hex-top-right.webp" alt="" class="hex hex-top" />
+	<img src="/images/comday/2026/hex-bottom-left.webp" alt="" class="hex hex-bottom" />
+
+	<div class="site-container relative flex min-h-[calc(100svh-var(--header-height))] flex-col items-center justify-center py-24 text-center">
+		<p class="reveal eyebrow" style="--delay: 0ms">First time in Bandung</p>
+		<h1 class="sr-only">{event.name}</h1>
+		<img
+			src="/images/comday/2026/lockup.webp"
+			alt="AWS Community Day Bandung"
+			width="1654"
+			height="442"
+			class="reveal mt-8 w-full max-w-3xl"
+			style="--delay: 120ms"
+		/>
+		<p class="reveal mt-7 text-base font-bold uppercase tracking-[0.32em] text-white sm:text-xl" style="--delay: 260ms">
+			7 November 2026
+		</p>
+		<p class="reveal lead mt-8 max-w-xl" style="--delay: 380ms">
+			A full day of practical AWS talks by people who build with it, not
+			vendors who sell it.
+		</p>
+		<div class="reveal mt-10" style="--delay: 500ms">
+			<ComingSoonButton label="Register" />
+		</div>
+	</div>
+</section>
+
+<style>
+	.glow {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			radial-gradient(40rem 28rem at 88% 8%, color-mix(in oklab, var(--comday-violet) 28%, transparent), transparent 70%),
+			radial-gradient(36rem 26rem at 6% 96%, color-mix(in oklab, var(--comday-blue) 24%, transparent), transparent 70%);
+	}
+
+	.hex {
+		position: absolute;
+		pointer-events: none;
+		width: clamp(9rem, 24vw, 21rem);
+		animation: drift 9s ease-in-out infinite alternate;
+	}
+
+	.hex-top {
+		top: 0;
+		right: 0;
+	}
+
+	.hex-bottom {
+		bottom: 0;
+		left: 0;
+		animation-delay: -4.5s;
+	}
+
+	.reveal {
+		animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+		animation-delay: var(--delay);
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(1.25rem);
+		}
+	}
+
+	@keyframes drift {
+		to {
+			transform: translateY(0.75rem) rotate(1.5deg);
+		}
+	}
+
+	@media (max-width: 639px) {
+		.hex {
+			opacity: 0.55;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hex,
+		.reveal {
+			animation: none;
+		}
+	}
+</style>
