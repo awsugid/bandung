@@ -1,0 +1,23 @@
+---
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import Layout from "@/layouts/Layout.astro";
+
+// Each year has its own module folder (e.g. 26 for 2026). Falls back to
+// `default` when the current year's folder does not exist yet.
+const modules = import.meta.glob<AstroComponentFactory>(
+	"../modules/comday/*/index.astro",
+	{ eager: true, import: "default" },
+);
+const year = String(new Date().getFullYear()).slice(-2);
+const Content =
+	modules[`../modules/comday/${year}/index.astro`] ??
+	modules["../modules/comday/default/index.astro"];
+---
+
+<Layout
+	title="Community Day | AWS User Group Bandung"
+	description="AWS Community Day Bandung, a full day of AWS talks and workshops by the local community."
+	canonicalPath="/comday"
+>
+	<Content />
+</Layout>
