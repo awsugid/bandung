@@ -4,11 +4,19 @@ import type { CommunityEvent } from "@/lib/events";
 interface Props {
 	event: CommunityEvent;
 	ctaLabel?: string;
+	// Label swapped in by the layout's date script once an upcoming event ends.
+	endedCtaLabel?: string;
 	// Omit on the events page, where the details link would point to itself.
 	detailsHref?: string;
 }
 
-const { event, ctaLabel = "Reserve a seat on Meetup", detailsHref } = Astro.props;
+const {
+	event,
+	ctaLabel = "Reserve a seat on Meetup",
+	endedCtaLabel,
+	detailsHref,
+} = Astro.props;
+const swapsLabel = endedCtaLabel && event.phase === "next";
 const toggleId = `description-${event.id}`;
 // Only offer "Read more" when the text is likely to exceed the clamped lines.
 const isLong = event.description.length > 240 || event.description.split("\n").length > 4;
@@ -45,7 +53,16 @@ const isLong = event.description.length > 240 || event.description.split("\n").l
 
 		<div class="mt-8 flex flex-col gap-3 sm:flex-row">
 			<a href={event.meetupUrl} target="_blank" rel="noopener noreferrer" class="button-primary">
-				{ctaLabel}
+				{
+					swapsLabel ? (
+						<>
+							<span data-until={event.endDate}>{ctaLabel}</span>
+							<span hidden data-after={event.endDate}>{endedCtaLabel}</span>
+						</>
+					) : (
+						ctaLabel
+					)
+				}
 			</a>
 			{detailsHref && <a href={detailsHref} class="button-secondary">Event details</a>}
 		</div>
