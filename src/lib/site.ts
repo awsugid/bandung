@@ -1,3 +1,5 @@
+import { feedLastModified } from "@/lib/meetup-feed";
+
 export const site = {
 	name: "AWS User Group Bandung",
 	shortName: "AWS UG Bandung",
@@ -24,8 +26,13 @@ export const siteUrl = new URL(site.url);
 
 export const absoluteUrl = (path = "/") => new URL(path, siteUrl).toString();
 
-// Bump when page content or event data changes; consumed by sitemap.xml.
-export const contentLastModified = "2026-08-16";
+// Bump when page content or local event data changes; consumed by sitemap.xml.
+// The Meetup feed's latest LAST-MODIFIED date wins when it is newer.
+const manualLastModified = "2026-08-16";
+export const contentLastModified =
+	feedLastModified && feedLastModified > manualLastModified
+		? feedLastModified
+		: manualLastModified;
 
 export const publicRoutes = [
 	{
