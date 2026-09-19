@@ -3,8 +3,6 @@ interface Props {
 	title: string;
 	description: string;
 	dateLabel?: string;
-	timeLabel?: string;
-	location?: string;
 	href?: string;
 	ctaLabel?: string;
 	imageUrl?: string;
@@ -14,8 +12,6 @@ const {
 	title,
 	description,
 	dateLabel = "Date to be announced",
-	timeLabel,
-	location = "Bandung",
 	href,
 	ctaLabel = "View details",
 	imageUrl,
@@ -44,32 +40,12 @@ const Tag = href ? "a" : "article";
 	}
 	<div class="flex flex-1 flex-col p-6">
 		<h3 class="text-2xl leading-tight">{title}</h3>
-		<p class="mt-3 text-sm">{description}</p>
-
-		<div class="min-h-8 flex-1" aria-hidden="true"></div>
-
-		<div class="grid gap-3 border-t border-border pt-5 text-sm text-muted-foreground">
-			<div class="flex items-center gap-3">
-				<span class="h-2 w-2 rounded-full bg-primary"></span>
-				<span>{dateLabel}</span>
-			</div>
-			{
-				timeLabel && (
-					<div class="flex items-center gap-3">
-						<span class="h-2 w-2 rounded-full bg-aws-blue"></span>
-						<span>{timeLabel}</span>
-					</div>
-				)
-			}
-			<div class="flex min-w-0 items-center gap-3">
-				<span class="h-2 w-2 rounded-full bg-aws-ink"></span>
-				<span class="truncate">{location}</span>
-			</div>
-		</div>
+		<p class="mt-2 text-sm font-bold text-foreground">{dateLabel}</p>
+		<p class="mt-3 line-clamp-3 text-sm">{description}</p>
 
 		{
 			href && (
-				<div class="mt-8 flex items-center text-sm font-bold text-foreground">
+				<div class="mt-auto flex items-center pt-8 text-sm font-bold text-foreground">
 					<span>{ctaLabel}</span>
 					<span class="ml-2 transition group-hover:translate-x-1" aria-hidden="true">
 						-&gt;
