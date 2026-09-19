@@ -81,5 +81,24 @@ const jsonLd = [
 			<slot />
 		</main>
 		<Footer />
+		<script is:inline>
+			// Pages are static, so hide or reveal event content by date in the browser;
+			// a finished event stops showing as next without waiting for a rebuild.
+			(() => {
+				const now = Date.now();
+				for (const el of document.querySelectorAll("[data-until]")) {
+					if (now >= Date.parse(el.dataset.until)) el.hidden = true;
+				}
+				for (const el of document.querySelectorAll("[data-after]")) {
+					if (now >= Date.parse(el.dataset.after)) el.hidden = false;
+				}
+				for (const list of document.querySelectorAll("[data-limit]")) {
+					let shown = 0;
+					for (const el of list.children) {
+						if (!el.hidden && ++shown > Number(list.dataset.limit)) el.hidden = true;
+					}
+				}
+			})();
+		</script>
 	</body>
 </html>

@@ -1,14 +1,48 @@
+import syncedEvents from "@/data/meetup-events.json";
+import { type FeedEvent, feedEvents } from "@/lib/meetup-feed";
 import { absoluteUrl, site } from "@/lib/site";
 
 export const meetupGroupUrl = "https://www.meetup.com/aws-user-group-bandung/";
 
-export const events = [
+type EventDetails = {
+	id: string;
+	title: string;
+	type: string;
+	dateLabel: string;
+	timeLabel: string;
+	startDate: string;
+	endDate: string;
+	location?: string;
+	address?: string;
+	city: string;
+	priceLabel: string;
+	attendeeCount?: number;
+	host: string;
+	hostDisplayName: string;
+	groupName?: string;
+	groupRating?: string;
+	groupReviewCount?: number;
+	imageUrl?: string;
+	meetupUrl: string;
+	mapUrl?: string;
+	coordinates?: { latitude: number; longitude: number };
+	speakers: { name: string; role: string; topic?: string }[];
+	topics: string[];
+	description: string;
+	details: string[];
+};
+
+export type CommunityEvent = EventDetails & {
+	phase: "next" | "past";
+	statusLabel: string;
+};
+
+// Hand-curated events. They take precedence over the Meetup feed for the same id.
+const localEvents: EventDetails[] = [
 	{
 		id: "316053753",
 		title: "AWS User Group Bandung Meetup - August 2026",
 		type: "Meetup",
-		phase: "past",
-		statusLabel: "Past event",
 		dateLabel: "Saturday, August 15, 2026",
 		timeLabel: "9:00 AM - 11:00 AM WIB",
 		startDate: "2026-08-15T09:00:00+07:00",
@@ -58,8 +92,6 @@ export const events = [
 		id: "315283406",
 		title: "AWS User Group Bandung Meetup - OpenClaw 2026",
 		type: "Meetup",
-		phase: "past",
-		statusLabel: "Past event",
 		dateLabel: "Saturday, July 25, 2026",
 		timeLabel: "9:00 AM - 11:00 AM WIB",
 		startDate: "2026-07-25T09:00:00+07:00",
@@ -105,8 +137,6 @@ export const events = [
 		id: "315282716",
 		title: "AWS User Group Bandung Meetup June 2026",
 		type: "Meetup",
-		phase: "past",
-		statusLabel: "Past event",
 		dateLabel: "Saturday, June 20, 2026",
 		timeLabel: "2:00 PM - 5:00 PM WIB",
 		startDate: "2026-06-20T14:00:00+07:00",
@@ -152,8 +182,6 @@ export const events = [
 		id: "314688796",
 		title: "AWS User Group Bandung Meetup May 2026",
 		type: "Meetup",
-		phase: "past",
-		statusLabel: "Past event",
 		dateLabel: "Saturday, May 16, 2026",
 		timeLabel: "4:00 PM - 6:00 PM WIB",
 		startDate: "2026-05-16T16:00:00+07:00",
@@ -200,8 +228,6 @@ export const events = [
 		id: "313454112",
 		title: "Kiro Night AWS User Group Bandung",
 		type: "Meetup",
-		phase: "past",
-		statusLabel: "Past event",
 		dateLabel: "Saturday, February 28, 2026",
 		timeLabel: "4:00 PM - 6:00 PM WIB",
 		startDate: "2026-02-28T16:00:00+07:00",
@@ -247,8 +273,6 @@ export const events = [
 		id: "312252052",
 		title: "AWS User Group Bandung Meetup December 2025",
 		type: "Meetup",
-		phase: "past",
-		statusLabel: "Past event",
 		dateLabel: "Monday, December 22, 2025",
 		timeLabel: "6:30 PM - 8:30 PM WIB",
 		startDate: "2025-12-22T18:30:00+07:00",
@@ -296,8 +320,68 @@ export const events = [
 	},
 ];
 
-export const nextEvents = events.filter((event) => event.phase === "next");
-export const currentEvents = events.filter((event) => event.phase === "current");
+const jakartaDate = new Intl.DateTimeFormat("en-US", {
+	timeZone: "Asia/Jakarta",
+	weekday: "long",
+	month: "long",
+	day: "numeric",
+	year: "numeric",
+});
+const jakartaTime = new Intl.DateTimeFormat("en-US", {
+	timeZone: "Asia/Jakarta",
+	hour: "numeric",
+	minute: "2-digit",
+});
+const formatTime = (iso: string) => jakartaTime.format(new Date(iso)).replace(/\s/g, " ");
+
+// Feed-only events carry just what the feed provides. The description is shown
+// as written on Meetup; venue, speakers, and map only exist for local events.
+const fromFeed = (event: FeedEvent): EventDetails => ({
+	id: event.id,
+	title: event.title,
+	type: "Meetup",
+	dateLabel: jakartaDate.format(new Date(event.startDate)),
+	timeLabel: `${formatTime(event.startDate)} - ${formatTime(event.endDate)} WIB`,
+	startDate: event.startDate,
+	endDate: event.endDate,
+	city: "Bandung",
+	priceLabel: "Free",
+	host: site.name,
+	hostDisplayName: site.name,
+	imageUrl: event.imageUrl,
+	meetupUrl: event.url,
+	speakers: [],
+	topics: [],
+	description: event.description.trim() || event.title,
+	details: [],
+});
+
+const localIds = new Set(localEvents.map((event) => event.id));
+// Saved feed events keep past meetups after Meetup drops them from the feed; the
+// live feed wins for the same id because it is fresher.
+const meetupEvents = new Map<string, FeedEvent>(
+	[...syncedEvents, ...feedEvents].map((event) => [event.id, event]),
+);
+const buildTime = Date.now();
+
+// Newest first. Phase is derived from the end time, so a finished event moves to
+// the archive on the next build without editing data.
+export const events: CommunityEvent[] = [
+	...localEvents,
+	...[...meetupEvents.values()].filter((event) => !localIds.has(event.id)).map(fromFeed),
+]
+	.map((event) => {
+		const upcoming = Date.parse(event.endDate) > buildTime;
+		return {
+			...event,
+			phase: upcoming ? ("next" as const) : ("past" as const),
+			statusLabel: upcoming ? "Next event" : "Past event",
+		};
+	})
+	.sort((a, b) => Date.parse(b.startDate) - Date.parse(a.startDate));
+
+// Soonest first.
+export const nextEvents = events.filter((event) => event.phase === "next").reverse();
 export const pastEvents = events.filter((event) => event.phase === "past");
 export const featuredEvent = nextEvents[0] ?? events[0];
 export const hasUpcomingEvent = nextEvents.length > 0;
@@ -306,8 +390,6 @@ export const hasUpcomingEvent = nextEvents.length > 0;
 export const archivedEvents = pastEvents.filter(
 	(event) => event.id !== featuredEvent.id,
 );
-
-export type CommunityEvent = (typeof events)[number];
 
 export const getEventJsonLd = (event: CommunityEvent) => ({
 	"@context": "https://schema.org",
@@ -321,7 +403,7 @@ export const getEventJsonLd = (event: CommunityEvent) => ({
 		event.phase === "past"
 			? "https://schema.org/EventCompleted"
 			: "https://schema.org/EventScheduled",
-	image: [event.imageUrl],
+	image: [event.imageUrl ?? absoluteUrl(site.ogImagePath)],
 	url: event.meetupUrl,
 	isAccessibleForFree: event.priceLabel === "Free",
 	offers: {
@@ -337,7 +419,7 @@ export const getEventJsonLd = (event: CommunityEvent) => ({
 	},
 	location: {
 		"@type": "Place",
-		name: event.location,
+		name: event.location ?? event.city,
 		address: {
 			"@type": "PostalAddress",
 			streetAddress: event.address,
@@ -345,7 +427,7 @@ export const getEventJsonLd = (event: CommunityEvent) => ({
 			addressRegion: "West Java",
 			addressCountry: "ID",
 		},
-		geo: {
+		geo: event.coordinates && {
 			"@type": "GeoCoordinates",
 			latitude: event.coordinates.latitude,
 			longitude: event.coordinates.longitude,
