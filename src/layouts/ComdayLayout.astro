@@ -1,0 +1,29 @@
+---
+import ComdayHeader from "@/components/ComdayHeader.astro";
+import Layout from "@/layouts/Layout.astro";
+
+interface Props {
+	description?: string;
+	startDate?: string;
+	endDate?: string;
+}
+
+const {
+	description = "AWS Community Day Bandung, a full day of AWS talks and workshops by the local community.",
+	startDate,
+	endDate,
+} = Astro.props;
+---
+
+<Layout
+	title="Community Day | AWS User Group Bandung"
+	description={description}
+	canonicalPath="/comday"
+	image="/images/comday/og.png"
+	imageAlt="AWS Community Day Bandung logo"
+>
+	<ComdayHeader slot="header" startDate={startDate} endDate={endDate} />
+	<div class="theme-comday">
+		<slot />
+	</div>
+</Layout>
