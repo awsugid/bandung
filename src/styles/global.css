@@ -83,6 +83,55 @@
     --section-y: clamp(4rem, 8vw, 7.5rem);
     --header-height: 4rem;
   }
+
+  /* Community Day scheme, taken from the AWS Community Day Bandung key visual.
+     Scoped to .theme-comday so it only applies to the /comday page. The
+     pattern hues are decorative; do not use them for text on navy. */
+  .theme-comday {
+    color-scheme: dark;
+
+    --comday-navy: hsl(209 100% 12%);
+    --comday-navy-deep: hsl(210 100% 8%);
+    --comday-navy-raised: hsl(210 75% 17%);
+    --comday-line: hsl(211 51% 28%);
+    --comday-white: hsl(0 0% 100%);
+    --comday-mist: hsl(210 23% 76%);
+    --comday-orange: hsl(34 94% 54%);
+
+    --comday-violet: hsl(266 75% 47%);
+    --comday-indigo: hsl(243 60% 50%);
+    --comday-blue: hsl(224 66% 53%);
+    --comday-magenta: hsl(336 61% 43%);
+    --comday-ember: hsl(13 68% 50%);
+    --comday-gradient: linear-gradient(
+      135deg,
+      var(--comday-violet),
+      var(--comday-blue) 35%,
+      var(--comday-magenta) 70%,
+      var(--comday-orange)
+    );
+
+    --background: var(--comday-navy);
+    --foreground: var(--comday-white);
+    --card: var(--comday-navy-raised);
+    --card-foreground: var(--comday-white);
+    --popover: var(--comday-navy-raised);
+    --popover-foreground: var(--comday-white);
+    --primary: var(--comday-orange);
+    --primary-foreground: var(--comday-navy);
+    --secondary: var(--comday-navy-raised);
+    --secondary-foreground: var(--comday-white);
+    --muted: var(--comday-navy-deep);
+    --muted-foreground: var(--comday-mist);
+    --accent: var(--comday-blue);
+    --accent-foreground: var(--comday-white);
+    --border: var(--comday-line);
+    --input: var(--comday-line);
+    --ring: var(--comday-orange);
+
+    background: var(--background);
+    color: var(--foreground);
+  }
 }
 
 @theme inline {
@@ -119,6 +168,16 @@
   --color-aws-blue: var(--aws-link-blue);
   --color-aws-cloud: var(--aws-cloud);
   --color-aws-frost: var(--aws-frost);
+
+  --color-comday-navy: var(--comday-navy);
+  --color-comday-navy-deep: var(--comday-navy-deep);
+  --color-comday-navy-raised: var(--comday-navy-raised);
+  --color-comday-orange: var(--comday-orange);
+  --color-comday-violet: var(--comday-violet);
+  --color-comday-indigo: var(--comday-indigo);
+  --color-comday-blue: var(--comday-blue);
+  --color-comday-magenta: var(--comday-magenta);
+  --color-comday-ember: var(--comday-ember);
 }
 
 @layer base {

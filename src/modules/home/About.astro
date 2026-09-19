@@ -1,0 +1,97 @@
+---
+import { joinCommunityUrl } from "@/lib/navigation";
+---
+
+<section class="site-section bg-muted">
+	<div class="site-container">
+		<div class="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+			<div class="max-w-2xl">
+				<p class="eyebrow">About the community</p>
+				<h2 class="mt-4">
+					A local space for people building with AWS.
+				</h2>
+				<p class="lead mt-6">
+					AWS User Group Bandung brings developers, students, operators,
+					architects, founders, and cloud-curious builders into the same
+					conversation, so AWS knowledge does not stay locked inside one
+					company, team, or job title.
+				</p>
+				<p class="mt-5">
+					Expect practical talks, honest questions, local connections, and
+					space to share what you are learning, whether you are deploying
+					your first workload or running production systems.
+				</p>
+
+				<a
+					href={joinCommunityUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="button-secondary mt-8 bg-background"
+				>
+					Join the local group
+				</a>
+			</div>
+
+			<aside class="aws-card overflow-hidden bg-background" aria-label="Community snapshot">
+				<div class="h-2 bg-primary"></div>
+				<div class="p-6 sm:p-8">
+					<div class="flex items-start justify-between gap-6 border-b border-border pb-6">
+						<div>
+							<p class="text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground">
+								What it is for
+							</p>
+							<h2 class="mt-4 text-3xl leading-tight">
+								Make cloud learning local.
+							</h2>
+						</div>
+						<img src="/images/awsug-bandung-logo.png" alt="" class="h-12 w-12 shrink-0" />
+					</div>
+
+					<div class="mt-2 divide-y divide-border">
+						<div class="grid gap-3 py-6 sm:grid-cols-[8.5rem_1fr]">
+							<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+								Ask
+							</p>
+							<div>
+								<h3 class="text-base">Bring the part you are stuck on</h3>
+								<p class="mt-2 text-sm">
+									Architecture choices, service tradeoffs, security basics,
+									cost concerns, migration stories, or where to begin.
+								</p>
+							</div>
+						</div>
+						<div class="grid gap-3 py-6 sm:grid-cols-[8.5rem_1fr]">
+							<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+								Share
+							</p>
+							<div>
+								<h3 class="text-base">Turn real work into useful lessons</h3>
+								<p class="mt-2 text-sm">
+									Short demos, production notes, experiments, failures, and
+									fixes are all useful when they help another builder move.
+								</p>
+							</div>
+						</div>
+						<div class="grid gap-3 py-6 sm:grid-cols-[8.5rem_1fr]">
+							<p class="text-sm font-bold uppercase tracking-[0.16em] text-primary">
+								Meet
+							</p>
+							<div>
+								<h3 class="text-base">Know the builders around Bandung</h3>
+								<p class="mt-2 text-sm">
+									Connect with people from different teams, campuses,
+									startups, agencies, and companies who are learning AWS too.
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<p class="border-t border-border pt-6 text-sm font-medium text-foreground">
+						Open to every experience level. Meetups may be in-person or
+						virtual depending on the session.
+					</p>
+				</div>
+			</aside>
+		</div>
+	</div>
+</section>

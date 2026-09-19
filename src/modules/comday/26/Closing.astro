@@ -1,0 +1,29 @@
+---
+import ComingSoonButton from "./ComingSoonButton.astro";
+---
+
+<section class="relative isolate overflow-hidden bg-muted py-24 sm:py-32">
+	<img
+		src="/images/comday/2026/hex-bottom-left.webp"
+		alt=""
+		class="pointer-events-none absolute -bottom-8 -left-8 -z-10 w-40 opacity-50 sm:w-60"
+	/>
+	<img
+		src="/images/comday/2026/hex-top-right.webp"
+		alt=""
+		class="pointer-events-none absolute -right-8 -top-8 -z-10 w-40 opacity-50 sm:w-60"
+	/>
+	<div class="site-container text-center">
+		<h2 class="mx-auto max-w-3xl text-4xl uppercase sm:text-6xl">
+			Save the date. <span class="text-primary">Registration opens soon.</span>
+		</h2>
+		<p class="lead mx-auto mt-6 max-w-xl">
+			Follow AWS User Group Bandung to hear the moment seats and speakers are
+			announced.
+		</p>
+
+		<div class="mt-10 flex justify-center">
+			<ComingSoonButton label="Register" />
+		</div>
+	</div>
+</section>

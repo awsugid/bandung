@@ -1,0 +1,29 @@
+---
+interface Props {
+	label: string;
+	variant?: "primary" | "secondary";
+}
+
+const { label, variant = "primary" } = Astro.props;
+---
+
+<button
+	type="button"
+	disabled
+	class:list={[
+		"inline-flex h-12 cursor-not-allowed items-center justify-center gap-3 rounded-md px-6 text-sm font-bold",
+		variant === "primary"
+			? "bg-primary text-primary-foreground"
+			: "border border-white/30 text-white",
+	]}
+>
+	{label}
+	<span
+		class:list={[
+			"rounded-md px-2.5 py-0.5 text-[0.65rem] uppercase tracking-[0.14em]",
+			variant === "primary" ? "bg-comday-navy/15" : "bg-white/10 text-comday-orange",
+		]}
+	>
+		Coming soon
+	</span>
+</button>

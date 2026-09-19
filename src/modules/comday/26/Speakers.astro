@@ -1,0 +1,65 @@
+---
+// Placeholder cards until the lineup is confirmed.
+const slots = Array.from({ length: 6 });
+---
+
+<section class="site-section bg-muted">
+	<div class="site-container">
+		<div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+			<div class="max-w-2xl">
+				<p class="eyebrow">Speakers</p>
+				<h2 class="mt-4 uppercase">Lineup coming soon.</h2>
+				<p class="lead mt-5">
+					Speakers are being curated with AWS User Group Indonesia. Names,
+					talks, and workshops will be announced here.
+				</p>
+			</div>
+		</div>
+
+		<ul class="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3">
+			{slots.map((_, index) => (
+				<li class="speaker rounded-xl border border-border bg-card p-5 sm:p-6" style={`--delay: ${index * 140}ms`}>
+					<div class="hexagon w-16 bg-[image:var(--comday-gradient)] p-[3px] sm:w-20">
+						<div class="hexagon grid h-full w-full place-items-center bg-card text-2xl font-bold text-muted-foreground">
+							?
+						</div>
+					</div>
+					<div class="mt-6 space-y-2" aria-hidden="true">
+						<div class="skeleton h-4 w-3/4 rounded-full"></div>
+						<div class="skeleton h-3 w-1/2 rounded-full"></div>
+					</div>
+					<p class="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-primary">To be announced</p>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.hexagon {
+		aspect-ratio: 1 / 1.1547;
+		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	}
+
+	.skeleton {
+		background: linear-gradient(90deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.06));
+		background-size: 200% 100%;
+		animation: shimmer 2.4s ease-in-out infinite;
+		animation-delay: var(--delay);
+	}
+
+	@keyframes shimmer {
+		from {
+			background-position: 100% 0;
+		}
+		to {
+			background-position: -100% 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.skeleton {
+			animation: none;
+		}
+	}
+</style>

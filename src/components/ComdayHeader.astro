@@ -1,0 +1,95 @@
+---
+import NextEventBar from "@/components/NextEventBar.astro";
+
+interface Props {
+	startDate?: string;
+	endDate?: string;
+}
+
+const { startDate, endDate } = Astro.props;
+const units = ["d", "h", "m", "s"];
+---
+
+<header class="theme-comday sticky top-0 z-50">
+	<NextEventBar />
+	<div class="h-px bg-[image:var(--comday-gradient)]"></div>
+	<div class="border-b border-border bg-comday-navy-deep/95 backdrop-blur">
+		<div class="site-container flex min-h-[calc(var(--header-height)-1px)] items-center justify-between gap-4 py-3">
+			<div class="flex shrink-0 items-center gap-3 sm:gap-4">
+				<a
+					href="/"
+					class="grid h-9 w-9 place-items-center rounded-md border border-border text-muted-foreground transition hover:border-primary hover:text-white"
+					aria-label="Back to AWS User Group Bandung home"
+				>
+					<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true">
+						<path d="M12.5 4.5 7 10l5.5 5.5" />
+					</svg>
+				</a>
+				<a href="/comday" aria-label="AWS Community Day Bandung">
+					<img src="/images/comday/logo.webp" alt="" width="1660" height="444" class="h-8 w-auto sm:h-9" />
+				</a>
+			</div>
+
+			{
+				startDate && endDate && (
+					<div
+						class="flex items-center gap-3"
+						data-comday-start={startDate}
+						data-comday-end={endDate}
+						aria-label="Time until AWS Community Day Bandung"
+					>
+						<span class="hidden text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground lg:inline" data-comday-label>
+							Starts in
+						</span>
+						<ol class="flex items-center gap-1 font-mono tabular-nums" data-comday-clock>
+							{units.map((unit) => (
+								<li class:list={["rounded-md border border-border bg-card px-1.5 py-1 text-xs font-bold text-white sm:px-2 sm:text-sm", unit === "s" && "hidden sm:block"]}>
+									<span data-comday-unit={unit}>--</span><span class="text-primary">{unit}</span>
+								</li>
+							))}
+						</ol>
+					</div>
+				)
+			}
+		</div>
+	</div>
+</header>
+
+<script>
+	// Ticks the Community Day countdown and hides it once the event ends.
+	const root = document.querySelector<HTMLElement>("[data-comday-start]");
+
+	if (root) {
+		const start = Date.parse(root.dataset.comdayStart ?? "");
+		const end = Date.parse(root.dataset.comdayEnd ?? "");
+		const clock = root.querySelector<HTMLElement>("[data-comday-clock]")!;
+		const label = root.querySelector<HTMLElement>("[data-comday-label]")!;
+		const pad = (value: number) => String(value).padStart(2, "0");
+		const set = (unit: string, value: string) => {
+			root.querySelector(`[data-comday-unit="${unit}"]`)!.textContent = value;
+		};
+
+		const tick = () => {
+			const now = Date.now();
+			if (now >= end) {
+				root.hidden = true;
+				clearInterval(timer);
+				return;
+			}
+			if (now >= start) {
+				clock.hidden = true;
+				label.textContent = "Happening now";
+				label.classList.remove("hidden");
+				return;
+			}
+			const seconds = Math.floor((start - now) / 1000);
+			set("d", String(Math.floor(seconds / 86_400)));
+			set("h", pad(Math.floor((seconds % 86_400) / 3_600)));
+			set("m", pad(Math.floor((seconds % 3_600) / 60)));
+			set("s", pad(seconds % 60));
+		};
+
+		const timer = setInterval(tick, 1_000);
+		tick();
+	}
+</script>

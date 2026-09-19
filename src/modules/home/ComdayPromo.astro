@@ -1,0 +1,48 @@
+---
+import { event } from "@/modules/comday/26/event";
+---
+
+<section class="theme-comday relative isolate overflow-hidden" data-until={event.endDate} aria-labelledby="comday-promo-title">
+	<div class="glow" aria-hidden="true"></div>
+	<img src="/images/comday/2026/hex-top-right.webp" alt="" class="hex -right-6 -top-6" />
+	<img src="/images/comday/2026/hex-bottom-left.webp" alt="" class="hex -bottom-6 -left-6" />
+
+	<div class="site-container flex flex-col items-center py-16 text-center sm:py-20">
+		<p class="eyebrow">First time in Bandung</p>
+		<h2 id="comday-promo-title" class="sr-only">{event.name}</h2>
+		<img src="/images/comday/logo.webp" alt="AWS Community Day Bandung" width="1660" height="444" class="mt-6 w-full max-w-md" />
+		<p class="mt-6 text-sm font-bold uppercase tracking-[0.18em] text-white">
+			7 Nov 2026 <span class="mx-2 text-primary" aria-hidden="true">·</span> SBM ITB, Bandung
+		</p>
+		<p class="lead mt-6 max-w-xl">
+			A full day of practical AWS talks and hands-on workshops, run by the
+			community.
+		</p>
+		<a
+			href="/comday"
+			class="group mt-8 inline-flex h-12 items-center gap-3 rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-[color-mix(in_oklab,var(--primary)_88%,white)]"
+		>
+			Explore Community Day
+			<span class="transition group-hover:translate-x-1" aria-hidden="true">→</span>
+		</a>
+	</div>
+</section>
+
+<style>
+	.glow {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			radial-gradient(36rem 24rem at 92% 0%, color-mix(in oklab, var(--comday-violet) 30%, transparent), transparent 70%),
+			radial-gradient(32rem 22rem at 0% 100%, color-mix(in oklab, var(--comday-blue) 26%, transparent), transparent 70%);
+	}
+
+	.hex {
+		position: absolute;
+		z-index: -1;
+		width: clamp(7rem, 16vw, 13rem);
+		pointer-events: none;
+		opacity: 0.45;
+	}
+</style>

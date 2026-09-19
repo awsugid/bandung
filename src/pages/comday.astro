@@ -1,0 +1,17 @@
+---
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+
+// Each year has its own module folder (e.g. 26 for 2026) that renders the
+// whole page with ComdayLayout. Falls back to `default` when the current
+// year's folder does not exist yet.
+const modules = import.meta.glob<AstroComponentFactory>(
+	"../modules/comday/*/index.astro",
+	{ eager: true, import: "default" },
+);
+const year = String(new Date().getFullYear()).slice(-2);
+const Content =
+	modules[`../modules/comday/${year}/index.astro`] ??
+	modules["../modules/comday/default/index.astro"];
+---
+
+<Content />

@@ -39,6 +39,10 @@ src/
     events.ts
     navigation.ts
     site.ts          site metadata, publicRoutes, JSON-LD, contentLastModified
+  modules/
+    home/            one component per homepage section, plus faqs.ts
+    events/          one component per events page section
+    comday/          default/ plus one folder per year (26 = 2026), each with index.astro
   pages/
     events.astro
     index.astro
@@ -54,8 +58,10 @@ src/
 
 ## Current App State
 
-- `src/pages/index.astro` renders the homepage sections: hero, community momentum, about, what to expect, event preview, ways to participate, and final CTA.
-- `src/pages/events.astro` renders the event page: page intro, next event feature, past events archive, and a simple Meetup group CTA.
+- Page content lives in `src/modules/<page>/`, one self-contained component per section. Pages only hold SEO meta, structured data, and the ordered list of modules. To change a section, edit its module or add a new one and swap it into the page.
+- `src/pages/index.astro` wires the homepage modules: `Hero`, `Momentum`, `About`, `WhatToExpect`, `EventsPreview`, `Participate`, `Faq`, and `JoinCta`. FAQ data lives in `src/modules/home/faqs.ts` because the page's FAQ JSON-LD also uses it.
+- `src/pages/comday.astro` renders `src/modules/comday/<yy>/index.astro` for the current build year, falling back to `default/` when that year's folder does not exist. Each year module wraps itself in `src/layouts/ComdayLayout.astro` (Community Day header with its own countdown, shared footer) and passes its event dates. It is not in `publicRoutes` or the navigation yet.
+- `src/pages/events.astro` wires the events modules: `Intro`, `NextEvent`, `PastEvents`, and `MeetupCta`.
 - `src/components/EventCard.astro` is the reusable event card used by home and events pages. It supports optional images and keeps event metadata/CTA aligned at the bottom.
 - `src/lib/meetup-feed.ts` fetches the public Meetup iCal feed (`/events/ical/`) at build time. The feed lists upcoming events only. The banner image is read from each event page's `og:image`. On any failure it logs a warning and returns no events (or no image), so the build never breaks.
 - `src/data/meetup-events.json` stores every event the feed has returned, so past meetups stay after Meetup drops them from the feed. It is updated by `scripts/sync-meetup-events.ts` (run with `bun`), which the `Sync Meetup events` GitHub Action runs every Monday at 07:00 WIB and commits straight to `main` when the file changes. Entries are updated but never removed.

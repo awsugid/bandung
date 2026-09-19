@@ -1,0 +1,49 @@
+---
+import { event } from "./event";
+---
+
+<section class="relative isolate overflow-hidden bg-muted py-16 sm:py-24">
+	<div class="site-container">
+		<p class="date-numeral w-fit font-bold leading-[0.8] tracking-tight" aria-label="7 November 2026">
+			07<span class="text-primary">.</span>11<span class="text-primary">.</span>26
+		</p>
+
+		<div class="mt-10 h-0.5 bg-primary sm:mt-12"></div>
+
+		<dl class="mt-8 grid gap-8 sm:mt-10 sm:grid-cols-2 sm:gap-16">
+			<div>
+				<dt class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Saturday</dt>
+				<dd class="mt-2 text-2xl font-bold uppercase text-white sm:text-3xl">09.00 – 16.00 WIB</dd>
+			</div>
+			<div>
+				<dt class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Venue</dt>
+				<dd class="mt-2">
+					<span class="block text-2xl font-bold uppercase text-white sm:text-3xl">Auditorium SBM ITB</span>
+					<span class="mt-1 block text-muted-foreground">Gedung Freeport Lt. 6, {event.address}</span>
+					<a
+						href={event.mapUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="mt-4 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-primary hover:text-white"
+					>
+						Map <span aria-hidden="true">→</span>
+					</a>
+				</dd>
+			</div>
+		</dl>
+	</div>
+</section>
+
+<style>
+	.date-numeral {
+		font-size: clamp(4.5rem, 20vw, 20rem);
+		background: var(--comday-gradient);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	.date-numeral span {
+		-webkit-text-fill-color: var(--primary);
+	}
+</style>
