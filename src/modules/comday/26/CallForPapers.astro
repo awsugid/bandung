@@ -1,0 +1,82 @@
+---
+import { event } from "./event";
+
+const daysLeft = Math.max(Math.ceil((Date.parse(event.cfpClosesAt) - Date.now()) / 86_400_000), 0);
+---
+
+<section class="site-section bg-muted" data-until={event.cfpClosesAt} aria-labelledby="cfp-title">
+	<div class="site-container">
+		<div class="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
+			<div>
+				<p class="eyebrow flex items-center gap-3">
+					<span class="relative flex h-2 w-2" aria-hidden="true">
+						<span class="pulse absolute inline-flex h-full w-full rounded-full bg-primary"></span>
+						<span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+					</span>
+					Call for papers is open
+				</p>
+				<h2 id="cfp-title" class="mt-6 text-4xl uppercase leading-[1.04] lg:text-5xl">
+					<span class="block">Share what you built.</span>
+					<span class="block">Share what broke.</span>
+					<span class="block text-primary">Share what you learned.</span>
+				</h2>
+				<p class="lead mt-6 max-w-xl">
+					You don't need to be an AWS Hero or a seasoned speaker. First-time
+					speakers are especially welcome.
+				</p>
+			</div>
+
+			<div class="rounded-xl comday-flow p-px">
+				<div class="rounded-[calc(0.75rem-1px)] bg-card p-6 sm:p-8">
+					<div class="flex items-end justify-between gap-6">
+						<div>
+							<p class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Closes</p>
+							<p class="mt-2 text-3xl font-bold uppercase text-white">20 Oct 2026</p>
+							<p class="mt-1 text-sm text-muted-foreground">23.59 WIB</p>
+						</div>
+						<p class="text-right">
+							<span class="block font-mono text-5xl font-bold leading-none text-primary" data-days-to={event.cfpClosesAt}>{daysLeft}</span>
+							<span class="mt-2 block text-xs font-bold uppercase tracking-[0.18em] text-white">days left</span>
+						</p>
+					</div>
+					<a
+						href={event.cfpUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="group mt-8 flex h-12 items-center justify-center gap-3 rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-[color-mix(in_oklab,var(--primary)_88%,white)]"
+					>
+						Submit a session
+						<span class="transition group-hover:translate-x-1" aria-hidden="true">→</span>
+					</a>
+					<p class="mt-3 text-center text-xs text-muted-foreground">Submissions via Sessionize</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	for (const el of document.querySelectorAll<HTMLElement>("[data-days-to]")) {
+		const days = Math.ceil((Date.parse(el.dataset.daysTo!) - Date.now()) / 86_400_000);
+		el.textContent = String(Math.max(days, 0));
+	}
+</script>
+
+<style>
+	.pulse {
+		animation: pulse 1.8s ease-out infinite;
+	}
+
+	@keyframes pulse {
+		to {
+			transform: scale(2.6);
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.pulse {
+			animation: none;
+		}
+	}
+</style>
