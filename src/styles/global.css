@@ -238,6 +238,28 @@
 }
 
 @layer components {
+  /* Community Day gradient that drifts slowly back and forth. */
+  .comday-flow {
+    background-image: var(--comday-gradient);
+    background-size: 200% 100%;
+    animation: comday-flow 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes comday-flow {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 100% 50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .comday-flow {
+      animation: none;
+    }
+  }
+
   .site-container {
     width: min(100% - 2rem, var(--container));
     margin-inline: auto;
