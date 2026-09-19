@@ -42,6 +42,7 @@ src/
   modules/
     home/            one component per homepage section, plus faqs.ts
     events/          one component per events page section
+    comday/          default/ plus one folder per year (26 = 2026), each with index.astro
   pages/
     events.astro
     index.astro
@@ -59,6 +60,7 @@ src/
 
 - Page content lives in `src/modules/<page>/`, one self-contained component per section. Pages only hold SEO meta, structured data, and the ordered list of modules. To change a section, edit its module or add a new one and swap it into the page.
 - `src/pages/index.astro` wires the homepage modules: `Hero`, `Momentum`, `About`, `WhatToExpect`, `EventsPreview`, `Participate`, `Faq`, and `JoinCta`. FAQ data lives in `src/modules/home/faqs.ts` because the page's FAQ JSON-LD also uses it.
+- `src/pages/comday.astro` renders `src/modules/comday/<yy>/index.astro` for the current build year, falling back to `default/` when that year's folder does not exist. It is not in `publicRoutes` or the navigation yet.
 - `src/pages/events.astro` wires the events modules: `Intro`, `NextEvent`, `PastEvents`, and `MeetupCta`.
 - `src/components/EventCard.astro` is the reusable event card used by home and events pages. It supports optional images and keeps event metadata/CTA aligned at the bottom.
 - `src/lib/meetup-feed.ts` fetches the public Meetup iCal feed (`/events/ical/`) at build time. The feed lists upcoming events only. The banner image is read from each event page's `og:image`. On any failure it logs a warning and returns no events (or no image), so the build never breaks.
