@@ -11,6 +11,10 @@ import {
 } from "@/lib/events";
 import { absoluteUrl, site } from "@/lib/site";
 
+// Set when an upcoming event is featured; the layout's date script relabels the
+// section as the most recent meetup after the event ends.
+const endsAt = hasUpcomingEvent ? featuredEvent.endDate : undefined;
+
 const eventsStructuredData = [
 	{
 		"@context": "https://schema.org",
@@ -59,23 +63,31 @@ const eventsStructuredData = [
 
 	<section class="site-section bg-background pt-0">
 		<div class="site-container">
-			<div class="max-w-3xl">
-				<p class="eyebrow">{hasUpcomingEvent ? "Next up" : "Most recent meetup"}</p>
-				<h2 class="mt-4">
-					{hasUpcomingEvent ? "Join the next meetup." : "The next meetup is on its way."}
-				</h2>
+			{
+				hasUpcomingEvent && (
+					<div class="max-w-3xl" data-until={endsAt}>
+						<p class="eyebrow">Next up</p>
+						<h2 class="mt-4">Join the next meetup.</h2>
+						<p class="lead mt-5">
+							Reserve your seat on Meetup, where registration, venue updates, and
+							attendee details stay current.
+						</p>
+					</div>
+				)
+			}
+			<div class="max-w-3xl" hidden={hasUpcomingEvent} data-after={endsAt}>
+				<p class="eyebrow">Most recent meetup</p>
+				<h2 class="mt-4">The next meetup is on its way.</h2>
 				<p class="lead mt-5">
-					{
-						hasUpcomingEvent
-							? "Reserve your seat on Meetup, where registration, venue updates, and attendee details stay current."
-							: "Catch up on the latest session while the next one is being planned, and follow the Meetup group to hear first."
-					}
+					Catch up on the latest session while the next one is being planned, and
+					follow the Meetup group to hear first.
 				</p>
 			</div>
 			<div class="mt-10">
 				<NextEventCard
 					event={featuredEvent}
 					ctaLabel={hasUpcomingEvent ? "Reserve a seat on Meetup" : "View on Meetup"}
+					endedCtaLabel="View on Meetup"
 				/>
 			</div>
 		</div>
