@@ -21,7 +21,7 @@ const topics = ["Architecture", "DevOps", "Data", "AI/ML", "Security"];
 			{topics.map((topic, index) => (
 				<li class="topic group flex items-baseline gap-6 border-b border-border py-6 sm:py-8">
 					<span class="w-8 shrink-0 text-sm font-bold text-muted-foreground">0{index + 1}</span>
-					<span class="topic-name text-4xl font-bold uppercase leading-none text-white sm:text-6xl">
+					<span class="topic-name comday-flow text-4xl font-bold uppercase leading-none text-white sm:text-6xl">
 						{topic}
 					</span>
 				</li>
@@ -32,18 +32,12 @@ const topics = ["Architecture", "DevOps", "Data", "AI/ML", "Security"];
 
 <style>
 	.topic-name {
-		background-image: var(--comday-gradient);
-		background-size: 0% 100%;
-		background-repeat: no-repeat;
 		-webkit-background-clip: text;
 		background-clip: text;
-		transition:
-			background-size 0.5s ease,
-			color 0.3s ease;
+		transition: color 0.4s ease;
 	}
 
 	.topic:hover .topic-name {
 		color: transparent;
-		background-size: 100% 100%;
 	}
 </style>
