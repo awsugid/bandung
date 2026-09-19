@@ -57,10 +57,22 @@ const eventsStructuredData = [
 		</div>
 	</section>
 
-	<section class="border-y border-border bg-muted py-10 sm:py-12">
+	<section class="site-section bg-background pt-0">
 		<div class="site-container">
-			<p class="eyebrow">{hasUpcomingEvent ? "Next up" : "Most recent meetup"}</p>
-			<div class="mt-6">
+			<div class="max-w-3xl">
+				<p class="eyebrow">{hasUpcomingEvent ? "Next up" : "Most recent meetup"}</p>
+				<h2 class="mt-4">
+					{hasUpcomingEvent ? "Join the next meetup." : "The next meetup is on its way."}
+				</h2>
+				<p class="lead mt-5">
+					{
+						hasUpcomingEvent
+							? "Reserve your seat on Meetup, where registration, venue updates, and attendee details stay current."
+							: "Catch up on the latest session while the next one is being planned, and follow the Meetup group to hear first."
+					}
+				</p>
+			</div>
+			<div class="mt-10">
 				<NextEventCard
 					event={featuredEvent}
 					ctaLabel={hasUpcomingEvent ? "Reserve a seat on Meetup" : "View on Meetup"}
@@ -69,7 +81,7 @@ const eventsStructuredData = [
 		</div>
 	</section>
 
-	<section class="site-section bg-background">
+	<section class="site-section bg-background pt-0">
 		<div class="site-container">
 			<div class="max-w-3xl">
 				<p class="eyebrow">Past events</p>
