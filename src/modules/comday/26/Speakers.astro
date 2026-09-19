@@ -19,7 +19,7 @@ const slots = Array.from({ length: 6 });
 		<ul class="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3">
 			{slots.map((_, index) => (
 				<li class="speaker rounded-xl border border-border bg-card p-5 sm:p-6" style={`--delay: ${index * 140}ms`}>
-					<div class="hexagon w-16 bg-[image:var(--comday-gradient)] p-[3px] sm:w-20">
+					<div class="hexagon w-16 comday-flow p-[3px] sm:w-20">
 						<div class="hexagon grid h-full w-full place-items-center bg-card text-2xl font-bold text-muted-foreground">
 							?
 						</div>

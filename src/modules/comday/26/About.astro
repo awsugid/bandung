@@ -2,8 +2,9 @@
 	<div class="site-container">
 		<p class="eyebrow">About</p>
 		<h2 class="mt-6 max-w-4xl text-4xl uppercase leading-[1.04] sm:text-6xl">
-			From the <span class="accent">community</span>, run by the
-			<span class="accent">community</span>, for the <span class="accent">community</span>.
+			<span class="block">From the <span class="accent comday-flow" style="animation-delay: 0s">community</span></span>
+			<span class="block">run by the <span class="accent comday-flow" style="animation-delay: -5s">community</span></span>
+			<span class="block">for the <span class="accent comday-flow" style="animation-delay: -10s">community</span>.</span>
 		</h2>
 
 		<div class="mt-12 grid gap-10 border-t border-border pt-10 lg:grid-cols-2 lg:gap-16">
@@ -36,8 +37,12 @@
 </section>
 
 <style>
+	/* Pad the box so the gradient reaches glyph ink past the text box (the Y's arm). */
 	.accent {
-		background: var(--comday-gradient);
+		padding-inline: 0.1em;
+		margin-inline: -0.1em;
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
