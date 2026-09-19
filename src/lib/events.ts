@@ -1,3 +1,4 @@
+import syncedEvents from "@/data/meetup-events.json";
 import { type FeedEvent, feedEvents } from "@/lib/meetup-feed";
 import { absoluteUrl, site } from "@/lib/site";
 
@@ -356,13 +357,18 @@ const fromFeed = (event: FeedEvent): EventDetails => ({
 });
 
 const localIds = new Set(localEvents.map((event) => event.id));
+// Saved feed events keep past meetups after Meetup drops them from the feed; the
+// live feed wins for the same id because it is fresher.
+const meetupEvents = new Map<string, FeedEvent>(
+	[...syncedEvents, ...feedEvents].map((event) => [event.id, event]),
+);
 const buildTime = Date.now();
 
 // Newest first. Phase is derived from the end time, so a finished event moves to
 // the archive on the next build without editing data.
 export const events: CommunityEvent[] = [
 	...localEvents,
-	...feedEvents.filter((event) => !localIds.has(event.id)).map(fromFeed),
+	...[...meetupEvents.values()].filter((event) => !localIds.has(event.id)).map(fromFeed),
 ]
 	.map((event) => {
 		const upcoming = Date.parse(event.endDate) > buildTime;
