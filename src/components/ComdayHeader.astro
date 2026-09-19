@@ -15,9 +15,20 @@ const units = ["d", "h", "m", "s"];
 	<div class="h-px bg-[image:var(--comday-gradient)]"></div>
 	<div class="border-b border-border bg-comday-navy-deep/95 backdrop-blur">
 		<div class="site-container flex min-h-[calc(var(--header-height)-1px)] items-center justify-between gap-4 py-3">
-			<a href="/comday" class="shrink-0" aria-label="AWS Community Day Bandung">
-				<img src="/images/comday/logo.webp" alt="" width="1660" height="444" class="h-8 w-auto sm:h-9" />
-			</a>
+			<div class="flex shrink-0 items-center gap-3 sm:gap-4">
+				<a
+					href="/"
+					class="grid h-9 w-9 place-items-center rounded-md border border-border text-muted-foreground transition hover:border-primary hover:text-white"
+					aria-label="Back to AWS User Group Bandung home"
+				>
+					<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true">
+						<path d="M12.5 4.5 7 10l5.5 5.5" />
+					</svg>
+				</a>
+				<a href="/comday" aria-label="AWS Community Day Bandung">
+					<img src="/images/comday/logo.webp" alt="" width="1660" height="444" class="h-8 w-auto sm:h-9" />
+				</a>
+			</div>
 
 			{
 				startDate && endDate && (
