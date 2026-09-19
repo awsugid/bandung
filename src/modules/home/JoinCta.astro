@@ -1,0 +1,41 @@
+---
+import { instagramUrl, joinCommunityUrl } from "@/lib/navigation";
+---
+
+<section class="bg-muted py-16 sm:py-20">
+	<div class="site-container">
+		<div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+			<div class="max-w-2xl">
+				<p class="eyebrow">
+					Join the community
+				</p>
+				<h2 class="mt-4">
+					Get notified when the next AWS meetup in Bandung is announced.
+				</h2>
+				<p class="lead mt-5">
+					Join the Meetup group to follow upcoming sessions, registration
+					updates, and ways to take part.
+				</p>
+			</div>
+
+			<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+				<a
+					href={joinCommunityUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="button-primary"
+				>
+					Join the Meetup
+				</a>
+				<a
+					href={instagramUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="button-secondary bg-background"
+				>
+					Follow Instagram
+				</a>
+			</div>
+		</div>
+	</div>
+</section>
