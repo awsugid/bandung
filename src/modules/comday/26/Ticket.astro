@@ -1,13 +1,11 @@
 ---
 import { event } from "./event";
-
-const daysLeft = Math.ceil((Date.parse(event.startDate) - Date.now()) / 86_400_000);
 ---
 
 <section class="relative bg-muted py-16 sm:py-24">
 	<div class="site-container">
-		<div class="ticket relative grid overflow-hidden rounded-2xl border border-border bg-card lg:grid-cols-[1fr_15rem]">
-			<div class="h-1 bg-[image:var(--comday-gradient)] lg:col-span-2"></div>
+		<div class="overflow-hidden rounded-2xl border border-border bg-card">
+			<div class="h-1 bg-[image:var(--comday-gradient)]"></div>
 
 			<dl class="grid divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
 				<div class="p-6 sm:p-8">
@@ -42,26 +40,9 @@ const daysLeft = Math.ceil((Date.parse(event.startDate) - Date.now()) / 86_400_0
 					</dd>
 				</div>
 			</dl>
-
-			<div class="stub flex items-center justify-between gap-6 border-t border-dashed border-border p-6 sm:p-8 lg:flex-col lg:items-start lg:justify-center lg:border-l lg:border-t-0" data-until={event.startDate}>
-				<p class="label">Countdown</p>
-				<p class="text-right lg:text-left">
-					<span class="block text-5xl font-bold leading-none text-primary sm:text-6xl lg:text-7xl" data-days-to={event.startDate}>
-						{Math.max(daysLeft, 0)}
-					</span>
-					<span class="mt-2 block text-sm font-bold uppercase tracking-[0.2em] text-white">days to go</span>
-				</p>
-			</div>
 		</div>
 	</div>
 </section>
-
-<script>
-	for (const el of document.querySelectorAll<HTMLElement>("[data-days-to]")) {
-		const days = Math.ceil((Date.parse(el.dataset.daysTo!) - Date.now()) / 86_400_000);
-		el.textContent = String(Math.max(days, 0));
-	}
-</script>
 
 <style>
 	.label {
@@ -70,32 +51,5 @@ const daysLeft = Math.ceil((Date.parse(event.startDate) - Date.now()) / 86_400_0
 		letter-spacing: 0.18em;
 		text-transform: uppercase;
 		color: var(--muted-foreground);
-	}
-
-	/* Punched notches where the stub tears off. */
-	@media (min-width: 1024px) {
-		.stub {
-			position: relative;
-		}
-
-		.stub::before,
-		.stub::after {
-			content: "";
-			position: absolute;
-			left: -0.75rem;
-			width: 1.5rem;
-			height: 1.5rem;
-			border-radius: 999px;
-			background: var(--muted);
-			border: 1px solid var(--border);
-		}
-
-		.stub::before {
-			top: -0.75rem;
-		}
-
-		.stub::after {
-			bottom: -0.75rem;
-		}
 	}
 </style>

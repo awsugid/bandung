@@ -1,15 +1,8 @@
 ---
-import { instagramUrl } from "@/lib/navigation";
 import ComingSoonButton from "./ComingSoonButton.astro";
-
-const channels = [
-	{ name: "Telegram", href: "https://t.me/awsugbandung" },
-	{ name: "Instagram", href: instagramUrl },
-	{ name: "bandung.awscommunity.id", href: "https://bandung.awscommunity.id" },
-];
 ---
 
-<section class="relative isolate overflow-hidden py-24 sm:py-32">
+<section class="relative isolate overflow-hidden bg-muted py-24 sm:py-32">
 	<img
 		src="/images/comday/2026/hex-bottom-left.webp"
 		alt=""
@@ -32,20 +25,5 @@ const channels = [
 		<div class="mt-10 flex justify-center">
 			<ComingSoonButton label="Register" />
 		</div>
-
-		<ul class="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
-			{channels.map((channel) => (
-				<li>
-					<a
-						href={channel.href}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="font-bold text-white underline decoration-white/30 underline-offset-4 hover:decoration-primary"
-					>
-						{channel.name}
-					</a>
-				</li>
-			))}
-		</ul>
 	</div>
 </section>
