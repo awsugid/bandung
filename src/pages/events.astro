@@ -1,5 +1,6 @@
 ---
 import EventCard from "@/components/EventCard.astro";
+import NextEventCard from "@/components/NextEventCard.astro";
 import Layout from "@/layouts/Layout.astro";
 import {
 	archivedEvents,
@@ -58,72 +59,12 @@ const eventsStructuredData = [
 
 	<section class="border-y border-border bg-muted py-10 sm:py-12">
 		<div class="site-container">
-			<div class="grid gap-12">
-				<figure class="overflow-hidden rounded-lg bg-aws-ink shadow-[0_18px_40px_hsl(213_28%_11%_/_0.14),0_44px_90px_hsl(213_28%_11%_/_0.16)]">
-					<img
-						src={featuredEvent.imageUrl}
-						alt={featuredEvent.title}
-						class="aspect-[16/9] w-full object-contain"
-					/>
-				</figure>
-
-				<div>
-					<p class="eyebrow">{hasUpcomingEvent ? "Next up" : "Most recent meetup"}</p>
-					<h2 class="mt-4">
-						{featuredEvent.title}
-					</h2>
-					<p class="lead mt-5">
-						{featuredEvent.description}
-					</p>
-
-					<div class="mt-8 grid gap-4 border-y border-border py-6 text-sm sm:grid-cols-3">
-						<div>
-							<p class="font-bold text-foreground">Date and time</p>
-							<p class="mt-1">
-								{featuredEvent.dateLabel}
-								<br />
-								{featuredEvent.timeLabel}
-							</p>
-						</div>
-						<div>
-							<p class="font-bold text-foreground">Venue</p>
-							<p class="mt-1">
-								{featuredEvent.location}
-							</p>
-						</div>
-						<div>
-							<p class="font-bold text-foreground">Host</p>
-							<p class="mt-1">
-								{featuredEvent.hostDisplayName}
-							</p>
-						</div>
-						<div class="sm:col-span-3">
-							<p class="font-bold text-foreground">Address</p>
-							<p class="mt-1">
-								{featuredEvent.address} · {featuredEvent.city}
-							</p>
-						</div>
-					</div>
-
-					<div class="mt-8 flex flex-col gap-3 sm:flex-row">
-						<a
-							href={featuredEvent.meetupUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="button-primary"
-						>
-							{hasUpcomingEvent ? "Attend on Meetup" : "View on Meetup"}
-						</a>
-						<a
-							href={featuredEvent.mapUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="button-secondary"
-						>
-							Open map
-						</a>
-					</div>
-				</div>
+			<p class="eyebrow">{hasUpcomingEvent ? "Next up" : "Most recent meetup"}</p>
+			<div class="mt-6">
+				<NextEventCard
+					event={featuredEvent}
+					ctaLabel={hasUpcomingEvent ? "Reserve a seat on Meetup" : "View on Meetup"}
+				/>
 			</div>
 		</div>
 	</section>
@@ -148,8 +89,6 @@ const eventsStructuredData = [
 								title={event.title}
 								description={event.description}
 							dateLabel={event.dateLabel}
-							timeLabel={event.timeLabel}
-							location={`${event.location}, ${event.city}`}
 							href={event.meetupUrl}
 							ctaLabel="View on Meetup"
 							imageUrl={event.imageUrl}
