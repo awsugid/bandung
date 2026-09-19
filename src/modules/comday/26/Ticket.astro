@@ -5,32 +5,39 @@ import { event } from "./event";
 <section class="relative isolate overflow-hidden bg-muted py-16 sm:py-24">
 	<div class="site-container">
 		<p class="date-numeral comday-flow mx-auto w-fit font-bold leading-[0.8] tracking-tight" aria-label="7 November 2026">
-			07<span class="text-primary">.</span>11<span class="text-primary">.</span>26
+			07.11.26
 		</p>
 
-		<div class="mt-10 h-0.5 bg-primary sm:mt-12"></div>
+		<div class="mt-10 sm:mt-12">
+			<p class="sr-only">Saturday, 09.00 to 16.00 WIB</p>
+			<div class="relative h-0.5 bg-primary">
+				<span class="absolute -top-[5px] left-0 h-3 w-3 rounded-full bg-primary" aria-hidden="true"></span>
+				<span class="absolute -top-[5px] right-0 h-3 w-3 rounded-full bg-primary" aria-hidden="true"></span>
+				<span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-muted px-4 text-xs font-bold uppercase tracking-[0.24em] text-white sm:px-6 sm:text-sm" aria-hidden="true">
+					Saturday
+				</span>
+			</div>
+			<div class="mt-5 flex justify-between font-mono text-xl font-bold text-white sm:text-3xl" aria-hidden="true">
+				<span>09.00</span>
+				<span>16.00 <span class="text-sm text-muted-foreground sm:text-base">WIB</span></span>
+			</div>
+		</div>
 
-		<dl class="mt-8 grid gap-8 sm:mt-10 sm:grid-cols-2 sm:gap-16">
-			<div>
-				<dt class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Saturday</dt>
-				<dd class="mt-2 text-2xl font-bold uppercase text-white sm:text-3xl">09.00 – 16.00 WIB</dd>
-			</div>
-			<div>
-				<dt class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Venue</dt>
-				<dd class="mt-2">
-					<span class="block text-2xl font-bold uppercase text-white sm:text-3xl">Auditorium SBM ITB</span>
-					<span class="mt-1 block text-muted-foreground">Gedung Freeport Lt. 6, {event.address}</span>
-					<a
-						href={event.mapUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="mt-4 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-primary hover:text-white"
-					>
-						Map <span aria-hidden="true">→</span>
-					</a>
-				</dd>
-			</div>
-		</dl>
+		<div class="mt-12 text-center sm:mt-16">
+			<p class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Venue</p>
+			<p class="mt-3 text-2xl font-bold uppercase text-white sm:text-4xl">Auditorium SBM ITB</p>
+			<p class="mt-2 text-muted-foreground">Gedung Freeport Lt. 6, {event.address}</p>
+			<a
+				href={event.mapUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="group mt-6 inline-flex h-11 items-center gap-2 rounded-md border border-white/30 px-5 text-sm font-bold text-white transition hover:border-primary hover:text-primary"
+			>
+				Open map
+				<span class="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true">↗</span>
+				<span class="sr-only">(opens in a new tab)</span>
+			</a>
+		</div>
 	</div>
 </section>
 
