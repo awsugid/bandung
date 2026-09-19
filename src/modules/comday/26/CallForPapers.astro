@@ -1,10 +1,15 @@
 ---
+import { joinCommunityUrl } from "@/lib/navigation";
 import { event } from "./event";
+
+// The open state swaps to the closed state when the call closes; the layout's
+// date script does it in the browser, a rebuild after the deadline starts closed.
+const isOpen = Date.now() < Date.parse(event.cfpClosesAt);
 ---
 
-<section class="site-section bg-muted" data-until={event.cfpClosesAt} aria-labelledby="cfp-title">
+<section class="site-section bg-muted">
 	<div class="site-container">
-		<div class="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
+		<div class="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end" hidden={!isOpen} data-until={event.cfpClosesAt}>
 			<div>
 				<p class="eyebrow flex items-center gap-3">
 					<span class="relative flex h-2 w-2" aria-hidden="true">
@@ -13,7 +18,7 @@ import { event } from "./event";
 					</span>
 					Call for papers is open
 				</p>
-				<h2 id="cfp-title" class="mt-6 text-3xl uppercase leading-[1.08] sm:text-4xl lg:text-[2.75rem]">
+				<h2 class="mt-6 text-3xl uppercase leading-[1.08] sm:text-4xl lg:text-[2.75rem]">
 					<span class="block text-balance">Share what you built.</span>
 					<span class="block text-balance">Share what broke.</span>
 					<span class="block text-balance text-primary">Share what you learned.</span>
@@ -43,6 +48,42 @@ import { event } from "./event";
 					</a>
 					<p class="mt-3 text-center text-xs text-muted-foreground">Submissions via Sessionize</p>
 				</div>
+			</div>
+		</div>
+
+		<div class="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end" hidden={isOpen} data-after={event.cfpClosesAt}>
+			<div>
+				<p class="eyebrow flex items-center gap-3 !text-muted-foreground">
+					<span class="h-2 w-2 rounded-full border-2 border-muted-foreground" aria-hidden="true"></span>
+					Call for papers is closed
+				</p>
+				<h2 class="mt-6 text-3xl uppercase leading-[1.08] sm:text-4xl lg:text-[2.75rem]">
+					<span class="block text-balance">Thank you for every submission.</span>
+					<span class="block text-balance text-primary">Next year's stage could be yours.</span>
+				</h2>
+				<p class="lead mt-6 max-w-xl">
+					Proposals are in review and the lineup will be announced here soon.
+					Missed this one? Keep building and bring your story next year.
+				</p>
+			</div>
+
+			<div class="rounded-xl border border-border bg-card p-6 sm:p-8">
+				<div class="text-center">
+					<p class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Closed</p>
+					<p class="mt-2 text-3xl font-bold uppercase text-white/60 line-through decoration-primary decoration-2">20 Oct 2026</p>
+					<p class="mt-1 text-sm text-muted-foreground">See you at the next call</p>
+				</div>
+				<a
+					href={joinCommunityUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="group mt-8 flex h-12 items-center justify-center gap-3 rounded-md border border-white/30 px-6 text-sm font-bold text-white transition hover:border-primary hover:text-primary"
+				>
+					Join the community
+					<span class="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true">↗</span>
+					<span class="sr-only">(opens in a new tab)</span>
+				</a>
+				<p class="mt-3 text-center text-xs text-muted-foreground">Hear first when the next call opens</p>
 			</div>
 		</div>
 	</div>
