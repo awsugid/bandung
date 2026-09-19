@@ -1,0 +1,57 @@
+---
+import { featuredEvent, hasUpcomingEvent } from "@/lib/events";
+---
+
+{
+	hasUpcomingEvent && (
+		<a
+			href="/events"
+			class="block bg-aws-ink text-white transition hover:bg-aws-ink-soft"
+			aria-label={`Next event: ${featuredEvent.title}, ${featuredEvent.dateLabel}. View events.`}
+			data-countdown-start={featuredEvent.startDate}
+			data-countdown-end={featuredEvent.endDate}
+		>
+			<span class="site-container flex items-center justify-center gap-3 py-2 text-xs sm:text-sm">
+				<span class="shrink-0 font-bold uppercase tracking-[0.16em] text-primary">Next event</span>
+				<span class="hidden min-w-0 truncate text-white/75 md:inline">{featuredEvent.title}</span>
+				<span class="shrink-0 font-bold tabular-nums" data-countdown>
+					{featuredEvent.dateLabel}
+				</span>
+				<span class="shrink-0" aria-hidden="true">-&gt;</span>
+			</span>
+		</a>
+	)
+}
+
+<script>
+	// Ticks the next event countdown; the server-rendered date stays if JS is off.
+	const bar = document.querySelector<HTMLElement>("[data-countdown-start]");
+	const label = bar?.querySelector<HTMLElement>("[data-countdown]");
+
+	if (bar && label) {
+		const start = Date.parse(bar.dataset.countdownStart ?? "");
+		const end = Date.parse(bar.dataset.countdownEnd ?? "");
+		const pad = (value: number) => String(value).padStart(2, "0");
+
+		const tick = () => {
+			const now = Date.now();
+			if (now >= end) {
+				bar.hidden = true;
+				clearInterval(timer);
+				return;
+			}
+			if (now >= start) {
+				label.textContent = "Happening now";
+				return;
+			}
+			const seconds = Math.floor((start - now) / 1000);
+			const days = Math.floor(seconds / 86_400);
+			const hours = Math.floor((seconds % 86_400) / 3_600);
+			const minutes = Math.floor((seconds % 3_600) / 60);
+			label.textContent = `Starts in ${days > 0 ? `${days}d ` : ""}${pad(hours)}h ${pad(minutes)}m ${pad(seconds % 60)}s`;
+		};
+
+		const timer = setInterval(tick, 1_000);
+		tick();
+	}
+</script>
