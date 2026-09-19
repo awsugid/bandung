@@ -3,11 +3,11 @@ import Layout from "@/layouts/Layout.astro";
 import { featuredEvent, getEventJsonLd } from "@/lib/events";
 import { absoluteUrl, site } from "@/lib/site";
 import About from "@/modules/home/About.astro";
+import ComdayPromo from "@/modules/home/ComdayPromo.astro";
 import EventsPreview from "@/modules/home/EventsPreview.astro";
 import Faq from "@/modules/home/Faq.astro";
 import Hero from "@/modules/home/Hero.astro";
 import JoinCta from "@/modules/home/JoinCta.astro";
-import Momentum from "@/modules/home/Momentum.astro";
 import Participate from "@/modules/home/Participate.astro";
 import WhatToExpect from "@/modules/home/WhatToExpect.astro";
 import { faqs } from "@/modules/home/faqs";
@@ -45,7 +45,7 @@ const homeStructuredData = [
 	structuredData={homeStructuredData}
 >
 	<Hero />
-	<Momentum />
+	<ComdayPromo />
 	<About />
 	<WhatToExpect />
 	<EventsPreview />
