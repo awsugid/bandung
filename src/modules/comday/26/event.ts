@@ -6,5 +6,6 @@ export const event = {
 	address: "Jl. Ganesa No.10, Bandung",
 	mapUrl: "https://maps.app.goo.gl/XH8AnKxTGobUdH5A7",
 	cfpUrl: "https://sessionize.com/aws-community-day-bandung-2026/",
+	cfpOpensAt: "2026-09-19T00:00:00+07:00",
 	cfpClosesAt: "2026-10-20T23:59:00+07:00",
 };
