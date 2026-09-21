@@ -1,0 +1,36 @@
+---
+const supporters = [
+	{ name: "Garuda Spark Innovation Hub", file: "garuda-spark", plate: "dark", size: "max-h-14 sm:max-h-16" },
+	{ name: "SBM ITB", file: "sbm-itb", plate: "light", size: "max-h-10 sm:max-h-12" },
+	{ name: "The Greater Hub", file: "the-greater-hub", plate: "dark", size: "max-h-16 sm:max-h-20" },
+];
+---
+
+<section class="site-section border-t border-border">
+	<div class="site-container text-center">
+		<p class="eyebrow">Supported by</p>
+		<h2 class="mt-4 uppercase">Made possible by our partners.</h2>
+		<p class="lead mx-auto mt-5 max-w-2xl">
+			Community Day Bandung is a community event, and it only happens with the
+			support of these organizations.
+		</p>
+
+		<ul class="mt-12 grid gap-4 sm:grid-cols-3">
+			{supporters.map((supporter) => (
+				<li
+					class:list={[
+						"flex h-28 items-center justify-center rounded-xl border border-border px-8 transition hover:border-primary/60 sm:h-32",
+						supporter.plate === "light" ? "bg-white" : "bg-card",
+					]}
+				>
+					<img
+						src={`/images/comday/supporters/${supporter.file}.webp`}
+						alt={supporter.name}
+						class:list={["w-auto max-w-full object-contain", supporter.size]}
+						loading="lazy"
+					/>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>
