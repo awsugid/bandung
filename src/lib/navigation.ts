@@ -3,5 +3,10 @@ export const navItems = [
 	{ name: "Events", href: "/events" },
 ];
 
+export const footerNavItems = [
+	...navItems,
+	{ name: "Community Day", href: "/comday" },
+];
+
 export const joinCommunityUrl = "https://www.meetup.com/aws-user-group-bandung/";
 export const instagramUrl = "https://www.instagram.com/awsugbandung/";
