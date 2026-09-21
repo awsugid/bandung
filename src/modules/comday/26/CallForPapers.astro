@@ -5,11 +5,15 @@ import { event } from "./event";
 // The open state swaps to the closed state when the call closes; the layout's
 // date script does it in the browser, a rebuild after the deadline starts closed.
 const isOpen = Date.now() < Date.parse(event.cfpClosesAt);
+const opensAt = Date.parse(event.cfpOpensAt);
+const closesAt = Date.parse(event.cfpClosesAt);
+const daysLeft = Math.max(Math.ceil((closesAt - Date.now()) / 86_400_000), 0);
+const elapsed = Math.min(Math.max((Date.now() - opensAt) / (closesAt - opensAt), 0), 1);
 ---
 
 <section class="site-section bg-muted">
 	<div class="site-container">
-		<div class="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end" hidden={!isOpen} data-until={event.cfpClosesAt}>
+		<div class="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-center" hidden={!isOpen} data-until={event.cfpClosesAt}>
 			<div>
 				<p class="eyebrow flex items-center gap-3">
 					<span class="relative flex h-2 w-2" aria-hidden="true">
@@ -36,22 +40,30 @@ const isOpen = Date.now() < Date.parse(event.cfpClosesAt);
 						<p class="mt-2 text-3xl font-bold uppercase text-white">20 Oct 2026</p>
 						<p class="mt-1 text-sm text-muted-foreground">23.59 WIB</p>
 					</div>
+
+					<div class="mt-6" data-cfp-window={`${event.cfpOpensAt}|${event.cfpClosesAt}`}>
+						<div class="h-1.5 overflow-hidden rounded-full bg-white/10">
+							<div class="comday-flow h-full rounded-full" style={`width: ${(elapsed * 100).toFixed(1)}%`} data-cfp-progress></div>
+						</div>
+						<p class="mt-3 text-center text-sm font-bold text-white">
+							<span data-cfp-days>{daysLeft}</span> days left to submit
+						</p>
+					</div>
 					<a
 						href={event.cfpUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="group mt-8 flex h-12 items-center justify-center gap-3 rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-[color-mix(in_oklab,var(--primary)_88%,white)]"
+						class="group mt-6 flex h-12 items-center justify-center gap-3 rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-[color-mix(in_oklab,var(--primary)_88%,white)]"
 					>
 						Submit a session
 						<span class="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true">↗</span>
 						<span class="sr-only">(opens in a new tab)</span>
 					</a>
-					<p class="mt-3 text-center text-xs text-muted-foreground">Submissions via Sessionize</p>
 				</div>
 			</div>
 		</div>
 
-		<div class="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end" hidden={isOpen} data-after={event.cfpClosesAt}>
+		<div class="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-center" hidden={isOpen} data-after={event.cfpClosesAt}>
 			<div>
 				<p class="eyebrow flex items-center gap-3 !text-muted-foreground">
 					<span class="h-2 w-2 rounded-full border-2 border-muted-foreground" aria-hidden="true"></span>
@@ -77,7 +89,7 @@ const isOpen = Date.now() < Date.parse(event.cfpClosesAt);
 					href={joinCommunityUrl}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="group mt-8 flex h-12 items-center justify-center gap-3 rounded-md border border-white/30 px-6 text-sm font-bold text-white transition hover:border-primary hover:text-primary"
+					class="group mt-6 flex h-12 items-center justify-center gap-3 rounded-md border border-white/30 px-6 text-sm font-bold text-white transition hover:border-primary hover:text-primary"
 				>
 					Join the community
 					<span class="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true">↗</span>
@@ -88,6 +100,20 @@ const isOpen = Date.now() < Date.parse(event.cfpClosesAt);
 		</div>
 	</div>
 </section>
+
+<script>
+	const el = document.querySelector<HTMLElement>("[data-cfp-window]");
+
+	if (el) {
+		const [opens, closes] = el.dataset.cfpWindow!.split("|").map(Date.parse);
+		const now = Date.now();
+		const elapsed = Math.min(Math.max((now - opens) / (closes - opens), 0), 1);
+		el.querySelector<HTMLElement>("[data-cfp-progress]")!.style.width = `${(elapsed * 100).toFixed(1)}%`;
+		el.querySelector<HTMLElement>("[data-cfp-days]")!.textContent = String(
+			Math.max(Math.ceil((closes - now) / 86_400_000), 0),
+		);
+	}
+</script>
 
 <style>
 	.pulse {
