@@ -1,5 +1,5 @@
 ---
-import { instagramUrl, joinCommunityUrl, navItems } from "@/lib/navigation";
+import { footerNavItems, instagramUrl, joinCommunityUrl } from "@/lib/navigation";
 
 const year = new Date().getFullYear();
 ---
@@ -25,7 +25,7 @@ const year = new Date().getFullYear();
 				<h2 class="text-sm font-bold text-white">Pages</h2>
 				<nav class="mt-4 grid gap-3 text-sm text-white/70" aria-label="Footer navigation">
 					{
-						navItems.map((item) => (
+						footerNavItems.map((item) => (
 							<a href={item.href} class="transition hover:text-white">
 								{item.name}
 							</a>
