@@ -7,12 +7,12 @@ interface Props {
 }
 
 const { startDate, endDate } = Astro.props;
-const units = ["d", "h", "m", "s"];
+const units = ["d", "h", "m"];
 ---
 
 <header class="theme-comday sticky top-0 z-50">
 	<NextEventBar />
-	<div class="h-px bg-[image:var(--comday-gradient)]"></div>
+	<div class="comday-flow h-px"></div>
 	<div class="border-b border-border bg-comday-navy-deep/95 backdrop-blur">
 		<div class="site-container flex min-h-[calc(var(--header-height)-1px)] items-center justify-between gap-4 py-3">
 			<div class="flex shrink-0 items-center gap-3 sm:gap-4">
@@ -43,7 +43,7 @@ const units = ["d", "h", "m", "s"];
 						</span>
 						<ol class="flex items-center gap-1 font-mono tabular-nums" data-comday-clock>
 							{units.map((unit) => (
-								<li class:list={["rounded-md border border-border bg-card px-1.5 py-1 text-xs font-bold text-white sm:px-2 sm:text-sm", unit === "s" && "hidden sm:block"]}>
+								<li class="rounded-md border border-border bg-card px-1.5 py-1 text-xs font-bold text-white sm:px-2 sm:text-sm">
 									<span data-comday-unit={unit}>--</span><span class="text-primary">{unit}</span>
 								</li>
 							))}
@@ -86,7 +86,6 @@ const units = ["d", "h", "m", "s"];
 			set("d", String(Math.floor(seconds / 86_400)));
 			set("h", pad(Math.floor((seconds % 86_400) / 3_600)));
 			set("m", pad(Math.floor((seconds % 3_600) / 60)));
-			set("s", pad(seconds % 60));
 		};
 
 		const timer = setInterval(tick, 1_000);
