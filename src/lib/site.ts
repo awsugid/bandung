@@ -28,7 +28,7 @@ export const absoluteUrl = (path = "/") => new URL(path, siteUrl).toString();
 
 // Bump when page content or local event data changes; consumed by sitemap.xml.
 // The Meetup feed's latest LAST-MODIFIED date wins when it is newer.
-const manualLastModified = "2026-08-16";
+const manualLastModified = "2026-09-21";
 export const contentLastModified =
 	feedLastModified && feedLastModified > manualLastModified
 		? feedLastModified
@@ -50,6 +50,15 @@ export const publicRoutes = [
 			"Upcoming, current, and past AWS User Group Bandung meetups, speakers, topics, and venue details.",
 		changefreq: "daily",
 		priority: "0.9",
+		lastmod: contentLastModified,
+	},
+	{
+		path: "/comday",
+		title: "Community Day | AWS User Group Bandung",
+		description:
+			"AWS Community Day Bandung 2026: date, venue, call for papers, and the shape of the day.",
+		changefreq: "weekly",
+		priority: "0.8",
 		lastmod: contentLastModified,
 	},
 ] as const;
