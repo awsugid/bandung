@@ -8,7 +8,7 @@ export const event = {
 	cfpUrl: "https://sessionize.com/aws-community-day-bandung-2026/",
 	cfpOpensAt: "2026-09-19T00:00:00+07:00",
 	cfpClosesAt: "2026-10-20T23:59:00+07:00",
-	// TODO: replace with the volunteer form link, and add volunteerOpensAt and
-	// volunteerClosesAt once the window is set. Until then the card shows "Coming soon".
-	volunteerUrl: "#",
+	volunteerUrl: "https://forms.gle/s42f8C3ZaHz4uMMi9",
+	volunteerOpensAt: "2026-09-26T07:00:00+07:00",
+	volunteerClosesAt: "2026-10-07T23:59:00+07:00",
 };

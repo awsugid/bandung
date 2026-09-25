@@ -26,12 +26,13 @@ const daysLeft = Math.max(Math.ceil((closes - now) / 86_400_000), 0);
 const elapsed = Math.min(Math.max((now - opens) / (closes - opens), 0), 1);
 
 const date = (iso: string) =>
-	new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }).format(
-		Date.parse(iso),
-	);
-const time = hasWindow && new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" })
-	.format(closes)
-	.replace(":", ".");
+	new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" })
+		.format(Date.parse(iso))
+		.replace("Sept", "Sep");
+const time = (iso: string) =>
+	new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" })
+		.format(Date.parse(iso))
+		.replace(":", ".");
 ---
 
 <article class="group relative isolate h-full rounded-xl bg-border p-px">
@@ -52,7 +53,7 @@ const time = hasWindow && new Intl.DateTimeFormat("en-GB", { hour: "2-digit", mi
 
 		<div class="mt-auto pt-10">
 			<div hidden={state !== "upcoming"} data-until={opensAt}>
-				{opensAt && <p class="mb-4 text-sm font-bold text-white">Opens {date(opensAt)}</p>}
+				{opensAt && <p class="mb-4 text-sm font-bold text-white">Opens {date(opensAt)}, {time(opensAt)} WIB</p>}
 				<p
 					class="flex h-12 cursor-not-allowed items-center justify-center gap-3 rounded-md border border-white/20 px-6 text-sm font-bold text-muted-foreground"
 				>
@@ -74,7 +75,7 @@ const time = hasWindow && new Intl.DateTimeFormat("en-GB", { hour: "2-digit", mi
 							</span>
 							<span><span data-days>{daysLeft}</span> days left</span>
 						</p>
-						<p class="whitespace-nowrap text-muted-foreground">Closes {date(closesAt!)}, {time} WIB</p>
+						<p class="whitespace-nowrap text-muted-foreground">Closes {date(closesAt!)}, {time(closesAt!)} WIB</p>
 					</div>
 					<div class="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
 						<div class="comday-flow h-full rounded-full" style={`width: ${(elapsed * 100).toFixed(1)}%`} data-progress>
