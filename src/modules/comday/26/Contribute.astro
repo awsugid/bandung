@@ -1,0 +1,55 @@
+---
+import ContributeCard from "./ContributeCard.astro";
+import { event } from "./event";
+---
+
+<section class="site-section bg-muted">
+	<div class="site-container">
+		<div class="max-w-2xl">
+			<p class="eyebrow">Get involved</p>
+			<h2 class="mt-6 text-3xl uppercase leading-[1.08] sm:text-4xl lg:text-[2.75rem]">
+				<span class="block text-balance">Don't just attend.</span>
+				<span class="block text-balance text-primary">Pick your side.</span>
+			</h2>
+			<p class="lead mt-6 max-w-xl">
+				Community Day is built by the community. Bring a talk to the stage, or
+				help run the day behind it.
+			</p>
+		</div>
+
+		<div class="mt-12 grid gap-4 lg:grid-cols-[1fr_auto_1fr] lg:gap-6">
+			<ContributeCard
+				index="01"
+				role="Speaker"
+				title="Take the stage."
+				body="Share what you built, what broke, and what you learned. You don't need to be an AWS Hero. First-time speakers are especially welcome."
+				cta="Submit a session"
+				url={event.cfpUrl}
+				opensAt={event.cfpOpensAt}
+				closesAt={event.cfpClosesAt}
+				closedBody="Thank you for every submission. The lineup will be announced here soon."
+			/>
+
+			<div class="flex items-center gap-4 lg:flex-col" aria-hidden="true">
+				<span class="h-px flex-1 bg-border lg:h-auto lg:w-px"></span>
+				<span class="rounded-full comday-flow p-px">
+					<span
+						class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-xs font-bold uppercase tracking-[0.18em] text-white"
+						>or</span
+					>
+				</span>
+				<span class="h-px flex-1 bg-border lg:h-auto lg:w-px"></span>
+			</div>
+
+			<ContributeCard
+				index="02"
+				role="Volunteer"
+				title="Run the show."
+				body="Keep the day moving, from doors open to the last session. No experience needed, and you'll meet the people behind the community."
+				cta="Apply to volunteer"
+				url={event.volunteerUrl}
+				closedBody="Thank you to everyone who signed up. See you on the day."
+			/>
+		</div>
+	</div>
+</section>

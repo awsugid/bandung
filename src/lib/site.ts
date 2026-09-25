@@ -28,7 +28,7 @@ export const absoluteUrl = (path = "/") => new URL(path, siteUrl).toString();
 
 // Bump when page content or local event data changes; consumed by sitemap.xml.
 // The Meetup feed's latest LAST-MODIFIED date wins when it is newer.
-const manualLastModified = "2026-09-21";
+const manualLastModified = "2026-09-25";
 export const contentLastModified =
 	feedLastModified && feedLastModified > manualLastModified
 		? feedLastModified
