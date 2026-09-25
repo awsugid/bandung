@@ -14,6 +14,7 @@ const communityPartners = [
 	{ name: "IMPHNEN", file: "imphnen", size: "max-h-12 sm:max-h-14" },
 	{ name: "bandung.py", file: "bandung-py", size: "max-h-12 sm:max-h-14" },
 	{ name: "AI Connect", file: "ai-connect", size: "max-h-5 sm:max-h-6" },
+	{ name: "BandungDev", file: "bandungdev", size: "max-h-6 sm:max-h-7" },
 ];
 ---
 
@@ -56,10 +57,10 @@ const communityPartners = [
 		<div class="tier mt-16">
 			<p class="eyebrow">Community partners</p>
 		</div>
-		<ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+		<ul class="mt-6 flex flex-wrap justify-center gap-3">
 			{communityPartners.map((partner) => (
 				<li
-					class="flex h-20 items-center justify-center rounded-xl border border-border bg-white px-4 transition hover:border-primary/60 sm:h-24"
+					class="flex h-20 basis-[calc((100%-0.75rem)/2)] items-center sm:basis-[calc((100%-1.5rem)/3)] lg:basis-[calc((100%-4.5rem)/7)] justify-center rounded-xl border border-border bg-white px-4 transition hover:border-primary/60 sm:h-24"
 				>
 					<img
 						src={`/images/comday/community-partners/${partner.file}.webp`}
