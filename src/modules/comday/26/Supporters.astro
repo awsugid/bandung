@@ -1,4 +1,6 @@
 ---
+const sponsor = { name: "JetBrains", src: "/images/comday/sponsors/jetbrains.svg" };
+
 const supporters = [
 	{ name: "SBM ITB", file: "sbm-itb", size: "max-h-12 sm:max-h-14" },
 	{ name: "Garuda Spark Innovation Hub", file: "garuda-spark", size: "max-h-24 sm:max-h-28" },
@@ -17,14 +19,26 @@ const communityPartners = [
 
 <section class="site-section border-t border-border">
 	<div class="site-container text-center">
-		<p class="eyebrow">Supported by</p>
-		<h2 class="mt-4 uppercase">Made possible by our partners.</h2>
+		<p class="eyebrow">Thank you</p>
+		<h2 class="mt-4 uppercase">Powering Bandung's first Community Day.</h2>
 		<p class="lead mx-auto mt-5 max-w-2xl">
-			Community Day Bandung is a community event, and it only happens with the
-			support of these organizations.
+			A community event runs on community support, and these organizations
+			are making it happen.
 		</p>
 
-		<ul class="mt-12 grid gap-4 sm:grid-cols-3">
+		<div class="tier mt-14">
+			<p class="eyebrow">Sponsor</p>
+		</div>
+		<div class="mx-auto mt-6 max-w-2xl rounded-2xl comday-flow p-px">
+			<div class="flex h-40 items-center justify-center rounded-[calc(1rem-1px)] bg-white px-8 sm:h-48">
+				<img src={sponsor.src} alt={sponsor.name} class="h-auto max-h-12 w-auto max-w-full sm:max-h-14" loading="lazy" />
+			</div>
+		</div>
+
+		<div class="tier mt-16">
+			<p class="eyebrow">Supported by</p>
+		</div>
+		<ul class="mt-6 grid gap-4 sm:grid-cols-3">
 			{supporters.map((supporter) => (
 				<li
 					class="flex h-32 items-center justify-center rounded-xl border border-border bg-white px-6 transition hover:border-primary/60 sm:h-36"
@@ -39,7 +53,9 @@ const communityPartners = [
 			))}
 		</ul>
 
-		<p class="eyebrow mt-14">Community partners</p>
+		<div class="tier mt-16">
+			<p class="eyebrow">Community partners</p>
+		</div>
 		<ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
 			{communityPartners.map((partner) => (
 				<li
@@ -56,3 +72,23 @@ const communityPartners = [
 		</ul>
 	</div>
 </section>
+
+<style>
+	.tier {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.tier::before,
+	.tier::after {
+		content: "";
+		height: 1px;
+		flex: 1;
+		background: linear-gradient(to right, transparent, var(--border));
+	}
+
+	.tier::after {
+		background: linear-gradient(to left, transparent, var(--border));
+	}
+</style>
