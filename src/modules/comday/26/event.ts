@@ -5,7 +5,11 @@ export const event = {
 	venue: "Auditorium SBM ITB, Gedung Freeport Lt. 6",
 	address: "Jl. Ganesa No.10, Bandung",
 	mapUrl: "https://maps.app.goo.gl/XH8AnKxTGobUdH5A7",
-	cfpUrl: "https://sessionize.com/aws-community-day-bandung-2026/",
+	ticketUrl: "https://gultix.awscommunity.id/AWSUGBandung/CommunityDay26/",
+	// Keep in sync with General Admission's availability window in Pretix.
+	ticketOpensAt: "2026-09-29T09:00:00+07:00",
+	ticketClosesAt: "2026-11-03T23:59:00+07:00",
+	cfpUrl:"https://sessionize.com/aws-community-day-bandung-2026/",
 	cfpOpensAt: "2026-09-19T00:00:00+07:00",
 	cfpClosesAt: "2026-10-20T23:59:00+07:00",
 	volunteerUrl: "https://forms.gle/s42f8C3ZaHz4uMMi9",
