@@ -1,0 +1,203 @@
+---
+import { instagramUrl } from "@/lib/navigation";
+import { event } from "./event";
+
+const steps = [
+	{ title: "Register", body: "Pick your ticket and fill in a few details about yourself." },
+	{ title: "Wait for approval", body: "Our team reviews every registration and emails you once it's approved." },
+	{
+		title: "Scan to pay",
+		body: "Once approved, a payment QR code from AWS User Group Indonesia appears. Scan it to pay the commitment fee.",
+	},
+	{ title: "Check your inbox", body: "After payment, your ticket and invoice arrive by email." },
+	{ title: "See you on the day", body: "Bring your ticket on 7 November. We can't wait to see you." },
+];
+---
+
+<section id="register" class="scroll-mt-[var(--header-height)] bg-muted pb-24 sm:pb-32">
+	<div class="site-container">
+		<div class="comday-flow rounded-2xl p-px">
+			<div class="pass overflow-hidden rounded-[calc(1rem-1px)] bg-card">
+				<div class="p-6 sm:p-10">
+					<p class="eyebrow">Entry pass</p>
+					<h2 class="mt-6 text-4xl uppercase leading-[1.04] sm:text-5xl">Secure your seat.</h2>
+					<p class="lead mt-6 max-w-xl">
+						The ticket price is a commitment fee, refunded when you show up on the day.
+					</p>
+
+					<div class="mt-10">
+						<link rel="stylesheet" href={`${event.ticketUrl}widget/v2.css`} crossorigin />
+						<script is:inline src="https://gultix.awscommunity.id/widget/v2.en.js" async crossorigin></script>
+						<pretix-widget event={event.ticketUrl}></pretix-widget>
+						<noscript>
+							<p>
+								JavaScript is disabled in your browser.
+								<a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" class="font-bold text-primary underline">
+									Open the ticket shop
+								</a>
+								to register.
+							</p>
+						</noscript>
+					</div>
+				</div>
+
+				<div class="perforation" aria-hidden="true"></div>
+
+				<div class="p-6 sm:p-10">
+					<h3 class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">How it works</h3>
+
+					<ol class="steps mt-8">
+						{steps.map((step, index) => (
+							<li class="step relative flex gap-5 pb-8 last:pb-0">
+								<span
+									class:list={[
+										"relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
+										index === steps.length - 1
+											? "bg-primary text-primary-foreground"
+											: "border border-border bg-card text-primary",
+									]}
+								>
+									0{index + 1}
+								</span>
+								<span class="pt-2">
+									<span class="block font-bold uppercase text-white">{step.title}</span>
+									<span class="mt-1 block max-w-lg text-sm text-muted-foreground">{step.body}</span>
+								</span>
+							</li>
+						))}
+					</ol>
+
+					<p class="mt-10 border-t border-border pt-6 text-sm">
+						Having trouble registering? Let us know on Instagram
+						<a href={instagramUrl} target="_blank" rel="noopener noreferrer" class="font-bold text-primary hover:underline">@awsugbandung</a>
+						or email
+						<a href="mailto:awsugbandung@gmail.com" class="font-bold text-primary hover:underline">awsugbandung@gmail.com</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	/* Tear line between the pass and its stub, with notches cut into the edges. */
+	.perforation {
+		position: relative;
+		height: 1px;
+		margin-inline: 1.5rem;
+		background-image: linear-gradient(to right, var(--border) 55%, transparent 0);
+		background-size: 12px 1px;
+	}
+
+	.perforation::before,
+	.perforation::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 9999px;
+		background: var(--muted);
+		transform: translateY(-50%);
+	}
+
+	.perforation::before {
+		left: -2.25rem;
+	}
+
+	.perforation::after {
+		right: -2.25rem;
+	}
+
+	/* Line joining the step markers, fading into the brand gradient. */
+	.step:not(:last-child)::before {
+		content: "";
+		position: absolute;
+		top: 2.5rem;
+		bottom: 0;
+		left: calc(1.25rem - 0.5px);
+		width: 1px;
+		background: linear-gradient(to bottom, var(--border), var(--comday-violet));
+	}
+
+	/* Pretix widget, restyled for the dark Community Day theme. */
+	.pass :global(.pretix-widget-wrapper) {
+		--pretix-brand-primary: var(--primary);
+		--pretix-brand-primary-darken-5: var(--primary);
+		--pretix-brand-primary-darken-10: var(--primary);
+		--pretix-brand-primary-darken-15: color-mix(in oklab, var(--primary) 88%, white);
+		--pretix-brand-primary-darken-17: color-mix(in oklab, var(--primary) 88%, white);
+		--pretix-border-radius-base: 0.375rem;
+	}
+
+	.pass :global(.pretix-widget) {
+		min-height: 0;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		color: var(--foreground);
+		font-family: inherit;
+	}
+
+	.pass :global(.pretix-widget h3.pretix-widget-category-name) {
+		padding: 0;
+		font-size: 0.75rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--muted-foreground);
+	}
+
+	.pass :global(.pretix-widget-item-title) {
+		font-size: 1.25rem;
+		text-transform: uppercase;
+		color: var(--foreground);
+	}
+
+	.pass :global(.pretix-widget-item-description),
+	.pass :global(.pretix-widget-item-description p),
+	.pass :global(.pretix-widget-item-meta) {
+		font-size: 0.875rem;
+		line-height: 1.6;
+		color: var(--muted-foreground);
+	}
+
+	.pass :global(.pretix-widget a) {
+		color: var(--primary);
+	}
+
+	.pass :global(.pretix-widget-pricebox) {
+		color: var(--foreground);
+		font-weight: 700;
+	}
+
+	.pass :global(.pretix-widget-pricebox-original-price) {
+		color: var(--muted-foreground);
+		font-weight: 400;
+	}
+
+	.pass :global(.pretix-widget label.pretix-widget-btn-checkbox) {
+		border-color: color-mix(in oklab, var(--foreground) 30%, transparent);
+		background: transparent;
+		color: var(--foreground);
+	}
+
+	.pass :global(.pretix-widget label.pretix-widget-btn-checkbox:hover),
+	.pass :global(.pretix-widget label.pretix-widget-btn-checkbox:has(input:checked)) {
+		border-color: var(--primary);
+		background: color-mix(in oklab, var(--primary) 12%, transparent);
+		color: var(--foreground);
+	}
+
+	.pass :global(.pretix-widget-action button) {
+		width: 100%;
+		height: 3rem;
+		font-weight: 700;
+		color: var(--primary-foreground);
+	}
+
+	.pass :global(.pretix-widget-attribution),
+	.pass :global(.pretix-widget-attribution a) {
+		font-size: 0.75rem;
+		color: var(--muted-foreground);
+	}
+</style>

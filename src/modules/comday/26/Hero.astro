@@ -1,5 +1,4 @@
 ---
-import ComingSoonButton from "./ComingSoonButton.astro";
 import { event } from "./event";
 ---
 
@@ -24,7 +23,13 @@ import { event } from "./event";
 			it in production.
 		</p>
 		<div class="reveal mt-10" style="--delay: 380ms">
-			<ComingSoonButton label="Register" />
+			<a
+				href="#register"
+				class="inline-flex h-12 items-center justify-center gap-3 rounded-md bg-primary px-6 text-sm font-bold text-primary-foreground transition hover:bg-[color-mix(in_oklab,var(--primary)_88%,white)]"
+			>
+				Get your ticket
+				<span aria-hidden="true">↓</span>
+			</a>
 		</div>
 	</div>
 </section>
