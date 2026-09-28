@@ -20,6 +20,21 @@ The event was cloned from an AWS User Group Jakarta event. The Jakarta leftovers
 - `src/modules/comday/26/Register.astro` is the **Entry pass** section on `/comday` (`#register`). It holds the Pretix widget, the registration window panel, the collapsible "How it works" steps, and the help line.
 - `src/modules/comday/26/event.ts` holds `ticketUrl`, `ticketOpensAt` and `ticketClosesAt`. **Keep the two dates in sync with General Admission → Availability in Pretix.** The page can't read them from Pretix.
 - The Hero and Closing sections link to `#register` with "Get your ticket".
+- `src/modules/comday/26/Faq.astro` is the FAQ section, placed between Supporters and Closing. It has three groups: Registration, Payment and refunds, and On the day. Several answers describe Pretix behaviour, so **update them when these settings change**:
+
+  | FAQ answer | Depends on |
+  |---|---|
+  | Why does my registration need approval? | General Admission → "Buying this product requires approval" |
+  | Can I register for a friend? | General Admission → max 1 per order |
+  | What if registration is full? | Waiting list enabled (event and product) |
+  | Is Community Day free? | Deliberately gives no amount and points to the ticket, so the price can change freely |
+  | How do I pay? | Midtrans offering payment by QR code (confirm QRIS is enabled on the account) |
+  | How long do I have to pay? | Payment → payment term (2 days) and automatic expiry |
+  | When do I get my money back? | The refund-on-check-in policy |
+  | Will I get an invoice? | Invoicing → generate after payment and attach to email |
+  | What do I need to bring? | The ticket PDF's QR code, used for check-in |
+  | I can't make it anymore | Deliberately promises no refund for early cancellation, because that policy isn't decided |
+  | I didn't get an email | The shop's "Resend order link" |
 - The widget is restyled for the dark theme with scoped `:global(.pretix-widget …)` rules and `--pretix-brand-primary` overrides in `Register.astro`. The checkout overlay isn't restyled.
 - The "powered by AWS User Group Indonesia / based on pretix (source code)" line comes from the widget itself. It's the AGPL source offer, so leave it in place.
 
@@ -159,3 +174,4 @@ Done:
 - [ ] Write the approval and approved email texts
 - [ ] Place one real order on the deployed HTTPS site to check checkout, the payment QR code, the ticket PDF and the invoice
 - [ ] If the sales window changes in Pretix, update `ticketOpensAt` and `ticketClosesAt` in `src/modules/comday/26/event.ts`
+- [ ] Decide the refund policy for early cancellations, then update the "I can't make it anymore" FAQ answer
