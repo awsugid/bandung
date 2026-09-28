@@ -13,6 +13,28 @@ const steps = [
 	{ title: "See you on the day", body: "Bring your ticket on 7 November. We can't wait to see you." },
 	{ title: "Get your refund", body: "Checked in? We refund your commitment fee at the end of the day." },
 ];
+
+// The sales window renders its current state at build time; the layout's date
+// script and the script below keep it right between rebuilds.
+const { ticketOpensAt: opensAt, ticketClosesAt: closesAt } = event;
+const now = Date.now();
+const opens = Date.parse(opensAt);
+const closes = Date.parse(closesAt);
+const state = now < opens ? "upcoming" : now < closes ? "open" : "closed";
+const days = (ms: number) => {
+	const n = Math.max(Math.ceil(ms / 86_400_000), 0);
+	return `${n} ${n === 1 ? "day" : "days"}`;
+};
+const elapsed = Math.min(Math.max((now - opens) / (closes - opens), 0), 1);
+
+const date = (iso: string) =>
+	new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" })
+		.format(Date.parse(iso))
+		.replace("Sept", "Sep");
+const time = (iso: string) =>
+	new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" })
+		.format(Date.parse(iso))
+		.replace(":", ".");
 ---
 
 <section id="register" class="scroll-mt-[var(--header-height)] bg-muted pb-24 sm:pb-32">
@@ -20,11 +42,54 @@ const steps = [
 		<div class="comday-flow rounded-2xl p-px">
 			<div class="pass overflow-hidden rounded-[calc(1rem-1px)] bg-card">
 				<div class="p-6 sm:p-10">
-					<p class="eyebrow">Entry pass</p>
-					<h2 class="mt-6 text-4xl uppercase leading-[1.04] sm:text-5xl">Secure your seat.</h2>
-					<p class="lead mt-6 max-w-xl">
-						The ticket price is a commitment fee, refunded when you show up on the day.
-					</p>
+					<div class="grid gap-10 lg:grid-cols-[1fr_minmax(22rem,26rem)] lg:items-end lg:gap-16">
+						<div>
+							<p class="eyebrow">Entry pass</p>
+							<h2 class="mt-6 text-4xl uppercase leading-[1.04] sm:text-5xl">Secure your seat.</h2>
+							<p class="lead mt-6 max-w-xl">
+								The ticket price is a commitment fee, refunded when you show up on the day.
+							</p>
+						</div>
+
+						<div class="rounded-xl border border-border bg-muted/40 p-5 sm:p-6" data-sales-window={`${opensAt}|${closesAt}`}>
+							<div class="flex items-center justify-between gap-4 text-sm">
+								<p class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Registration</p>
+
+								<p class="font-bold text-white" hidden={state !== "upcoming"} data-until={opensAt}>
+									Opens in <span data-open-days>{days(opens - now)}</span>
+								</p>
+								<div hidden={state !== "open"} data-after={opensAt}>
+									<p class="flex items-center gap-2 font-bold text-white" hidden={state === "closed"} data-until={closesAt}>
+										<span class="relative flex h-2 w-2" aria-hidden="true">
+											<span class="pulse absolute inline-flex h-full w-full rounded-full bg-primary"></span>
+											<span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+										</span>
+										<span><span data-close-days>{days(closes - now)}</span> left</span>
+									</p>
+								</div>
+								<p class="font-bold text-muted-foreground" hidden={state !== "closed"} data-after={closesAt}>Closed</p>
+							</div>
+
+							<div class="relative mt-6 h-0.5 bg-border">
+								<div class="comday-flow h-full" style={`width: ${(elapsed * 100).toFixed(1)}%`} data-progress></div>
+								<span class="absolute -top-[5px] left-0 h-3 w-3 rounded-full bg-primary" aria-hidden="true"></span>
+								<span class="absolute -top-[5px] right-0 h-3 w-3 rounded-full border-2 border-primary bg-card" aria-hidden="true"></span>
+							</div>
+
+							<dl class="mt-4 flex justify-between gap-4 text-sm">
+								<div>
+									<dt class="text-muted-foreground">Opens</dt>
+									<dd class="mt-1 font-mono font-bold text-white">{date(opensAt)}</dd>
+									<dd class="font-mono text-xs text-muted-foreground">{time(opensAt)} WIB</dd>
+								</div>
+								<div class="text-right">
+									<dt class="text-muted-foreground">Closes</dt>
+									<dd class="mt-1 font-mono font-bold text-white">{date(closesAt)}</dd>
+									<dd class="font-mono text-xs text-muted-foreground">{time(closesAt)} WIB</dd>
+								</div>
+							</dl>
+						</div>
+					</div>
 
 					<div class="mt-10">
 						<link rel="stylesheet" href={`${event.ticketUrl}widget/v2.css`} crossorigin />
@@ -106,7 +171,40 @@ const steps = [
 	</div>
 </section>
 
+<script>
+	const days = (ms: number) => {
+		const n = Math.max(Math.ceil(ms / 86_400_000), 0);
+		return `${n} ${n === 1 ? "day" : "days"}`;
+	};
+
+	for (const el of document.querySelectorAll<HTMLElement>("[data-sales-window]")) {
+		const [opens, closes] = el.dataset.salesWindow!.split("|").map(Date.parse);
+		const now = Date.now();
+		const elapsed = Math.min(Math.max((now - opens) / (closes - opens), 0), 1);
+		el.querySelector<HTMLElement>("[data-progress]")!.style.width = `${(elapsed * 100).toFixed(1)}%`;
+		el.querySelector<HTMLElement>("[data-open-days]")!.textContent = days(opens - now);
+		el.querySelector<HTMLElement>("[data-close-days]")!.textContent = days(closes - now);
+	}
+</script>
+
 <style>
+	.pulse {
+		animation: pulse 1.8s ease-out infinite;
+	}
+
+	@keyframes pulse {
+		to {
+			opacity: 0;
+			transform: scale(2.4);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.pulse {
+			animation: none;
+		}
+	}
+
 	/* Tear line between the pass and its stub, with notches cut into the edges. */
 	.perforation {
 		position: relative;
