@@ -3,25 +3,23 @@ import ComdayLayout from "@/layouts/ComdayLayout.astro";
 import About from "./About.astro";
 import Closing from "./Closing.astro";
 import Contribute from "./Contribute.astro";
-import Day from "./Day.astro";
 import { event } from "./event";
 import Faq from "./Faq.astro";
 import Hero from "./Hero.astro";
+import Perks from "./Perks.astro";
+import Program from "./Program.astro";
 import Register from "./Register.astro";
-import Speakers from "./Speakers.astro";
 import Supporters from "./Supporters.astro";
 import Ticket from "./Ticket.astro";
-import Topics from "./Topics.astro";
 ---
 
 <ComdayLayout startDate={event.startDate} endDate={event.endDate}>
 	<Hero />
 	<About />
 	<Ticket />
+	<Perks />
 	<Register />
-	<Topics />
-	<Speakers />
-	<Day />
+	<Program />
 	<Contribute />
 	<Supporters />
 	<Faq />

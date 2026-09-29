@@ -16,3 +16,18 @@ export const event = {
 	volunteerOpensAt: "2026-09-26T07:00:00+07:00",
 	volunteerClosesAt: "2026-10-07T23:59:00+07:00",
 };
+
+export const topics = ["Architecture", "DevOps", "Data", "AI/ML", "Security"] as const;
+
+export type Session = {
+	time: string;
+	room: "Main stage" | "Workshop";
+	title: string;
+	speaker: string;
+	role: string;
+	topic: (typeof topics)[number];
+	photo?: string;
+};
+
+// Leave empty until the lineup is confirmed; the program shows placeholders.
+export const sessions: Session[] = [];
