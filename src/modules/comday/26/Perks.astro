@@ -1,0 +1,135 @@
+---
+const perks = [
+	{
+		name: "Tech talks",
+		value: "Main stage",
+		body: "Lessons from builders running AWS in real systems, with Q&A.",
+	},
+	{
+		name: "Hands-on workshop",
+		value: "After lunch",
+		body: "Classrooms open in the afternoon for hands-on sessions.",
+	},
+	{
+		name: "Lunch",
+		value: "On us",
+		body: "Eat with the room between the morning talks and the workshops.",
+	},
+	{
+		name: "Event merch",
+		value: "Yours to keep",
+		body: "Something to remember the first Community Day in Bandung.",
+	},
+	{
+		name: "The people",
+		value: "Bandung & beyond",
+		body: "Developers, architects, founders, and students who build on AWS.",
+	},
+];
+---
+
+<section class="bg-muted pb-16 sm:pb-24">
+	<div class="site-container">
+		<div class="grid gap-12 border-t border-border pt-16 sm:pt-24 lg:grid-cols-[1fr_minmax(24rem,30rem)] lg:items-center lg:gap-16">
+			<div>
+				<p class="eyebrow">What you get</p>
+				<h2 class="mt-6 text-4xl uppercase leading-[1.04] sm:text-5xl">
+					One ticket.<br />
+					<span class="headline-accent comday-flow">The whole day.</span>
+				</h2>
+				<p class="lead mt-6 max-w-xl">
+					Talks, a workshop, lunch, and merch. Check in on the day and your
+					commitment fee comes back too.
+				</p>
+			</div>
+
+			<div class="receipt-wrap">
+				<div class="receipt bg-card pb-10">
+					<div class="comday-flow h-1" aria-hidden="true"></div>
+
+					<div class="px-6 pt-6 sm:px-8 sm:pt-8">
+						<div class="flex items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
+							<span>Admit one</span>
+							<span>Sat 07.11.26</span>
+						</div>
+						<p class="mt-3 text-xl font-bold uppercase text-white">Your ticket includes</p>
+
+						<ol class="mt-6 border-t border-dashed border-border">
+							{perks.map((perk, index) => (
+								<li class="item grid grid-cols-[2rem_1fr] border-b border-dashed border-border py-4">
+									<span class="pt-0.5 font-mono text-xs text-muted-foreground">0{index + 1}</span>
+									<div>
+										<div class="flex items-baseline gap-3">
+											<span class="font-bold uppercase text-white">{perk.name}</span>
+											<span class="leader min-w-4 flex-1 border-b-2 border-dotted border-border" aria-hidden="true"></span>
+											<span class="shrink-0 text-right font-mono text-xs font-bold uppercase tracking-wider text-primary">
+												{perk.value}
+											</span>
+										</div>
+										<p class="mt-1 text-sm leading-6 text-muted-foreground">{perk.body}</p>
+									</div>
+								</li>
+							))}
+						</ol>
+
+						<dl class="mt-6 grid gap-3 font-mono text-sm">
+							<div class="flex items-baseline gap-3">
+								<dt class="whitespace-nowrap text-muted-foreground">Commitment fee</dt>
+								<span class="min-w-4 flex-1 border-b-2 border-dotted border-border" aria-hidden="true"></span>
+								<dd class="text-white">Refunded</dd>
+							</div>
+							<div class="flex items-end justify-between gap-4 border-t-2 border-white/80 pt-4">
+								<dt class="text-xs font-bold uppercase tracking-[0.18em] text-white">Your cost after check-in</dt>
+								<dd class="total comday-flow shrink-0 whitespace-nowrap text-4xl font-bold leading-none">Rp 0</dd>
+							</div>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.headline-accent,
+	.total {
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	/* Torn edge along the bottom of the receipt. */
+	.receipt {
+		mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 1rem 100%;
+	}
+
+	.receipt-wrap {
+		filter: drop-shadow(0 1.5rem 2.5rem hsl(210 100% 4% / 0.6));
+		transition: transform 0.4s ease;
+	}
+
+	@media (min-width: 1024px) {
+		.receipt-wrap {
+			transform: rotate(1.5deg);
+		}
+
+		.receipt-wrap:hover {
+			transform: rotate(0deg);
+		}
+	}
+
+	.leader {
+		transition: border-color 0.3s ease;
+	}
+
+	.item:hover .leader {
+		border-color: var(--primary);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.receipt-wrap,
+		.leader {
+			transition: none;
+		}
+	}
+</style>
