@@ -49,7 +49,7 @@ The event was cloned from an AWS User Group Jakarta event. The Jakarta leftovers
 **Basics**
 - Name: AWS Community Day Bandung 2026
 - Date: Sat 7 Nov 2026, 09:00–17:00; admission 09:00
-- Location: School of Business & Management (SBM) ITB, Jl. Ganesa No.10, Lb. Siliwangi, Kecamatan Coblong, Kota Bandung, Jawa Barat 40132
+- Location: Auditorium SBM ITB, Gedung Labtek XIX Lt. 6, Jl. Ganesa No.10
 - Geo: -6.8880907, 107.6092099 (the SBM ITB pin, https://maps.app.goo.gl/UHN3nEUB4hmi9Uyb8)
 - Currency: IDR
 - Contact email: awsugbandung@gmail.com; contact URL: Instagram @awsugbandung; imprint: https://bandung.awscommunity.id/comday/
@@ -64,7 +64,7 @@ The event was cloned from an AWS User Group Jakarta event. The Jakarta leftovers
 - Waiting list: on.
 
 **Texts**
-- The front page text has Bandung details: 7 Nov 2026, 09.00–17.00 WIB, SBM ITB, Gedung Freeport Lt. 6.
+- The front page text has Bandung details: 7 Nov 2026, 09.00–16.00 WIB, Auditorium SBM ITB, Gedung Labtek XIX Lt. 6, Jl. Ganesa No.10.
 - The phone field help text isn't set yet. Suggested text: "Please use an active WhatsApp number. We use it to reach you about your registration and event updates."
 
 **Shop design:** primary color `#4a2c6e`, font Amazon Ember. No logo or social preview image yet.
