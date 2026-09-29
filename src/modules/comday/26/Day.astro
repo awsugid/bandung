@@ -1,47 +1,47 @@
----
-const workshopRooms = ["Classroom 1", "Classroom 2", "Classroom 3"];
----
-
 <section class="site-section">
 	<div class="site-container">
-		<div class="max-w-2xl">
-			<p class="eyebrow">The format</p>
-			<h2 class="mt-4 uppercase">One main stage. Three workshop rooms.</h2>
-			<p class="lead mt-5">
-				Tech talks run in the main room through the day. After the noon break,
-				three classrooms open for hands-on workshops.
+		<p class="eyebrow">The format</p>
+		<h2 class="mt-4 uppercase">
+			Talks all day.<br />
+			<span class="text-primary">Workshops after lunch.</span>
+		</h2>
+
+		<div class="mt-12">
+			<div class="grid grid-cols-3 font-mono text-sm font-bold sm:text-lg" aria-hidden="true">
+				<span class="text-white">09.00</span>
+				<span class="text-center uppercase text-primary">Lunch</span>
+				<span class="text-right text-white">16.00 <span class="text-muted-foreground">WIB</span></span>
+			</div>
+			<div class="ruler relative mt-3 h-3 border-x border-b border-muted-foreground" aria-hidden="true"></div>
+
+			<div class="relative mt-3 grid gap-3">
+				<span class="lunch-line pointer-events-none absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2" aria-hidden="true"></span>
+
+				<div class="relative rounded-xl bg-primary p-5 text-primary-foreground sm:p-6">
+					<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground/75 sm:text-sm">Main stage</p>
+					<h3 class="mt-2 text-2xl uppercase text-primary-foreground sm:text-4xl">Tech talks</h3>
+					<p class="mt-1 font-medium text-primary-foreground">With Q&A, all day</p>
+				</div>
+
+				<div class="relative grid grid-cols-2 gap-3">
+					<div class="flex items-center rounded-xl border border-dashed border-border p-5 sm:p-6">
+						<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground sm:text-sm">Classrooms</p>
+					</div>
+					<div class="comday-flow rounded-xl p-0.5">
+						<div class="h-full rounded-[calc(0.75rem-2px)] bg-card p-5 sm:p-6">
+							<h3 class="text-xl uppercase sm:text-3xl">Workshops</h3>
+							<p class="mt-1">Hands-on</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<p class="sr-only">
+				09.00 to 16.00 WIB. Tech talks with Q&A run on the main stage all day.
+				After lunch, classrooms open for hands-on workshops.
 			</p>
 		</div>
 
-		<div class="mt-12 grid gap-4 lg:grid-cols-[1.15fr_1fr]">
-			<div class="rounded-xl comday-flow p-px">
-				<div class="flex h-full flex-col rounded-[calc(0.75rem-1px)] bg-card p-6 sm:p-8">
-					<p class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Main room</p>
-					<h3 class="mt-4 text-3xl uppercase sm:text-4xl">Tech talks</h3>
-					<p class="mt-3">
-						Talks with Q&A from community practitioners, from opening to the
-						fireside chat that closes the day.
-					</p>
-					<p class="mt-auto pt-8 text-sm font-bold uppercase tracking-[0.18em] text-primary">
-						Morning and afternoon
-					</p>
-				</div>
-			</div>
-
-			<ul class="grid gap-4">
-				{workshopRooms.map((room) => (
-					<li class="flex items-center justify-between gap-6 rounded-xl border border-border bg-card p-6">
-						<div>
-							<p class="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">{room}</p>
-							<h3 class="mt-2 uppercase">Workshop</h3>
-						</div>
-						<p class="text-right text-sm font-bold uppercase tracking-[0.18em] text-primary">After lunch</p>
-					</li>
-				))}
-			</ul>
-		</div>
-
-		<div class="mt-4 flex flex-col gap-4 rounded-xl border border-dashed border-border p-6 sm:flex-row sm:items-center sm:justify-between">
+		<div class="mt-8 flex flex-col gap-4 rounded-xl border border-dashed border-border p-6 sm:flex-row sm:items-center sm:justify-between">
 			<p class="text-white">
 				<span class="font-bold">Full schedule</span>
 				<span class="text-muted-foreground">: session times, rooms, and workshop topics will be posted here.</span>
@@ -52,3 +52,21 @@ const workshopRooms = ["Classroom 1", "Classroom 2", "Classroom 3"];
 		</div>
 	</div>
 </section>
+
+<style>
+	/* Tick at the lunch break, midway along the day. */
+	.ruler::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		bottom: -0.5rem;
+		width: 2px;
+		height: 1.25rem;
+		background: var(--primary);
+		transform: translateX(-50%);
+	}
+
+	.lunch-line {
+		background: repeating-linear-gradient(to bottom, var(--primary) 0 6px, transparent 6px 12px);
+	}
+</style>
