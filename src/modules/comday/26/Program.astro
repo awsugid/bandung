@@ -1,0 +1,237 @@
+---
+import { sessions, topics } from "./event";
+
+const topicColors: Record<(typeof topics)[number], string> = {
+	Architecture: "var(--comday-blue)",
+	DevOps: "var(--comday-violet)",
+	Data: "var(--comday-orange)",
+	"AI/ML": "var(--comday-magenta)",
+	Security: "var(--comday-ember)",
+};
+
+const initials = (name: string) =>
+	name
+		.split(/\s+/)
+		.slice(0, 2)
+		.map((word) => word[0])
+		.join("");
+
+const placeholders = Array.from({ length: 4 });
+---
+
+<section class="site-section">
+	<div class="site-container">
+		<div class="grid gap-10 lg:grid-cols-2 lg:items-end lg:gap-16">
+			<div>
+				<p class="eyebrow">The program</p>
+				<h2 class="mt-4 uppercase">
+					Talks all day.<br />
+					<span class="text-primary">Workshops after lunch.</span>
+				</h2>
+			</div>
+			<div>
+				<p class="lead">
+					Every session comes from someone in the AWS community who runs this
+					in real systems.
+				</p>
+				<p class="mt-3 text-sm">
+					For developers, architects, founders, and IT professionals from
+					Bandung and beyond.
+				</p>
+				<ul class="mt-6 flex flex-wrap gap-2" aria-label="Topics">
+					{topics.map((topic) => (
+						<li
+							class="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider text-white"
+							style={`--topic: ${topicColors[topic]}`}
+						>
+							<span class="dot h-2 w-2 rounded-full" aria-hidden="true"></span>
+							{topic}
+						</li>
+					))}
+				</ul>
+			</div>
+		</div>
+
+		<div class="mt-14">
+			<div class="grid grid-cols-3 font-mono text-sm font-bold sm:text-lg" aria-hidden="true">
+				<span class="text-white">09.00</span>
+				<span class="text-center uppercase text-primary">Lunch</span>
+				<span class="text-right text-white">16.00 <span class="text-muted-foreground">WIB</span></span>
+			</div>
+			<div class="ruler relative mt-3 h-3 border-x border-b border-muted-foreground" aria-hidden="true"></div>
+
+			<div class="relative mt-3 grid gap-3" aria-hidden="true">
+				<span class="lunch-line pointer-events-none absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2"></span>
+
+				<div class="relative rounded-xl bg-primary p-5 sm:p-6">
+					<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground/75 sm:text-sm">Main stage</p>
+					<p class="mt-2 text-2xl font-bold uppercase text-primary-foreground sm:text-4xl">Tech talks</p>
+					<p class="mt-1 font-medium text-primary-foreground">With Q&A, all day</p>
+				</div>
+
+				<div class="relative grid grid-cols-2 gap-3">
+					<div class="flex items-center rounded-xl border border-dashed border-border p-5 sm:p-6">
+						<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground sm:text-sm">Classrooms</p>
+					</div>
+					<div class="comday-flow rounded-xl p-0.5">
+						<div class="h-full rounded-[calc(0.75rem-2px)] bg-card p-5 sm:p-6">
+							<p class="text-xl font-bold uppercase text-white sm:text-3xl">Workshops</p>
+							<p class="mt-1">Hands-on</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<p class="sr-only">
+				09.00 to 16.00 WIB. Tech talks with Q&A run on the main stage all day.
+				After lunch, classrooms open for hands-on workshops.
+			</p>
+		</div>
+
+		<div class="mt-16">
+			<div class="flex items-center justify-between gap-4 border-b border-border pb-4">
+				<h3 class="uppercase">Lineup</h3>
+				{sessions.length === 0 && (
+					<span class="rounded-md bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-comday-orange">
+						Coming soon
+					</span>
+				)}
+			</div>
+
+			{sessions.length > 0 ? (
+				<ol class="mt-4 grid gap-3">
+					{sessions.map((session) => (
+						<li class="session relative grid gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 pl-7 sm:grid-cols-[7rem_1fr_auto] sm:items-center sm:gap-6">
+							<span
+								class:list={[
+									"absolute inset-y-0 left-0 w-1",
+									session.room === "Workshop" ? "comday-flow" : "bg-primary",
+								]}
+								aria-hidden="true"
+							></span>
+							<div class="flex items-baseline gap-3 sm:block">
+								<p class="font-mono text-lg font-bold text-white">{session.time}</p>
+								<p class="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground sm:mt-1">{session.room}</p>
+							</div>
+							<div class="flex items-center gap-4">
+								<div class="hexagon w-12 shrink-0 comday-flow p-[2px]">
+									{session.photo ? (
+										<img src={session.photo} alt="" class="hexagon h-full w-full object-cover" loading="lazy" />
+									) : (
+										<div class="hexagon grid h-full w-full place-items-center bg-card text-sm font-bold text-white">
+											{initials(session.speaker)}
+										</div>
+									)}
+								</div>
+								<div>
+									<p class="font-bold text-white">{session.title}</p>
+									<p class="mt-1 text-sm text-muted-foreground">
+										{session.speaker}, {session.role}
+									</p>
+								</div>
+							</div>
+							<p
+								class="flex w-fit items-center gap-2 self-start rounded-full border border-border px-3 py-1.5 sm:self-center font-mono text-xs font-bold uppercase tracking-wider text-white"
+								style={`--topic: ${topicColors[session.topic]}`}
+							>
+								<span class="dot h-2 w-2 rounded-full" aria-hidden="true"></span>
+								{session.topic}
+							</p>
+						</li>
+					))}
+				</ol>
+			) : (
+				<>
+					<ol class="mt-4 grid gap-3" aria-hidden="true">
+						{placeholders.map((_, index) => (
+							<li
+								class="relative grid gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 pl-7 sm:grid-cols-[7rem_1fr_auto] sm:items-center sm:gap-6"
+								style={`--delay: ${index * 140}ms`}
+							>
+								<span class="absolute inset-y-0 left-0 w-1 bg-border"></span>
+								<p class="font-mono text-lg font-bold text-muted-foreground">--.--</p>
+								<div class="flex items-center gap-4">
+									<div class="hexagon w-12 shrink-0 comday-flow p-[2px]">
+										<div class="hexagon grid h-full w-full place-items-center bg-card font-bold text-muted-foreground">?</div>
+									</div>
+									<div class="w-full max-w-xs space-y-2">
+										<div class="skeleton h-4 w-full rounded-full"></div>
+										<div class="skeleton h-3 w-1/2 rounded-full"></div>
+									</div>
+								</div>
+								<p class="w-fit rounded-full border border-dashed border-border px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
+									Topic TBA
+								</p>
+							</li>
+						))}
+					</ol>
+					<p class="mt-6 max-w-2xl">
+						Speakers are being curated with AWS User Group Indonesia. Talks,
+						workshops, and times land here as they're confirmed.
+					</p>
+				</>
+			)}
+		</div>
+	</div>
+</section>
+
+<style>
+	/* Tick at the lunch break, midway along the day. */
+	.ruler::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		bottom: -0.5rem;
+		width: 2px;
+		height: 1.25rem;
+		background: var(--primary);
+		transform: translateX(-50%);
+	}
+
+	.lunch-line {
+		background: repeating-linear-gradient(to bottom, var(--primary) 0 6px, transparent 6px 12px);
+	}
+
+	.dot {
+		background: var(--topic);
+		box-shadow: 0 0 0 3px color-mix(in oklab, var(--topic) 30%, transparent);
+	}
+
+	.hexagon {
+		aspect-ratio: 1 / 1.1547;
+		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	}
+
+	.session {
+		transition: border-color 0.3s ease;
+	}
+
+	.session:hover {
+		border-color: var(--primary);
+	}
+
+	.skeleton {
+		background: linear-gradient(90deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.06));
+		background-size: 200% 100%;
+		animation: shimmer 2.4s ease-in-out infinite;
+		animation-delay: var(--delay);
+	}
+
+	@keyframes shimmer {
+		from {
+			background-position: 100% 0;
+		}
+		to {
+			background-position: -100% 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.session {
+			transition: none;
+		}
+
+		.skeleton {
+			animation: none;
+		}
+	}
+</style>
