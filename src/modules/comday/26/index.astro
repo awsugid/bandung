@@ -3,17 +3,71 @@ import ComdayLayout from "@/layouts/ComdayLayout.astro";
 import About from "./About.astro";
 import Closing from "./Closing.astro";
 import Contribute from "./Contribute.astro";
+import { absoluteUrl } from "@/lib/site";
 import { event } from "./event";
 import Faq from "./Faq.astro";
+import { groups } from "./faqs";
 import Hero from "./Hero.astro";
 import Perks from "./Perks.astro";
 import Program from "./Program.astro";
 import Register from "./Register.astro";
 import Supporters from "./Supporters.astro";
 import Ticket from "./Ticket.astro";
+
+const structuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "Event",
+		name: event.name,
+		description: event.description,
+		startDate: event.startDate,
+		endDate: event.endDate,
+		eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+		eventStatus: "https://schema.org/EventScheduled",
+		image: [absoluteUrl("/images/comday/og.png")],
+		url: absoluteUrl("/comday"),
+		location: {
+			"@type": "Place",
+			name: event.venue,
+			address: {
+				"@type": "PostalAddress",
+				streetAddress: event.address,
+				addressLocality: "Bandung",
+				addressRegion: "West Java",
+				addressCountry: "ID",
+			},
+		},
+		organizer: [
+			{ "@id": `${absoluteUrl("/")}#organization` },
+			{ "@type": "Organization", name: "AWS User Group Indonesia" },
+		],
+		offers: {
+			"@type": "Offer",
+			url: event.ticketUrl,
+			validFrom: event.ticketOpensAt,
+			validThrough: event.ticketClosesAt,
+		},
+	},
+	{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		mainEntity: groups.flatMap((group) =>
+			group.faqs.map((faq) => ({
+				"@type": "Question",
+				name: faq.question,
+				acceptedAnswer: { "@type": "Answer", text: faq.answer },
+			})),
+		),
+	},
+];
 ---
 
-<ComdayLayout startDate={event.startDate} endDate={event.endDate}>
+<ComdayLayout
+	description={event.description}
+	startDate={event.startDate}
+	endDate={event.endDate}
+	structuredData={structuredData}
+>
 	<Hero />
 	<About />
 	<Ticket />

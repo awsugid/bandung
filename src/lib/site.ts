@@ -1,4 +1,5 @@
 import { feedLastModified } from "@/lib/meetup-feed";
+import { event as comday } from "@/modules/comday/26/event";
 
 export const site = {
 	name: "AWS User Group Bandung",
@@ -55,8 +56,7 @@ export const publicRoutes = [
 	{
 		path: "/comday",
 		title: "Community Day | AWS User Group Bandung",
-		description:
-			"AWS Community Day Bandung 2026: date, venue, call for papers, and the shape of the day.",
+		description: comday.description,
 		changefreq: "weekly",
 		priority: "0.8",
 		lastmod: contentLastModified,
