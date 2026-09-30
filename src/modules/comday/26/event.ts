@@ -1,5 +1,7 @@
 export const event = {
 	name: "AWS Community Day Bandung 2026",
+	description:
+		"AWS Community Day Bandung 2026 is on Saturday, 7 November 2026 at SBM ITB, Bandung: a full day of AWS talks and hands-on workshops by the community.",
 	startDate: "2026-11-07T09:00:00+07:00",
 	endDate: "2026-11-07T16:00:00+07:00",
 	venue: "Auditorium SBM ITB, Gedung Labtek XIX Lt. 6",
