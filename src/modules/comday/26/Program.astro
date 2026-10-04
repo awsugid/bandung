@@ -1,5 +1,5 @@
 ---
-import { sessions, topics } from "./event";
+import { agenda, formats, sessions, topics, type AgendaItem, type Session } from "./event";
 
 const initials = (name: string) =>
 	name
@@ -8,7 +8,49 @@ const initials = (name: string) =>
 		.map((word) => word[0])
 		.join("");
 
-const placeholders = Array.from({ length: 4 });
+const minutes = (time: string) => {
+	const [hours, mins] = time.split(".").map(Number);
+	return hours * 60 + mins;
+};
+const duration = (from: string, to: string) => minutes(to) - minutes(from);
+
+const mainStage = sessions.filter((session) => session.format !== "Workshop");
+const workshops = sessions.filter((session) => session.format === "Workshop");
+const pending = sessions.some(
+	(session) => session.format !== "Fireside" && (!session.speaker || !session.title),
+);
+
+const legend = formats.map((format) => ({
+	format,
+	count: sessions.filter((session) => session.format === format).length,
+}));
+
+// Wide screens draw the day to scale: one grid row per 5 minutes.
+const dayStart = Math.min(...[...agenda, ...sessions].map((entry) => minutes(entry.start)));
+const dayEnd = Math.max(...[...agenda, ...sessions].map((entry) => minutes(entry.end)));
+const row = (time: string) => (minutes(time) - dayStart) / 5 + 1;
+const area = (from: string, to: string) => `--from: ${row(from)}; --to: ${row(to)}`;
+const rows = (dayEnd - dayStart) / 5;
+// The classrooms column starts below the venue-wide moments at the top.
+const trackStart = [...agenda.filter((entry) => !entry.wide), ...sessions]
+	.map((entry) => entry.start)
+	.sort((a, b) => minutes(a) - minutes(b))[0];
+const hours: string[] = [];
+for (let hour = Math.ceil(dayStart / 60); hour * 60 <= dayEnd; hour++) {
+	hours.push(`${String(hour).padStart(2, "0")}.00`);
+}
+
+// Chronological order, so narrow screens read as a plain agenda.
+type Item = { start: string } & (
+	| { kind: "session"; session: Session }
+	| { kind: "agenda"; entry: AgendaItem }
+	| { kind: "workshops" }
+);
+const timeline: Item[] = [
+	...agenda.map((entry) => ({ kind: "agenda" as const, start: entry.start, entry })),
+	...mainStage.map((session) => ({ kind: "session" as const, start: session.start, session })),
+	{ kind: "workshops", start: workshops[0].start },
+].sort((a, b) => minutes(a.start) - minutes(b.start));
 ---
 
 <section class="site-section">
@@ -80,83 +122,211 @@ const placeholders = Array.from({ length: 4 });
 		<div class="mt-16">
 			<div class="flex items-center justify-between gap-4 border-b border-border pb-4">
 				<h3 class="uppercase">Lineup</h3>
-				{sessions.length === 0 && (
+				{pending && (
 					<span class="rounded-md bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-comday-orange">
 						Coming soon
 					</span>
 				)}
 			</div>
 
-			{sessions.length > 0 ? (
-				<ol class="mt-4 grid gap-3">
-					{sessions.map((session) => (
-						<li class="session relative grid gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 pl-7 sm:grid-cols-[7rem_1fr_auto] sm:items-center sm:gap-6">
-							<span
-								class:list={[
-									"absolute inset-y-0 left-0 w-1",
-									session.room === "Workshop" ? "comday-flow" : "bg-primary",
-								]}
-								aria-hidden="true"
-							></span>
-							<div class="flex items-baseline gap-3 sm:block">
-								<p class="font-mono text-lg font-bold text-white">{session.time}</p>
-								<p class="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground sm:mt-1">{session.room}</p>
-							</div>
-							<div class="flex items-center gap-4">
-								<div class="hexagon w-12 shrink-0 comday-flow p-[2px]">
-									{session.photo ? (
-										<img src={session.photo} alt="" class="hexagon h-full w-full object-cover" loading="lazy" />
-									) : (
-										<div class="hexagon grid h-full w-full place-items-center bg-card text-sm font-bold text-white">
-											{initials(session.speaker)}
-										</div>
-									)}
-								</div>
-								<div>
-									<p class="font-bold text-white">{session.title}</p>
-									<p class="mt-1 text-sm text-muted-foreground">
-										{session.speaker}, {session.role}
-									</p>
-								</div>
-							</div>
-							<p
-								class="flex w-fit items-center gap-2 self-start rounded-full border border-border px-3 py-1.5 sm:self-center font-mono text-xs font-bold uppercase tracking-wider text-white"
-							>
-								{session.topic}
-							</p>
-						</li>
-					))}
-				</ol>
-			) : (
-				<>
-					<ol class="mt-4 grid gap-3" aria-hidden="true">
-						{placeholders.map((_, index) => (
-							<li
-								class="relative grid gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 pl-7 sm:grid-cols-[7rem_1fr_auto] sm:items-center sm:gap-6"
-								style={`--delay: ${index * 140}ms`}
-							>
-								<span class="absolute inset-y-0 left-0 w-1 bg-border"></span>
-								<p class="font-mono text-lg font-bold text-muted-foreground">--.--</p>
-								<div class="flex items-center gap-4">
-									<div class="hexagon w-12 shrink-0 comday-flow p-[2px]">
-										<div class="hexagon grid h-full w-full place-items-center bg-card font-bold text-muted-foreground">?</div>
-									</div>
-									<div class="w-full max-w-xs space-y-2">
-										<div class="skeleton h-4 w-full rounded-full"></div>
-										<div class="skeleton h-3 w-1/2 rounded-full"></div>
-									</div>
-								</div>
-								<p class="w-fit rounded-full border border-dashed border-border px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
-									Topic TBA
-								</p>
-							</li>
-						))}
-					</ol>
-					<p class="mt-6 max-w-2xl">
-						Speakers are being curated with AWS User Group Indonesia. Talks,
-						workshops, and times land here as they're confirmed.
+			<ul class="mt-5 flex flex-wrap gap-x-6 gap-y-3" aria-label="Sessions by format">
+				{legend.map(({ format, count }) => (
+					<li class="flex items-center gap-2.5" data-format={format}>
+						<span class="swatch h-3 w-3 rounded-sm" aria-hidden="true"></span>
+						<span class="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">{format}</span>
+						<span class="font-mono text-sm font-bold text-white">{count}</span>
+					</li>
+				))}
+			</ul>
+
+			<div class="columns-head mt-8 font-mono text-xs font-bold uppercase tracking-[0.18em]" aria-hidden="true">
+				<span></span>
+				<p class="text-white">Main stage <span class="text-muted-foreground">· All day</span></p>
+				<p class="text-white">Classrooms <span class="text-muted-foreground">· After lunch</span></p>
+			</div>
+
+			<div class="timeline mt-6" style={`--rows: ${rows}`}>
+				<div class="track placed" style={`--from: ${row(trackStart)}; --to: ${rows + 1}`} aria-hidden="true">
+					<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
+						Opens {workshops[0].start}
 					</p>
-				</>
+				</div>
+				{hours.map((hour) => (
+					<div class="hour placed" style={area(hour, hour)} aria-hidden="true">
+						<span>{hour}</span>
+					</div>
+				))}
+
+				{timeline.map((item, index) => {
+					if (item.kind === "agenda") {
+						const { entry } = item;
+						const length = duration(entry.start, entry.end);
+
+						if (5 >= length) {
+							return (
+								<div class="marker placed reveal flex items-center gap-3" style={area(entry.start, entry.end)}>
+									<p class="font-mono text-xs font-bold text-white">{entry.start}</p>
+									<p class="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">{entry.title}</p>
+									<span class="flex-1 border-t border-dashed border-border" aria-hidden="true"></span>
+								</div>
+							);
+						}
+
+						const short = 15 >= length;
+						return (
+							<div
+								class:list={[
+									"agenda placed reveal rounded-xl border border-border text-center",
+									short
+										? "flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-3 lg:py-2"
+										: "grid place-content-center gap-1 p-4 lg:p-3",
+								]}
+								style={area(entry.start, entry.end)}
+								data-wide={entry.wide ? "" : undefined}
+							>
+								<p class="font-mono text-sm font-bold text-white">
+									{entry.start}–{entry.end}
+									<span class="text-muted-foreground"> · {length} min</span>
+								</p>
+								<p
+									class:list={[
+										"font-bold uppercase text-white",
+										length >= 60 ? "text-xl sm:text-2xl" : short ? "" : "text-lg",
+									]}
+								>
+									{entry.title}
+								</p>
+								{entry.note && <p class="text-sm">{entry.note}</p>}
+							</div>
+						);
+					}
+
+					if (item.kind === "workshops") {
+						const { start, end } = workshops[0];
+						return (
+							<div class="workshops placed reveal comday-flow rounded-xl p-0.5" style={area(start, end)}>
+								<div class="h-full rounded-[calc(0.75rem-2px)] bg-comday-navy-deep p-4">
+									<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+										<p class="font-mono font-bold text-white">
+											{start}–{end}
+											<span class="text-sm text-muted-foreground"> · {duration(start, end)} min</span>
+										</p>
+										<p class="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+											{workshops.length} workshops in parallel
+										</p>
+									</div>
+									<ol class="mt-3 grid gap-2 sm:grid-cols-3">
+										{workshops.map((workshop, room) => (
+											<li class="session flex flex-col gap-3 rounded-lg border border-border bg-card p-3">
+												<div class="flex items-center gap-2.5">
+													<div class="hexagon w-8 shrink-0 comday-flow p-[2px]">
+														<div
+															class:list={[
+																"hexagon grid h-full w-full place-items-center bg-card text-xs font-bold",
+																workshop.speaker ? "text-white" : "text-muted-foreground",
+															]}
+															aria-hidden="true"
+														>
+															{workshop.speaker ? initials(workshop.speaker) : "?"}
+														</div>
+													</div>
+													<p class="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Class {room + 1}</p>
+												</div>
+												<div class="space-y-1.5">
+													{workshop.title ? (
+														<p class="text-[0.8125rem] font-bold leading-snug text-white">{workshop.title}</p>
+													) : (
+														<div class="skeleton h-3.5 w-full rounded-full" style={`--delay: ${room * 140}ms`} aria-hidden="true"></div>
+													)}
+													{workshop.speaker ? (
+														<p class="text-sm leading-snug text-white">
+															{workshop.speaker}
+															{workshop.role && <span class="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{workshop.role}</span>}
+														</p>
+													) : (
+														<div class="skeleton h-3 w-2/3 rounded-full" style={`--delay: ${room * 140}ms`} aria-hidden="true"></div>
+													)}
+												</div>
+												{workshop.topic && (
+													<p class="mt-auto w-fit whitespace-nowrap rounded-full border border-border px-2.5 py-1.5 font-mono text-[0.6875rem] font-bold uppercase leading-none tracking-wider text-white">
+														{workshop.topic}
+													</p>
+												)}
+											</li>
+										))}
+									</ol>
+								</div>
+							</div>
+						);
+					}
+
+					const { session } = item;
+					const minutesLong = duration(session.start, session.end);
+					const fireside = session.format === "Fireside";
+					return (
+						<div
+							class="slot session placed reveal relative overflow-hidden rounded-lg border border-border bg-card"
+							style={area(session.start, session.end)}
+							data-format={session.format}
+							data-compact={minutesLong <= 15 ? "" : undefined}
+						>
+							<span class="swatch absolute inset-y-0 left-0 w-1" aria-hidden="true"></span>
+							<div class="slot-body grid h-full gap-3 py-3 pl-6 pr-4 sm:grid-cols-[7rem_minmax(0,1fr)_auto] sm:items-center sm:gap-5">
+								<div class="slot-time flex items-baseline gap-3 whitespace-nowrap">
+									<p class="font-mono text-lg font-bold leading-none text-white">
+										{session.start}<span class="text-xs text-muted-foreground">–{session.end}</span>
+									</p>
+									<p class="text-xs font-bold uppercase leading-4 tracking-[0.14em] text-muted-foreground">{session.format}</p>
+								</div>
+								{fireside ? (
+									<p class="font-bold text-white lg:truncate">
+										Fireside chat
+										<span class="text-sm font-normal text-muted-foreground">· Q&A with the speakers before it</span>
+									</p>
+								) : (
+									<div class="flex min-w-0 items-center gap-3">
+										<div class="avatar hexagon w-10 shrink-0 comday-flow p-[2px]">
+											<div
+												class:list={[
+													"hexagon grid h-full w-full place-items-center bg-card text-sm font-bold",
+													session.speaker ? "text-white" : "text-muted-foreground",
+												]}
+												aria-hidden="true"
+											>
+												{session.speaker ? initials(session.speaker) : "?"}
+											</div>
+										</div>
+										<div class="slot-text min-w-0 flex-1 space-y-1.5">
+											{session.title ? (
+												<p class="line-clamp-2 font-bold leading-snug text-white">{session.title}</p>
+											) : (
+												<div class="skeleton h-3.5 w-full max-w-xs rounded-full" style={`--delay: ${(index % 4) * 140}ms`} aria-hidden="true"></div>
+											)}
+											{session.speaker ? (
+												<p class="truncate text-sm text-muted-foreground">
+													{session.role ? `${session.speaker}, ${session.role}` : session.speaker}
+												</p>
+											) : (
+												<div class="skeleton h-3 w-1/2 max-w-40 rounded-full" style={`--delay: ${(index % 4) * 140}ms`} aria-hidden="true"></div>
+											)}
+										</div>
+									</div>
+								)}
+								{session.topic && (
+									<p class="w-fit rounded-full border border-border px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider text-white">
+										{session.topic}
+									</p>
+								)}
+							</div>
+						</div>
+					);
+				})}
+			</div>
+			{pending && (
+				<p class="mt-6 max-w-2xl">
+					Speakers are being curated with AWS User Group Indonesia. Talks,
+					workshops, and times land here as they're confirmed.
+				</p>
 			)}
 		</div>
 	</div>
@@ -190,6 +360,197 @@ const placeholders = Array.from({ length: 4 });
 
 	.session:hover {
 		border-color: var(--primary);
+	}
+
+	/* One tone per format, shared by the legend and the slot stripes. */
+	[data-format="Keynote"] {
+		--tone: var(--comday-orange);
+	}
+
+	[data-format="Tech talk"] {
+		--tone: var(--comday-blue);
+	}
+
+	[data-format="Lightning talk"] {
+		--tone: var(--comday-magenta);
+	}
+
+	[data-format="Workshop"] {
+		--tone: var(--comday-gradient);
+	}
+
+	[data-format="Fireside"] {
+		--tone: var(--comday-mist);
+	}
+
+	.swatch {
+		background: var(--tone);
+	}
+
+	.slot[data-format="Keynote"] {
+		background: color-mix(in oklab, var(--comday-orange) 14%, var(--card));
+	}
+
+	.slot[data-format="Fireside"] {
+		border-style: dashed;
+		background: transparent;
+	}
+
+	.agenda {
+		background: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.03) 0 10px, transparent 10px 20px)
+			var(--background);
+	}
+
+	.timeline {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	.columns-head,
+	.track,
+	.hour {
+		display: none;
+	}
+
+	@media (min-width: 40rem) {
+		.slot-time {
+			display: block;
+		}
+
+		.slot-time > * + * {
+			margin-top: 0.375rem;
+		}
+	}
+
+	/* The day to scale: rows are 5 minutes, columns are the two venues. */
+	@media (min-width: 64rem) {
+		.timeline,
+		.columns-head {
+			display: grid;
+			grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1fr);
+			column-gap: 1rem;
+		}
+
+		.timeline {
+			grid-template-rows: repeat(var(--rows), 1.125rem);
+			row-gap: 0;
+		}
+
+		.columns-head > p {
+			border-bottom: 2px solid var(--border);
+			padding-bottom: 0.75rem;
+		}
+
+		.placed {
+			grid-row: var(--from) / var(--to);
+		}
+
+		.slot {
+			grid-column: 2;
+			margin-bottom: 0.25rem;
+		}
+
+		.slot-body {
+			padding-block: 0.625rem;
+		}
+
+		.slot[data-compact] .slot-body {
+			padding-block: 0.25rem;
+		}
+
+		.slot[data-compact] .slot-time > * + * {
+			margin-top: 0.25rem;
+		}
+
+		.slot[data-compact] .avatar {
+			width: 1.75rem;
+		}
+
+		.slot[data-compact] .slot-text {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+		}
+
+		.slot[data-compact] .slot-text > * {
+			flex: 1 1 0;
+			margin-top: 0;
+		}
+
+		/* One placeholder bar reads cleaner than two on a single line. */
+		.slot[data-compact] .slot-text > .skeleton + .skeleton {
+			display: none;
+		}
+
+		.agenda {
+			grid-column: 2;
+			margin-bottom: 0.25rem;
+		}
+
+		.agenda[data-wide] {
+			grid-column: 2 / 4;
+		}
+
+		.marker {
+			grid-column: 2;
+			align-self: center;
+		}
+
+		.workshops {
+			grid-column: 3;
+			display: grid;
+			align-self: start;
+			min-height: calc(100% - 0.25rem);
+		}
+
+		.track {
+			display: block;
+			grid-column: 3;
+			border: 1px dashed var(--border);
+			border-radius: 0.75rem;
+			padding: 1rem;
+			background: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.025) 0 8px, transparent 8px 16px);
+		}
+
+		.hour {
+			display: flex;
+			grid-column: 1 / -1;
+			grid-row: var(--from);
+			align-items: flex-start;
+			gap: 1rem;
+		}
+
+		.hour span {
+			width: 3.5rem;
+			transform: translateY(-50%);
+			font-family: var(--font-mono);
+			font-size: 0.75rem;
+			font-weight: 700;
+			color: var(--muted-foreground);
+		}
+
+		.hour::after {
+			content: "";
+			flex: 1;
+			border-top: 1px dashed var(--border);
+		}
+	}
+
+	@supports (animation-timeline: view()) {
+		@media (prefers-reduced-motion: no-preference) {
+			.reveal {
+				animation: rise linear both;
+				animation-timeline: view();
+				animation-range: entry 0% entry 70%;
+			}
+		}
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(0.75rem);
+		}
 	}
 
 	.skeleton {
