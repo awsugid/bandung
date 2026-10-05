@@ -50,6 +50,7 @@ export const sessions: Session[] = [
 		speaker: "Arief Nugraha",
 		role: "Sr. Database Solutions Architect, AWS ASEAN",
 		topic: "Data",
+		photo: "/images/comday/2026/speakers/arief-nugraha.webp",
 	},
 	{ start: "13.00", end: "14.30", format: "Workshop" },
 	{ start: "13.00", end: "14.30", format: "Workshop" },
