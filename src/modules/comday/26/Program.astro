@@ -1,5 +1,7 @@
 ---
-import { sessions, topics } from "./event";
+import { agenda, formats, sessions, topics, type AgendaItem, type Session } from "./event";
+
+type Span = { start: string; end: string };
 
 const initials = (name: string) =>
 	name
@@ -8,7 +10,85 @@ const initials = (name: string) =>
 		.map((word) => word[0])
 		.join("");
 
-const placeholders = Array.from({ length: 4 });
+const minutes = (time: string) => {
+	const [hours, mins] = time.split(".").map(Number);
+	return hours * 60 + mins;
+};
+const duration = (from: string, to: string) => minutes(to) - minutes(from);
+const byStart = (a: Span, b: Span) => minutes(a.start) - minutes(b.start);
+
+const mainStage = sessions.filter((session) => session.format !== "Workshop");
+const workshops = sessions.filter((session) => session.format === "Workshop");
+const workshopSlot = workshops[0];
+const venue = agenda.filter((entry) => entry.wide);
+const stage: Span[] = [...agenda.filter((entry) => !entry.wide), ...mainStage];
+const pending = sessions.some(
+	(session) => session.format !== "Fireside" && (!session.speaker || !session.title),
+);
+
+// Joins back-to-back entries into one block for the overview bars.
+const merge = <T extends Span>(entries: T[]) =>
+	[...entries].sort(byStart).reduce<(Span & { first: T })[]>((blocks, entry) => {
+		const last = blocks.at(-1);
+		if (last && last.end === entry.start) last.end = entry.end;
+		else blocks.push({ start: entry.start, end: entry.end, first: entry });
+		return blocks;
+	}, []);
+
+const venueBlocks = merge(venue);
+const stageBlocks = merge(stage);
+const counted = (n: number, format: string) => `${format.toLowerCase()}${n === 1 ? "" : "s"}`;
+
+// Each main-stage block summarises its formats and draws a strip of its sessions.
+const stageSummary = stageBlocks.map((block) => {
+	const from = minutes(block.start);
+	const length = minutes(block.end) - from;
+	const inside = (entry: Span) => minutes(entry.start) >= from && minutes(entry.end) <= minutes(block.end);
+	return {
+		...block,
+		counts: formats
+			.map((format) => ({ format, n: mainStage.filter((s) => s.format === format && inside(s)).length }))
+			.filter(({ n }) => n > 0),
+		parts: stage.filter(inside).map((entry) => ({
+			format: "format" in entry ? (entry as Session).format : undefined,
+			style: `left: ${((minutes(entry.start) - from) / length) * 100}%; width: ${(duration(entry.start, entry.end) / length) * 100}%`,
+		})),
+	};
+});
+
+// The overview draws the whole day to scale, as percentages of its width.
+const dayStart = Math.min(...[...agenda, ...sessions].map((entry) => minutes(entry.start)));
+const dayEnd = Math.max(...[...agenda, ...sessions].map((entry) => minutes(entry.end)));
+const pct = (time: string) => ((minutes(time) - dayStart) / (dayEnd - dayStart)) * 100;
+const place = ({ start, end }: Span) => `left: ${pct(start)}%; width: ${pct(end) - pct(start)}%`;
+const hours: string[] = [];
+for (let hour = Math.ceil(dayStart / 60); hour * 60 <= dayEnd; hour++) {
+	hours.push(`${String(hour).padStart(2, "0")}.00`);
+}
+
+const talks = mainStage.filter((session) => session.format !== "Fireside").length;
+const firesides = mainStage.length - talks;
+const stageRange = `${stageBlocks[0].start}–${stageBlocks.at(-1)!.end}`;
+const legend = formats
+	.filter((format) => format !== "Workshop")
+	.map((format) => ({ format, count: mainStage.filter((session) => session.format === format).length }));
+
+// The main stage breaks for lunch; its schedule splits there.
+type Row = Span & (
+	| { kind: "session"; session: Session }
+	| { kind: "agenda"; entry: AgendaItem }
+	| { kind: "workshops" }
+);
+const rows: Row[] = [
+	...agenda.map((entry) => ({ kind: "agenda" as const, start: entry.start, end: entry.end, entry })),
+	...mainStage.map((session) => ({ kind: "session" as const, start: session.start, end: session.end, session })),
+	{ kind: "workshops", start: workshopSlot.start, end: workshopSlot.end },
+].sort(byStart);
+const noon = minutes(stageBlocks.at(-1)!.start);
+const halves = [
+	{ name: "Morning", rows: rows.filter((row) => minutes(row.start) < noon) },
+	{ name: "Afternoon", rows: rows.filter((row) => minutes(row.start) >= noon) },
+];
 ---
 
 <section class="site-section">
@@ -42,179 +122,593 @@ const placeholders = Array.from({ length: 4 });
 			</div>
 		</div>
 
-		<div class="mt-14">
-			<div class="grid grid-cols-3 font-mono text-sm font-bold sm:text-lg" aria-hidden="true">
-				<span class="text-white">09.00</span>
-				<span class="text-center uppercase text-primary">Lunch</span>
-				<span class="text-right text-white">16.00 <span class="text-muted-foreground">WIB</span></span>
-			</div>
-			<div class="ruler relative mt-3 h-3 border-x border-b border-muted-foreground" aria-hidden="true"></div>
-
-			<div class="relative mt-3 grid gap-3" aria-hidden="true">
-				<span class="lunch-line pointer-events-none absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2"></span>
-
-				<div class="relative rounded-xl bg-primary p-5 sm:p-6">
-					<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground/75 sm:text-sm">Main stage</p>
-					<p class="mt-2 text-2xl font-bold uppercase text-primary-foreground sm:text-4xl">Tech talks</p>
-					<p class="mt-1 font-medium text-primary-foreground">With Q&A, all day</p>
-				</div>
-
-				<div class="relative grid grid-cols-2 gap-3">
-					<div class="flex items-center rounded-xl border border-dashed border-border p-5 sm:p-6">
-						<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground sm:text-sm">Classrooms</p>
-					</div>
-					<div class="comday-flow rounded-xl p-0.5">
-						<div class="h-full rounded-[calc(0.75rem-2px)] bg-card p-5 sm:p-6">
-							<p class="text-xl font-bold uppercase text-white sm:text-3xl">Workshops</p>
-							<p class="mt-1">Hands-on</p>
-						</div>
-					</div>
+		<div class="day mt-14">
+			<div class="lane-grid" aria-hidden="true">
+				<span class="hidden lg:block"></span>
+				<div class="axis relative h-7 border-b border-muted-foreground">
+					{hours.map((hour) => (
+						<span class="tick absolute bottom-0 flex flex-col items-center" style={`left: ${pct(hour)}%`}>
+							<span class="font-mono text-xs font-bold text-white">{hour}</span>
+							<span class="mt-1 h-1.5 w-px bg-muted-foreground"></span>
+						</span>
+					))}
 				</div>
 			</div>
-			<p class="sr-only">
-				09.00 to 16.00 WIB. Tech talks with Q&A run on the main stage all day.
-				After lunch, classrooms open for hands-on workshops.
-			</p>
-		</div>
 
-		<div class="mt-16">
-			<div class="flex items-center justify-between gap-4 border-b border-border pb-4">
-				<h3 class="uppercase">Lineup</h3>
-				{sessions.length === 0 && (
-					<span class="rounded-md bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-comday-orange">
-						Coming soon
+			<div class="mt-3 grid gap-3">
+				<button
+					type="button"
+					class="lane lane-grid group rounded-xl border border-border p-3 text-left"
+					aria-expanded="false"
+					aria-controls="program-stage"
+					data-lane
+				>
+					<span class="lane-head">
+						<span>
+							<span class="block font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Main stage</span>
+							<span class="mt-1 block text-2xl font-bold uppercase text-white">Tech talks</span>
+							<span class="mt-1 block text-sm text-muted-foreground">
+								{talks} talks · {firesides} firesides · <span class="font-mono text-white">{stageRange}</span>
+							</span>
+						</span>
+						<span class="toggle">
+							<span class="toggle-label"><span class="when-closed">See all {mainStage.length} sessions</span><span class="when-open">Hide sessions</span></span>
+							<span class="toggle-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg></span>
+						</span>
 					</span>
+					<span class="bar relative block h-12 lg:h-auto" aria-hidden="true">
+						{venueBlocks.map((block) => (
+							<span class="venue seg absolute inset-y-0 grid place-items-center" style={place(block)}>
+								<span class="hidden font-mono text-[0.625rem] font-bold uppercase tracking-[0.16em] text-primary sm:block">
+									{block.first.label}
+								</span>
+							</span>
+						))}
+						{stageSummary.map((block) => (
+							<span class="seg absolute inset-y-0 overflow-hidden rounded-md bg-primary" style={place(block)}>
+								<span class="hidden h-full flex-col justify-between px-3 pb-4 pt-2.5 text-primary-foreground md:flex">
+									<span class="font-mono text-[0.6875rem] font-bold tracking-wider opacity-70">{block.start}–{block.end}</span>
+									<span class="block text-sm leading-snug">
+										{block.counts.map(({ format, n }) => (
+											<span class="block truncate">
+												<span class="font-bold">{n}</span> {counted(n, format)}
+											</span>
+										))}
+									</span>
+								</span>
+								<span class="strip absolute inset-x-0 bottom-0 h-1.5">
+									{block.parts.map((part) => (
+										<span class="part absolute inset-y-0" data-format={part.format} style={part.style}></span>
+									))}
+								</span>
+							</span>
+						))}
+					</span>
+				</button>
+
+				<button
+					type="button"
+					class="lane lane-grid group rounded-xl border border-border p-3 text-left"
+					aria-expanded="false"
+					aria-controls="program-classrooms"
+					data-lane
+				>
+					<span class="lane-head">
+						<span>
+							<span class="block font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Classrooms</span>
+							<span class="mt-1 block text-2xl font-bold uppercase text-white">Workshops</span>
+							<span class="mt-1 block text-sm text-muted-foreground">
+								{workshops.length} in parallel · <span class="font-mono text-white">{workshopSlot.start}–{workshopSlot.end}</span>
+							</span>
+						</span>
+						<span class="toggle">
+							<span class="toggle-label"><span class="when-closed">See all {workshops.length} workshops</span><span class="when-open">Hide workshops</span></span>
+							<span class="toggle-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg></span>
+						</span>
+					</span>
+					<span class="bar relative block h-12 rounded-md border border-dashed border-border lg:h-auto" aria-hidden="true">
+						{venueBlocks.map((block) => (
+							<span class="venue seg absolute inset-y-0" style={place(block)}></span>
+						))}
+						<span class="seg absolute inset-y-0 overflow-hidden rounded-md comday-flow" style={place(workshopSlot)}>
+							<span class="hidden h-full flex-col justify-between px-3 pb-3 pt-2.5 text-white md:flex">
+								<span class="font-mono text-[0.6875rem] font-bold tracking-wider opacity-80">{workshopSlot.start}–{workshopSlot.end}</span>
+								<span class="block truncate text-sm leading-snug">
+									<span class="font-bold">{workshops.length}</span> {counted(workshops.length, "Workshop")}
+								</span>
+							</span>
+						</span>
+					</span>
+				</button>
+			</div>
+
+			<p class="mt-4 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
+				All times WIB · Pick a track for its schedule
+			</p>
+
+			<div id="program-stage" class="panel mt-8 scroll-mt-[calc(var(--header-height)+1rem)] rounded-2xl border border-border bg-comday-navy-deep p-4 sm:p-8" data-panel hidden>
+				<div class="flex flex-wrap items-start justify-between gap-4">
+					<div>
+						<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Main stage · {stageRange}</p>
+						<h3 class="mt-2 uppercase">Talks, keynote & firesides</h3>
+					</div>
+					{pending && (
+						<span class="rounded-md bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-comday-orange">
+							Speakers coming soon
+						</span>
+					)}
+				</div>
+				<ul class="mt-5 flex flex-wrap gap-x-6 gap-y-3" aria-label="Sessions by format">
+					{legend.map(({ format, count }) => (
+						<li class="flex items-center gap-2.5" data-format={format}>
+							<span class="swatch h-2.5 w-2.5 rounded-full" aria-hidden="true"></span>
+							<span class="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">{format}</span>
+							<span class="font-mono text-sm font-bold text-white">{count}</span>
+						</li>
+					))}
+				</ul>
+
+				<div class="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-12">
+					{halves.map((half, column) => (
+						<div>
+							<p class="border-b border-border pb-3 font-mono text-xs font-bold uppercase tracking-[0.18em] text-white">{half.name}</p>
+							<ol class="rail mt-5">
+								{half.rows.map((row, index) => {
+									const length = duration(row.start, row.end);
+									const format = row.kind === "session" ? row.session.format : row.kind === "workshops" ? "Workshop" : undefined;
+									return (
+										<li class="rail-item rise" style={`--i: ${column * 4 + index}`} data-format={format}>
+											<div class="pt-0.5">
+												<p class="font-mono text-base font-bold leading-none text-white sm:text-lg">{row.start}</p>
+												<p class="mt-1 font-mono text-xs text-muted-foreground">{row.end}</p>
+											</div>
+											<div class="rail-line" aria-hidden="true">
+												<span class="node" data-hollow={format ? undefined : ""}></span>
+											</div>
+											<div class="min-w-0 pb-5">
+												{row.kind === "session" && row.session.format === "Fireside" && (
+													<div class="rounded-lg border border-dashed border-border px-4 py-3">
+														<p class="text-xs font-bold uppercase leading-4 tracking-[0.14em] text-muted-foreground">Fireside · {length} min</p>
+														<p class="mt-2 font-bold text-white">Fireside chat</p>
+														<p class="text-sm text-muted-foreground">Q&A with the speakers before it</p>
+													</div>
+												)}
+
+												{row.kind === "session" && row.session.format !== "Fireside" && (
+													<div class="card rounded-lg border border-border bg-card px-4 py-3">
+														<div class="flex items-center justify-between gap-4">
+															<div class="min-w-0">
+																<p class="text-xs font-bold uppercase leading-4 tracking-[0.14em] text-muted-foreground">
+																	{row.session.format} · {length} min
+																</p>
+																{row.session.title && <p class="mt-2 font-bold leading-snug text-white">{row.session.title}</p>}
+																<p class:list={["text-sm", row.session.title ? "mt-1 text-muted-foreground" : "mt-2 text-muted-foreground/80"]}>
+																	{row.session.speaker
+																		? [row.session.speaker, row.session.role].filter(Boolean).join(", ")
+																		: "Speaker to be announced"}
+																</p>
+															</div>
+															<div class="hexagon w-9 shrink-0 comday-flow p-[2px]" aria-hidden="true">
+																{row.session.photo ? (
+																	<img src={row.session.photo} alt="" class="hexagon h-full w-full bg-card object-cover" loading="lazy" />
+																) : (
+																	<div class="hexagon grid h-full w-full place-items-center bg-card text-xs font-bold text-muted-foreground">
+																		{row.session.speaker ? <span class="text-white">{initials(row.session.speaker)}</span> : "?"}
+																	</div>
+																)}
+															</div>
+														</div>
+														{row.session.topic && (
+															<p class="mt-3 w-fit rounded-full border border-border px-2.5 py-1 font-mono text-[0.6875rem] font-bold uppercase leading-none tracking-wider text-white">
+																{row.session.topic}
+															</p>
+														)}
+													</div>
+												)}
+
+												{row.kind === "workshops" && (
+													<button type="button" class="jump block w-full rounded-lg comday-flow p-px text-left" data-show="program-classrooms">
+														<span class="block rounded-[calc(0.5rem-1px)] bg-card px-4 py-3">
+															<span class="block text-xs font-bold uppercase leading-4 tracking-[0.14em] text-muted-foreground">Classrooms · {length} min</span>
+															<span class="mt-2 block font-bold text-white">{workshops.length} workshops start in parallel</span>
+															<span class="mt-1 block text-sm text-primary">See the workshops <span aria-hidden="true">→</span></span>
+														</span>
+													</button>
+												)}
+
+												{row.kind === "agenda" && row.entry.wide && (
+													<div class="venue rounded-lg border border-border px-4 py-3">
+														<p class="font-bold uppercase text-white">{row.entry.title}</p>
+														{row.entry.note && <p class="text-sm">{row.entry.note}</p>}
+													</div>
+												)}
+
+												{row.kind === "agenda" && !row.entry.wide && (
+													<div class="pt-0.5">
+														<p class="font-bold text-white">{row.entry.title}</p>
+														{row.entry.note && <p class="text-sm text-muted-foreground">{row.entry.note}</p>}
+													</div>
+												)}
+											</div>
+										</li>
+									);
+								})}
+							</ol>
+						</div>
+					))}
+				</div>
+				{pending && (
+					<p class="mt-4 max-w-2xl text-sm">
+						Speakers are being curated with AWS User Group Indonesia. Talks and
+						times land here as they're confirmed.
+					</p>
 				)}
 			</div>
 
-			{sessions.length > 0 ? (
-				<ol class="mt-4 grid gap-3">
-					{sessions.map((session) => (
-						<li class="session relative grid gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 pl-7 sm:grid-cols-[7rem_1fr_auto] sm:items-center sm:gap-6">
-							<span
-								class:list={[
-									"absolute inset-y-0 left-0 w-1",
-									session.room === "Workshop" ? "comday-flow" : "bg-primary",
-								]}
-								aria-hidden="true"
-							></span>
-							<div class="flex items-baseline gap-3 sm:block">
-								<p class="font-mono text-lg font-bold text-white">{session.time}</p>
-								<p class="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground sm:mt-1">{session.room}</p>
-							</div>
-							<div class="flex items-center gap-4">
-								<div class="hexagon w-12 shrink-0 comday-flow p-[2px]">
-									{session.photo ? (
-										<img src={session.photo} alt="" class="hexagon h-full w-full object-cover" loading="lazy" />
+			<div id="program-classrooms" class="panel mt-8 scroll-mt-[calc(var(--header-height)+1rem)] rounded-2xl border border-border bg-comday-navy-deep p-4 sm:p-8" data-panel hidden>
+				<div class="flex flex-wrap items-start justify-between gap-4">
+					<div class="max-w-xl">
+						<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
+							Classrooms · {workshopSlot.start}–{workshopSlot.end} · {duration(workshopSlot.start, workshopSlot.end)} min
+						</p>
+						<h3 class="mt-2 uppercase">Hands-on workshops</h3>
+						<p class="mt-2 text-sm">
+							{workshops.length} workshops run at the same time, alongside the
+							afternoon main-stage talks.
+						</p>
+					</div>
+					{pending && (
+						<span class="rounded-md bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-comday-orange">
+							Speakers coming soon
+						</span>
+					)}
+				</div>
+
+				<ol class="mt-8 grid gap-3 md:grid-cols-3">
+					{workshops.map((workshop, room) => (
+						<li class="card rise flex flex-col rounded-xl border border-border bg-card p-5" style={`--i: ${room}`}>
+							<div class="flex items-start justify-between gap-4">
+								<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Class {room + 1}</p>
+								<div class="hexagon w-14 shrink-0 comday-flow p-[2px]" aria-hidden="true">
+									{workshop.photo ? (
+										<img src={workshop.photo} alt="" class="hexagon h-full w-full bg-card object-cover" loading="lazy" />
 									) : (
-										<div class="hexagon grid h-full w-full place-items-center bg-card text-sm font-bold text-white">
-											{initials(session.speaker)}
+										<div class="hexagon grid h-full w-full place-items-center bg-card text-sm font-bold text-muted-foreground">
+											{workshop.speaker ? <span class="text-white">{initials(workshop.speaker)}</span> : "?"}
 										</div>
 									)}
 								</div>
-								<div>
-									<p class="font-bold text-white">{session.title}</p>
-									<p class="mt-1 text-sm text-muted-foreground">
-										{session.speaker}, {session.role}
+							</div>
+							<p class:list={["mt-4 text-lg font-bold leading-snug", workshop.title ? "text-white" : "text-muted-foreground/80"]}>
+								{workshop.title ?? "Workshop to be announced"}
+							</p>
+							{workshop.speaker && (
+								<p class="mt-3 text-sm text-white">
+									{workshop.speaker}
+									{workshop.role && <span class="block text-xs text-muted-foreground">{workshop.role}</span>}
+								</p>
+							)}
+							{workshop.topic && (
+								<div class="mt-auto pt-4">
+									<p class="w-fit rounded-full border border-border px-2.5 py-1 font-mono text-[0.6875rem] font-bold uppercase leading-none tracking-wider text-white">
+										{workshop.topic}
 									</p>
 								</div>
-							</div>
-							<p
-								class="flex w-fit items-center gap-2 self-start rounded-full border border-border px-3 py-1.5 sm:self-center font-mono text-xs font-bold uppercase tracking-wider text-white"
-							>
-								{session.topic}
-							</p>
+							)}
 						</li>
 					))}
 				</ol>
-			) : (
-				<>
-					<ol class="mt-4 grid gap-3" aria-hidden="true">
-						{placeholders.map((_, index) => (
-							<li
-								class="relative grid gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 pl-7 sm:grid-cols-[7rem_1fr_auto] sm:items-center sm:gap-6"
-								style={`--delay: ${index * 140}ms`}
-							>
-								<span class="absolute inset-y-0 left-0 w-1 bg-border"></span>
-								<p class="font-mono text-lg font-bold text-muted-foreground">--.--</p>
-								<div class="flex items-center gap-4">
-									<div class="hexagon w-12 shrink-0 comday-flow p-[2px]">
-										<div class="hexagon grid h-full w-full place-items-center bg-card font-bold text-muted-foreground">?</div>
-									</div>
-									<div class="w-full max-w-xs space-y-2">
-										<div class="skeleton h-4 w-full rounded-full"></div>
-										<div class="skeleton h-3 w-1/2 rounded-full"></div>
-									</div>
-								</div>
-								<p class="w-fit rounded-full border border-dashed border-border px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
-									Topic TBA
-								</p>
-							</li>
-						))}
-					</ol>
-					<p class="mt-6 max-w-2xl">
-						Speakers are being curated with AWS User Group Indonesia. Talks,
-						workshops, and times land here as they're confirmed.
-					</p>
-				</>
-			)}
+			</div>
 		</div>
 	</div>
 </section>
 
+<noscript><style is:inline>[data-panel][hidden] { display: block; }</style></noscript>
+
+<script>
+	const lanes = [...document.querySelectorAll<HTMLButtonElement>("[data-lane]")];
+
+	// One track open at a time; selecting the open track closes it.
+	// Opening a track brings its schedule into view.
+	const show = (lane?: HTMLButtonElement) => {
+		for (const other of lanes) {
+			const open = other === lane;
+			other.setAttribute("aria-expanded", String(open));
+			document.getElementById(other.getAttribute("aria-controls")!)!.hidden = !open;
+		}
+		if (!lane) return;
+		const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		document
+			.getElementById(lane.getAttribute("aria-controls")!)!
+			.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+	};
+
+	for (const lane of lanes) {
+		lane.addEventListener("click", () => {
+			show(lane.getAttribute("aria-expanded") === "true" ? undefined : lane);
+		});
+	}
+
+	for (const jump of document.querySelectorAll<HTMLButtonElement>("[data-show]")) {
+		jump.addEventListener("click", () => {
+			show(lanes.find((lane) => lane.getAttribute("aria-controls") === jump.dataset.show));
+		});
+	}
+</script>
+
 <style>
-	/* Tick at the lunch break, midway along the day. */
-	.ruler::after {
-		content: "";
-		position: absolute;
-		left: 50%;
-		bottom: -0.5rem;
-		width: 2px;
-		height: 1.25rem;
-		background: var(--primary);
-		transform: translateX(-50%);
-	}
-
-	.lunch-line {
-		background: repeating-linear-gradient(to bottom, var(--primary) 0 6px, transparent 6px 12px);
-	}
-
 	.hexagon {
 		aspect-ratio: 1 / 1.1547;
 		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 	}
 
-	.session {
-		transition: border-color 0.3s ease;
+	/* One tone per format, shared by the legend and the schedule nodes. */
+	[data-format="Keynote"] {
+		--tone: var(--comday-orange);
 	}
 
-	.session:hover {
+	[data-format="Tech talk"] {
+		--tone: var(--comday-blue);
+	}
+
+	[data-format="Lightning talk"] {
+		--tone: var(--comday-magenta);
+	}
+
+	[data-format="Workshop"] {
+		--tone: var(--comday-gradient);
+	}
+
+	[data-format="Fireside"] {
+		--tone: var(--comday-mist);
+	}
+
+	.swatch {
+		background: var(--tone);
+	}
+
+	.venue {
+		background: repeating-linear-gradient(135deg, rgb(255 255 255 / 0.05) 0 6px, transparent 6px 12px);
+	}
+
+	/* Overview: the head sits beside the bar on wide screens, above it on narrow ones. */
+	.lane-grid {
+		display: grid;
+		gap: 0.75rem;
+	}
+
+	@media (min-width: 64rem) {
+		.lane-grid {
+			grid-template-columns: 15rem minmax(0, 1fr);
+			gap: 1.5rem;
+		}
+	}
+
+	.day > .lane-grid {
+		padding-inline: calc(0.75rem + 1px);
+	}
+
+	.tick {
+		transform: translateX(-50%);
+	}
+
+	.tick:first-child {
+		align-items: flex-start;
+		transform: none;
+	}
+
+	/* Every other hour on narrow screens keeps the labels apart. */
+	@media (max-width: 39.99rem) {
+		.tick:nth-child(even) {
+			display: none;
+		}
+	}
+
+	.lane {
+		cursor: pointer;
+		transition:
+			border-color 0.25s ease,
+			background-color 0.25s ease,
+			opacity 0.25s ease;
+	}
+
+	.lane:hover,
+	.lane[aria-expanded="true"] {
 		border-color: var(--primary);
 	}
 
-	.skeleton {
-		background: linear-gradient(90deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.06));
-		background-size: 200% 100%;
-		animation: shimmer 2.4s ease-in-out infinite;
-		animation-delay: var(--delay);
+	.lane[aria-expanded="true"] {
+		background: var(--comday-navy-raised);
 	}
 
-	@keyframes shimmer {
+	.lane:focus-visible,
+	.jump:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 3px;
+	}
+
+	.day:has(.lane[aria-expanded="true"]) .lane:not([aria-expanded="true"]) {
+		opacity: 0.55;
+	}
+
+	.day:has(.lane[aria-expanded="true"]) .lane:not([aria-expanded="true"]):hover {
+		opacity: 1;
+	}
+
+	.lane-head {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	@media (min-width: 64rem) {
+		.lane-head {
+			flex-direction: column;
+			justify-content: space-between;
+		}
+	}
+
+	.toggle {
+		display: inline-flex;
+		flex-shrink: 0;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--primary);
+	}
+
+	.toggle-label {
+		display: none;
+	}
+
+	@media (min-width: 40rem) {
+		.toggle-label {
+			display: inline;
+		}
+	}
+
+	.lane[aria-expanded="true"] .when-closed,
+	.lane:not([aria-expanded="true"]) .when-open {
+		display: none;
+	}
+
+	.toggle-icon {
+		display: grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		transition: border-color 0.3s ease;
+	}
+
+	.toggle-icon svg {
+		width: 0.875rem;
+		height: 0.875rem;
+		transition: transform 0.3s ease;
+	}
+
+	.lane:hover .toggle-icon,
+	.lane[aria-expanded="true"] .toggle-icon {
+		border-color: var(--primary);
+	}
+
+	/* Nudges toward the panel it opens; flips once the panel is open. */
+	.lane:not([aria-expanded="true"]):hover .toggle-icon svg {
+		transform: translateY(2px);
+	}
+
+	.lane[aria-expanded="true"] .toggle-icon svg {
+		transform: rotate(180deg);
+	}
+
+	/* Keeps neighbouring blocks visibly apart where they touch. */
+	.seg {
+		border-inline: 2px solid transparent;
+		background-clip: padding-box;
+	}
+
+	/* The session strip: one segment per slot, coloured by format. */
+	.strip {
+		background: var(--comday-navy);
+	}
+
+	.part {
+		border-inline: 1px solid var(--comday-navy);
+		background: var(--tone, rgb(255 255 255 / 0.3));
+		background-clip: padding-box;
+	}
+
+	/* Detail: a rail of time, node, and content. */
+	.rail-item {
+		display: grid;
+		grid-template-columns: 3.5rem 1rem minmax(0, 1fr);
+		column-gap: 0.75rem;
+	}
+
+	@media (min-width: 40rem) {
+		.rail-item {
+			grid-template-columns: 4rem 1rem minmax(0, 1fr);
+			column-gap: 1rem;
+		}
+	}
+
+	.rail-line {
+		position: relative;
+		display: flex;
+		justify-content: center;
+	}
+
+	.rail-line::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		width: 2px;
+		background: var(--border);
+		transform: translateX(-50%);
+	}
+
+	.rail-item:first-child .rail-line::before {
+		top: 0.5rem;
+	}
+
+	.rail-item:last-child .rail-line::before {
+		bottom: auto;
+		height: 0.5rem;
+	}
+
+	.node {
+		position: relative;
+		margin-top: 0.125rem;
+		width: 0.75rem;
+		height: 0.75rem;
+		border-radius: 999px;
+		background: var(--tone);
+		box-shadow: 0 0 0 4px var(--comday-navy-deep);
+	}
+
+	.node[data-hollow] {
+		border: 2px solid var(--comday-mist);
+		background: var(--comday-navy-deep);
+	}
+
+	.card {
+		transition: border-color 0.3s ease;
+	}
+
+	.card:hover {
+		border-color: var(--primary);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.panel:not([hidden]) {
+			animation: panel-in 0.35s ease both;
+		}
+
+		.panel:not([hidden]) .rise {
+			animation: rise 0.45s ease both;
+			animation-delay: calc(var(--i) * 35ms);
+		}
+	}
+
+	@keyframes panel-in {
 		from {
-			background-position: 100% 0;
-		}
-		to {
-			background-position: -100% 0;
+			opacity: 0;
+			transform: translateY(-0.5rem);
 		}
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.session {
-			transition: none;
-		}
-
-		.skeleton {
-			animation: none;
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(0.5rem);
 		}
 	}
 </style>
