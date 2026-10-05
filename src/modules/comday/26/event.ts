@@ -70,14 +70,16 @@ export type AgendaItem = {
 	note?: string;
 	// Venue-wide moments span both the main stage and the classrooms.
 	wide?: boolean;
+	// Short name for the day overview.
+	label?: string;
 };
 
 // Non-speaker moments from the organizer rundown.
 export const agenda: AgendaItem[] = [
-	{ start: "08.00", end: "09.00", title: "Registration", note: "Check in at the lobby", wide: true },
+	{ start: "08.00", end: "09.00", title: "Registration", note: "Check in at the lobby", wide: true, label: "Check-in" },
 	{ start: "09.00", end: "09.15", title: "Doors open", note: "Find a seat in the main hall", wide: true },
 	{ start: "09.15", end: "09.45", title: "Opening", note: "MC welcome, Indonesia Raya, opening remarks" },
-	{ start: "11.50", end: "13.00", title: "Lunch & prayer break", note: "Classrooms open right after", wide: true },
+	{ start: "11.50", end: "13.00", title: "Lunch & prayer break", note: "Classrooms open right after", wide: true, label: "Lunch" },
 	{ start: "13.00", end: "13.05", title: "MC reopening" },
 	{ start: "16.15", end: "16.45", title: "Closing", note: "Group photo, door prize, wrap-up" },
 ];
