@@ -122,7 +122,7 @@ const halves = [
 			</div>
 		</div>
 
-		<div class="day mt-14 scroll-mt-[calc(var(--header-height)+1.5rem)]">
+		<div class="day mt-14">
 			<div class="lane-grid" aria-hidden="true">
 				<span class="hidden lg:block"></span>
 				<div class="axis relative h-7 border-b border-muted-foreground">
@@ -151,7 +151,10 @@ const halves = [
 								{talks} talks · {firesides} firesides · <span class="font-mono text-white">{stageRange}</span>
 							</span>
 						</span>
-						<span class="toggle"><span class="toggle-label">Schedule</span><span class="toggle-icon"></span></span>
+						<span class="toggle">
+							<span class="toggle-label"><span class="when-closed">See all {mainStage.length} sessions</span><span class="when-open">Hide sessions</span></span>
+							<span class="toggle-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg></span>
+						</span>
 					</span>
 					<span class="bar relative block h-12 lg:h-auto" aria-hidden="true">
 						{venueBlocks.map((block) => (
@@ -198,7 +201,10 @@ const halves = [
 								{workshops.length} in parallel · <span class="font-mono text-white">{workshopSlot.start}–{workshopSlot.end}</span>
 							</span>
 						</span>
-						<span class="toggle"><span class="toggle-label">Details</span><span class="toggle-icon"></span></span>
+						<span class="toggle">
+							<span class="toggle-label"><span class="when-closed">See all {workshops.length} workshops</span><span class="when-open">Hide workshops</span></span>
+							<span class="toggle-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg></span>
+						</span>
 					</span>
 					<span class="bar relative block h-12 rounded-md border border-dashed border-border lg:h-auto" aria-hidden="true">
 						{venueBlocks.map((block) => (
@@ -220,7 +226,7 @@ const halves = [
 				All times WIB · Pick a track for its schedule
 			</p>
 
-			<div id="program-stage" class="panel mt-8 rounded-2xl border border-border bg-comday-navy-deep p-4 sm:p-8" data-panel hidden>
+			<div id="program-stage" class="panel mt-8 scroll-mt-[calc(var(--header-height)+1rem)] rounded-2xl border border-border bg-comday-navy-deep p-4 sm:p-8" data-panel hidden>
 				<div class="flex flex-wrap items-start justify-between gap-4">
 					<div>
 						<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Main stage · {stageRange}</p>
@@ -283,9 +289,13 @@ const halves = [
 																</p>
 															</div>
 															<div class="hexagon w-9 shrink-0 comday-flow p-[2px]" aria-hidden="true">
-																<div class="hexagon grid h-full w-full place-items-center bg-card text-xs font-bold text-muted-foreground">
-																	{row.session.speaker ? <span class="text-white">{initials(row.session.speaker)}</span> : "?"}
-																</div>
+																{row.session.photo ? (
+																	<img src={row.session.photo} alt="" class="hexagon h-full w-full bg-card object-cover" loading="lazy" />
+																) : (
+																	<div class="hexagon grid h-full w-full place-items-center bg-card text-xs font-bold text-muted-foreground">
+																		{row.session.speaker ? <span class="text-white">{initials(row.session.speaker)}</span> : "?"}
+																	</div>
+																)}
 															</div>
 														</div>
 														{row.session.topic && (
@@ -335,7 +345,7 @@ const halves = [
 				)}
 			</div>
 
-			<div id="program-classrooms" class="panel mt-8 rounded-2xl border border-border bg-comday-navy-deep p-4 sm:p-8" data-panel hidden>
+			<div id="program-classrooms" class="panel mt-8 scroll-mt-[calc(var(--header-height)+1rem)] rounded-2xl border border-border bg-comday-navy-deep p-4 sm:p-8" data-panel hidden>
 				<div class="flex flex-wrap items-start justify-between gap-4">
 					<div class="max-w-xl">
 						<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -359,10 +369,14 @@ const halves = [
 						<li class="card rise flex flex-col rounded-xl border border-border bg-card p-5" style={`--i: ${room}`}>
 							<div class="flex items-start justify-between gap-4">
 								<p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground">Class {room + 1}</p>
-								<div class="hexagon w-12 shrink-0 comday-flow p-[2px]" aria-hidden="true">
-									<div class="hexagon grid h-full w-full place-items-center bg-card text-sm font-bold text-muted-foreground">
-										{workshop.speaker ? <span class="text-white">{initials(workshop.speaker)}</span> : "?"}
-									</div>
+								<div class="hexagon w-14 shrink-0 comday-flow p-[2px]" aria-hidden="true">
+									{workshop.photo ? (
+										<img src={workshop.photo} alt="" class="hexagon h-full w-full bg-card object-cover" loading="lazy" />
+									) : (
+										<div class="hexagon grid h-full w-full place-items-center bg-card text-sm font-bold text-muted-foreground">
+											{workshop.speaker ? <span class="text-white">{initials(workshop.speaker)}</span> : "?"}
+										</div>
+									)}
 								</div>
 							</div>
 							<p class:list={["mt-4 text-lg font-bold leading-snug", workshop.title ? "text-white" : "text-muted-foreground/80"]}>
@@ -395,12 +409,18 @@ const halves = [
 	const lanes = [...document.querySelectorAll<HTMLButtonElement>("[data-lane]")];
 
 	// One track open at a time; selecting the open track closes it.
+	// Opening a track brings its schedule into view.
 	const show = (lane?: HTMLButtonElement) => {
 		for (const other of lanes) {
 			const open = other === lane;
 			other.setAttribute("aria-expanded", String(open));
 			document.getElementById(other.getAttribute("aria-controls")!)!.hidden = !open;
 		}
+		if (!lane) return;
+		const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		document
+			.getElementById(lane.getAttribute("aria-controls")!)!
+			.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
 	};
 
 	for (const lane of lanes) {
@@ -411,10 +431,7 @@ const halves = [
 
 	for (const jump of document.querySelectorAll<HTMLButtonElement>("[data-show]")) {
 		jump.addEventListener("click", () => {
-			const target = jump.dataset.show!;
-			show(lanes.find((lane) => lane.getAttribute("aria-controls") === target));
-			const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-			jump.closest(".day")!.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+			show(lanes.find((lane) => lane.getAttribute("aria-controls") === jump.dataset.show));
 		});
 	}
 </script>
@@ -555,30 +572,25 @@ const halves = [
 		}
 	}
 
+	.lane[aria-expanded="true"] .when-closed,
+	.lane:not([aria-expanded="true"]) .when-open {
+		display: none;
+	}
+
 	.toggle-icon {
-		position: relative;
+		display: grid;
+		place-items: center;
 		width: 1.75rem;
 		height: 1.75rem;
 		border: 1px solid var(--border);
 		border-radius: 999px;
-		transition:
-			transform 0.3s ease,
-			border-color 0.3s ease;
+		transition: border-color 0.3s ease;
 	}
 
-	.toggle-icon::before,
-	.toggle-icon::after {
-		content: "";
-		position: absolute;
-		inset: 50% auto auto 50%;
-		width: 0.625rem;
-		height: 2px;
-		background: currentColor;
-		transform: translate(-50%, -50%);
-	}
-
-	.toggle-icon::after {
-		transform: translate(-50%, -50%) rotate(90deg);
+	.toggle-icon svg {
+		width: 0.875rem;
+		height: 0.875rem;
+		transition: transform 0.3s ease;
 	}
 
 	.lane:hover .toggle-icon,
@@ -586,8 +598,13 @@ const halves = [
 		border-color: var(--primary);
 	}
 
-	.lane[aria-expanded="true"] .toggle-icon {
-		transform: rotate(45deg);
+	/* Nudges toward the panel it opens; flips once the panel is open. */
+	.lane:not([aria-expanded="true"]):hover .toggle-icon svg {
+		transform: translateY(2px);
+	}
+
+	.lane[aria-expanded="true"] .toggle-icon svg {
+		transform: rotate(180deg);
 	}
 
 	/* Keeps neighbouring blocks visibly apart where they touch. */
