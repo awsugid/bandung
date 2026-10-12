@@ -1,0 +1,133 @@
+---
+import { sessions } from "./event";
+
+// Confirmed speakers, in schedule order.
+const speakers = sessions.filter((session) => session.speaker && session.photo);
+---
+
+<section class="hive-section site-section relative isolate overflow-hidden">
+	<div class="glow comday-flow" aria-hidden="true"></div>
+	<div class="site-container">
+		<div class="mx-auto max-w-2xl text-center">
+			<p class="eyebrow">Speakers</p>
+			<h2 class="mt-4 uppercase">
+				The people in the hive.<br />
+				<span class="text-primary">More on the way.</span>
+			</h2>
+			<p class="lead mt-4">
+				Engineers, architects, and builders from the AWS community. New names
+				land here as they're confirmed.
+			</p>
+		</div>
+
+		<ul class="hive mt-14">
+			{speakers.map((speaker) => (
+				<li class="cell group text-center" data-format={speaker.format}>
+					<div class="frame hexagon comday-flow mx-auto">
+						<div class="hexagon relative h-full w-full overflow-hidden bg-white">
+							<img src={speaker.photo} alt={speaker.speaker} class="photo h-full w-full object-cover object-bottom" loading="lazy" />
+						</div>
+					</div>
+					<p class="mx-auto mt-5 flex w-fit items-center gap-2 rounded-full border border-border px-3 py-1 font-mono text-[0.6875rem] font-bold uppercase leading-none tracking-wider text-white">
+						<span class="dot h-2 w-2 rounded-full" aria-hidden="true"></span>
+						{speaker.format} · {speaker.start}
+					</p>
+					<p class="mt-3 text-lg font-bold uppercase leading-tight text-white">{speaker.speaker}</p>
+					<p class="mt-1 text-sm text-muted-foreground">{speaker.role}</p>
+					<p class="talk mx-auto mt-3 max-w-[16rem] text-sm leading-snug text-white">{speaker.title}</p>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>
+
+<style>
+	[data-format="Keynote"] {
+		--tone: var(--comday-orange);
+	}
+
+	[data-format="Tech talk"] {
+		--tone: var(--comday-blue);
+	}
+
+	[data-format="Lightning talk"] {
+		--tone: var(--comday-magenta);
+	}
+
+	[data-format="Workshop"] {
+		--tone: var(--comday-gradient);
+	}
+
+	.dot {
+		background: var(--tone);
+	}
+
+	.hexagon {
+		aspect-ratio: 1 / 1.1547;
+		clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	}
+
+	/* A faint gradient bloom behind the comb. */
+	.glow {
+		position: absolute;
+		inset: 35% 10% auto;
+		z-index: -1;
+		height: 40%;
+		border-radius: 999px;
+		opacity: 0.18;
+		filter: blur(90px);
+	}
+
+	.hive {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 2.5rem 1rem;
+	}
+
+	.frame {
+		width: min(100%, 11rem);
+		padding: 6px;
+		transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	@media (min-width: 64rem) {
+		.hive {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 1.5rem;
+		}
+
+		/* Every other cell drops half a step, so the row reads as a honeycomb. */
+		.cell:nth-child(even) {
+			margin-top: 5.5rem;
+		}
+
+		.frame {
+			width: 13rem;
+		}
+	}
+
+	.photo {
+		transform-origin: bottom center;
+		transition: transform 0.5s ease;
+	}
+
+	.cell:hover .frame {
+		transform: translateY(-6px) rotate(-2deg);
+	}
+
+	.cell:hover .photo {
+		transform: scale(1.05);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.frame,
+		.photo {
+			transition: none;
+		}
+
+		.cell:hover .frame,
+		.cell:hover .photo {
+			transform: none;
+		}
+	}
+</style>
