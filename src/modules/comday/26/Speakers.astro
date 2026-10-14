@@ -78,10 +78,18 @@ const speakers = sessions.filter((session) => session.speaker && session.photo);
 		filter: blur(90px);
 	}
 
+	/* Wraps into centred rows, so a short last row stays in the middle. */
 	.hive {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 2.5rem 1rem;
+		--columns: 2;
+		--gap: 1rem;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 2.5rem var(--gap);
+	}
+
+	.cell {
+		width: calc((100% - (var(--columns) - 1) * var(--gap)) / var(--columns));
 	}
 
 	.frame {
@@ -92,8 +100,8 @@ const speakers = sessions.filter((session) => session.speaker && session.photo);
 
 	@media (min-width: 64rem) {
 		.hive {
-			grid-template-columns: repeat(4, minmax(0, 1fr));
-			gap: 1.5rem;
+			--columns: 4;
+			--gap: 1.5rem;
 		}
 
 		/* Every other cell drops half a step, so the row reads as a honeycomb. */
