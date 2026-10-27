@@ -103,8 +103,26 @@ export const sessions: Session[] = [
 		photo: "/images/comday/2026/speakers/rio-astamal.webp",
 	},
 	{ start: "14.20", end: "14.40", format: "Fireside" },
-	{ start: "14.40", end: "14.55", format: "Lightning talk" },
-	{ start: "14.55", end: "15.25", format: "Tech talk" },
+	{
+		start: "14.40",
+		end: "14.55",
+		format: "Lightning talk",
+		title: "Beyond Backup: Designing Centralized Backup & Recovery on AWS",
+		speaker: "Muhammad Bella Buay Nunyai",
+		role: "Service Access Management, CISO Group, BRI",
+		topic: "Architecture",
+		photo: "/images/comday/2026/speakers/muhammad-bella-buay-nunyai.webp",
+	},
+	{
+		start: "14.55",
+		end: "15.25",
+		format: "Tech talk",
+		title: "I hired an AI Crew, and it’s purple!",
+		speaker: "Khairul Habib",
+		role: "Senior Solutions Architect, AWS",
+		topic: "AI/ML",
+		photo: "/images/comday/2026/speakers/khairul-habib.webp",
+	},
 	{
 		start: "15.25",
 		end: "15.55",
@@ -127,14 +145,17 @@ export type AgendaItem = {
 	wide?: boolean;
 	// Short name for the day overview.
 	label?: string;
+	logo?: { name: string; src: string };
 };
 
 // Non-speaker moments from the organizer rundown.
 export const agenda: AgendaItem[] = [
 	{ start: "08.00", end: "09.00", title: "Registration", note: "Check in at the lobby", wide: true, label: "Check-in" },
 	{ start: "09.00", end: "09.15", title: "Doors open", note: "Find a seat in the main hall", wide: true },
-	{ start: "09.15", end: "09.45", title: "Opening", note: "MC welcome, Indonesia Raya, opening remarks" },
-	{ start: "11.35", end: "11.45", title: "Sponsor talk" },
+	{ start: "09.15", end: "09.25", title: "Opening", note: "MC welcome, Indonesia Raya" },
+	{ start: "09.25", end: "09.35", title: "Opening speech by AWS User Group Bandung", note: "Speaker to be announced" },
+	{ start: "09.35", end: "09.45", title: "Opening speech by guest", note: "Speaker to be announced" },
+	{ start: "11.35", end: "11.45", title: "Sponsor talk", logo: { name: "KAI", src: "/images/comday/sponsors/kai.svg" } },
 	{ start: "11.45", end: "13.00", title: "Lunch & prayer break", note: "Classrooms open right after", wide: true, label: "Lunch" },
 	{ start: "13.00", end: "13.05", title: "MC reopening" },
 	{ start: "16.15", end: "16.45", title: "Closing", note: "Group photo, door prize, wrap-up" },

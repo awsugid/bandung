@@ -324,6 +324,11 @@ const halves = [
 													<div class="pt-0.5">
 														<p class="font-bold text-white">{row.entry.title}</p>
 														{row.entry.note && <p class="text-sm text-muted-foreground">{row.entry.note}</p>}
+														{row.entry.logo && (
+															<span class="mt-2 inline-flex rounded-md bg-white px-3 py-2">
+																<img src={row.entry.logo.src} alt={row.entry.logo.name} class="h-6 w-auto" loading="lazy" />
+															</span>
+														)}
 													</div>
 												)}
 											</div>
