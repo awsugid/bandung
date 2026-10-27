@@ -1,5 +1,8 @@
 ---
-const sponsor = { name: "JetBrains", src: "/images/comday/sponsors/jetbrains.svg" };
+const sponsors = [
+	{ name: "JetBrains", src: "/images/comday/sponsors/jetbrains.svg", size: "max-h-12 sm:max-h-14" },
+	{ name: "KAI", src: "/images/comday/sponsors/kai.svg", size: "max-h-14 sm:max-h-16" },
+];
 
 const supporters = [
 	{ name: "SBM ITB", file: "sbm-itb", size: "max-h-12 sm:max-h-14" },
@@ -15,6 +18,8 @@ const communityPartners = [
 	{ name: "bandung.py", file: "bandung-py", size: "max-h-12 sm:max-h-14" },
 	{ name: "AI Connect", file: "ai-connect", size: "max-h-5 sm:max-h-6" },
 	{ name: "BandungDev", file: "bandungdev", size: "max-h-6 sm:max-h-7" },
+	{ name: "Startup Bandung", file: "startup-bandung", size: "max-h-9 sm:max-h-10" },
+	{ name: "Business Initiative Movement", file: "bim", size: "max-h-6 sm:max-h-7" },
 ];
 ---
 
@@ -30,11 +35,15 @@ const communityPartners = [
 		<div class="tier mt-14">
 			<p class="eyebrow">Sponsor</p>
 		</div>
-		<div class="mx-auto mt-6 max-w-2xl rounded-2xl comday-flow p-px">
-			<div class="flex h-40 items-center justify-center rounded-[calc(1rem-1px)] bg-white px-8 sm:h-48">
-				<img src={sponsor.src} alt={sponsor.name} class="h-auto max-h-12 w-auto max-w-full sm:max-h-14" loading="lazy" />
-			</div>
-		</div>
+		<ul class="mx-auto mt-6 grid max-w-4xl gap-4 sm:grid-cols-2">
+			{sponsors.map((sponsor) => (
+				<li class="rounded-2xl comday-flow p-px">
+					<div class="flex h-40 items-center justify-center rounded-[calc(1rem-1px)] bg-white px-8 sm:h-48">
+						<img src={sponsor.src} alt={sponsor.name} class:list={["h-auto w-auto max-w-full", sponsor.size]} loading="lazy" />
+					</div>
+				</li>
+			))}
+		</ul>
 
 		<div class="tier mt-16">
 			<p class="eyebrow">Supported by</p>
