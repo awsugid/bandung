@@ -168,6 +168,25 @@ const rows = [0, 1, 2].map((row) => volunteers.filter((_, index) => index % 3 ==
 	</div>
 </section>
 
+<script>
+	// The page is static, so shuffle on every load: deal the volunteers into
+	// the rows in a random order, then refill each row's four identical sets.
+	const reels = [...document.querySelectorAll<HTMLElement>(".marquee .reel")];
+	const people = reels.flatMap((reel) => [...reel.querySelector(".set")!.children]);
+
+	for (let i = people.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[people[i], people[j]] = [people[j], people[i]];
+	}
+
+	reels.forEach((reel, row) => {
+		const pills = people.filter((_, index) => index % reels.length === row);
+		for (const set of reel.querySelectorAll(".set")) {
+			set.replaceChildren(...pills.map((pill) => pill.cloneNode(true)));
+		}
+	});
+</script>
+
 <style>
 	/* A faint orange bloom behind the leads. */
 	.glow {
