@@ -1,0 +1,386 @@
+---
+const photo = (slug: string) => `/images/team/${slug}.webp`;
+
+const leads = [
+	{
+		name: "Arsy Opraza Akma",
+		role: "Lead",
+		photo: photo("arsy-opraza-akma"),
+		linkedin: "https://www.linkedin.com/in/arasopraza/",
+	},
+	{
+		name: "Farhan Rafly Fahrezi Saepulloh",
+		role: "Co-lead",
+		photo: photo("farhan-rafly-fahrezi-saepulloh"),
+		linkedin: "https://www.linkedin.com/in/farhanraflyfahrezi/",
+	},
+];
+
+// Volunteers without a photo fall back to their initials. `linkedin` is the profile handle.
+const volunteers: { name: string; slug?: string; linkedin?: string }[] = [
+	{ name: "Nurhana Sayyida", slug: "nurhana-sayyida", linkedin: "nurhanasayyida" },
+	{ name: "Muhammad Harits Ar Razi", slug: "muhammad-harits-ar-razi", linkedin: "mharitsar-razi" },
+	{ name: "Irfan Nurdin Salman", slug: "irfan-nurdin-salman", linkedin: "irfan-nurdin-salman-423245151" },
+	{ name: "Cantika Putri Arbiliansyah", slug: "cantika-putri-arbiliansyah", linkedin: "cantikaputria" },
+	{ name: "Dennie Fuzi", slug: "dennie-fuzi", linkedin: "denifuzi" },
+	{ name: "Agung Al Ghifari Akma", slug: "agung-al-ghifari-akma", linkedin: "agung-al-ghifari-akma-99b4a027a" },
+	{ name: "Bervianto Leo Pratama", slug: "bervianto-leo-pratama", linkedin: "bervianto-leo-pratama" },
+	{ name: "Mochammad Syahrindra Akbar Suharno", slug: "mochammad-syahrindra-akbar-suharno", linkedin: "m-syahrindra" },
+	{ name: "Ayik Mardiansah", slug: "ayik-mardiansah", linkedin: "ayik-mardiansah" },
+	{ name: "Intan Sapitri", slug: "intan-sapitri", linkedin: "intan-sapitri-622ba028a" },
+	{ name: "Siti Maryam", slug: "siti-maryam", linkedin: "sitimaryam15" },
+	{ name: "Adeline Putri Sinurat", slug: "adeline-putri-sinurat", linkedin: "adelinesinurat" },
+	{ name: "Aria Hadid", slug: "aria-hadid", linkedin: "ariahadid" },
+	{ name: "Baihaqi Syawkat", slug: "baihaqi-syawkat", linkedin: "baihaqi-syawkat" },
+	{ name: "Lisa Nuri Amelia", slug: "lisa-nuri-amelia", linkedin: "LisaNuriAmelia" },
+	{ name: "Nita Oktaviani", slug: "nita-oktaviani", linkedin: "nita-oktaviani" },
+	{ name: "Inggih Wicaksono", slug: "inggih-wicaksono", linkedin: "inggih-wicaksono" },
+	{ name: "Agustian Nugraha", slug: "agustian-nugraha", linkedin: "agustian-nugraha-979717257" },
+	{ name: "Divanya Luthfi Adzani" },
+	{ name: "Refan Hendri", slug: "refan-hendri", linkedin: "refanhendri" },
+	{ name: "Mochamad Alfath Haikal Akbar", slug: "mochamad-alfath-haikal-akbar", linkedin: "mochamad-alfath-haikal-akbar-94664643b" },
+	{ name: "Michael Sanjaya", slug: "michael-sanjaya", linkedin: "michael-sanjaya" },
+	{ name: "Deden Fahrul Roziqin", slug: "deden-fahrul-roziqin", linkedin: "dedenfahrul" },
+	{ name: "Muhammad Rafie Akbar Rizali", slug: "muhammad-rafie-akbar-rizali", linkedin: "rafieakbar" },
+	{ name: "Hasna Lutfiah Khairunnisa", slug: "hasna-lutfiah-khairunnisa", linkedin: "hasnalutfiahkhairunnisa" },
+	{ name: "Emir Iskandar Ananto", slug: "emir-iskandar-ananto", linkedin: "emiriskandarananto" },
+	{ name: "Abizar Febryan", slug: "abizar-febryan", linkedin: "abizarfebryan27" },
+	{ name: "Maria Zakiyya Safwawidadi", slug: "maria-zakiyya-safwawidadi", linkedin: "safwa-azkiya-508478217" },
+	{ name: "Nada Ika Sari", slug: "nada-ika-sari", linkedin: "nadaikasari" },
+];
+
+const initials = (name: string) =>
+	name
+		.split(" ")
+		.slice(0, 2)
+		.map((word) => word[0])
+		.join("");
+
+// First two names in full, the rest as initials: "Mochammad Syahrindra A. S.".
+const shortName = (name: string) => {
+	const words = name.split(" ");
+	return [...words.slice(0, 2), ...words.slice(2).map((word) => `${word[0]}.`)].join(" ");
+};
+
+const profile = (handle: string) => `https://www.linkedin.com/in/${handle}/`;
+
+const rows = [0, 1, 2].map((row) => volunteers.filter((_, index) => index % 3 === row));
+---
+
+<section class="site-section relative isolate overflow-hidden bg-aws-ink text-white" aria-labelledby="team-title">
+	<div class="glow" aria-hidden="true"></div>
+	<div class="site-container">
+		<div class="grid gap-14 lg:grid-cols-[1fr_1.05fr] lg:items-center">
+			<div class="max-w-xl">
+				<p class="text-sm font-bold uppercase tracking-[0.18em] text-primary">Meet the team</p>
+				<h2 id="team-title" class="mt-4 text-3xl leading-tight text-white sm:text-4xl">
+					The people behind the meetups.
+				</h2>
+				<p class="mt-6 text-lg leading-8 text-white/70">
+					AWS User Group Bandung is run by volunteers. Two leads keep the
+					community moving, and every event is carried by people who give
+					their time to help.
+				</p>
+			</div>
+
+			<ul class="leads">
+				{leads.map((lead, index) => (
+					<li class="lead-cell">
+						<a
+							href={lead.linkedin}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="lead-link block rounded-2xl text-center"
+							aria-label={`${lead.name}, ${lead.role}, on LinkedIn`}
+						>
+							<div class="orbit mx-auto">
+								<div class="lead-ring rounded-full">
+									<div class="h-full w-full overflow-hidden rounded-full bg-aws-ink-soft">
+										<img src={lead.photo} alt="" class="photo h-full w-full object-cover object-top" loading="lazy" />
+									</div>
+								</div>
+							</div>
+							<p class="mt-7 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+								0{index + 1} / {lead.role}
+							</p>
+							<p class="mt-2 text-base font-bold leading-snug text-balance text-white sm:text-lg">{lead.name}</p>
+							<span class="linkedin mt-3 inline-flex items-center gap-1 text-xs font-bold text-white/60">
+								LinkedIn
+								<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5" aria-hidden="true">
+									<path d="M7 13 13 7M8 7h5v5" />
+								</svg>
+							</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</div>
+
+		<div class="mt-20 flex items-center gap-3 border-t border-white/15 pt-12">
+			<h3 class="text-2xl text-white sm:text-3xl">Past volunteers</h3>
+			<span class="rounded-full bg-primary px-2.5 py-0.5 text-sm font-bold text-aws-ink">{volunteers.length}</span>
+		</div>
+	</div>
+
+	<ul class="sr-only">
+		{volunteers.map((volunteer) => (
+			<li>
+				{volunteer.linkedin ? (
+					<a href={profile(volunteer.linkedin)} target="_blank" rel="noopener noreferrer">{volunteer.name} on LinkedIn</a>
+				) : (
+					volunteer.name
+				)}
+			</li>
+		))}
+	</ul>
+
+	<div class="marquee mt-10" aria-hidden="true">
+		{rows.map((row, index) => (
+			<div class="reel" data-row={index}>
+				{[0, 1, 2, 3].map(() => (
+					<div class="set">
+						{row.map((volunteer) => {
+							const Pill = volunteer.linkedin ? "a" : "span";
+							return (
+								<Pill
+									class="pill"
+									href={volunteer.linkedin && profile(volunteer.linkedin)}
+									target={volunteer.linkedin && "_blank"}
+									rel={volunteer.linkedin && "noopener noreferrer"}
+									tabindex={volunteer.linkedin && "-1"}
+								>
+									<span class="avatar">
+										{volunteer.slug ? (
+											<img src={photo(volunteer.slug)} alt="" class="h-full w-full object-cover" loading="lazy" />
+										) : (
+											<span class="flex h-full w-full items-center justify-center text-xs font-bold text-primary">
+												{initials(volunteer.name)}
+											</span>
+										)}
+									</span>
+									{shortName(volunteer.name)}
+								</Pill>
+							);
+						})}
+					</div>
+				))}
+			</div>
+		))}
+	</div>
+</section>
+
+<style>
+	/* A faint orange bloom behind the leads. */
+	.glow {
+		position: absolute;
+		top: 8%;
+		right: -10%;
+		z-index: -1;
+		width: 55%;
+		height: 45%;
+		border-radius: 999px;
+		background: var(--primary);
+		opacity: 0.1;
+		filter: blur(110px);
+	}
+
+	.leads {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+	}
+
+	.lead-cell {
+		width: min(calc(50% - 0.75rem), 15rem);
+	}
+
+	/* The co-lead sits half a step lower, so the pair reads as a duo, not a row. */
+	.lead-cell:nth-child(2) {
+		margin-top: 3rem;
+	}
+
+	@media (min-width: 40rem) {
+		.lead-cell:nth-child(2) {
+			margin-top: 5rem;
+		}
+	}
+
+	.lead-link:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 6px;
+	}
+
+	/* A dashed orbit around each lead, turning slowly. */
+	.orbit {
+		position: relative;
+		width: calc(100% - 1.5rem);
+	}
+
+	.orbit::before {
+		content: "";
+		position: absolute;
+		inset: -0.75rem;
+		border: 1px dashed hsl(0 0% 100% / 0.22);
+		border-radius: 999px;
+		animation: orbit 60s linear infinite;
+		transition: border-color 0.3s ease;
+	}
+
+	@keyframes orbit {
+		to {
+			transform: rotate(1turn);
+		}
+	}
+
+	.lead-ring {
+		position: relative;
+		aspect-ratio: 1;
+		padding: 5px;
+		background: var(--primary);
+		transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.photo {
+		transition: transform 0.5s ease;
+	}
+
+	.linkedin {
+		transition: color 0.2s ease;
+	}
+
+	.lead-link:hover .lead-ring {
+		transform: translateY(-6px);
+	}
+
+	.lead-link:hover .photo {
+		transform: scale(1.06);
+	}
+
+	.lead-link:hover .orbit::before {
+		border-color: hsl(0 0% 100% / 0.45);
+	}
+
+	.lead-link:hover .linkedin {
+		color: var(--primary);
+	}
+
+	/* Three edge-to-edge rows drifting sideways in alternating directions. */
+	.marquee {
+		display: grid;
+		gap: 0.75rem;
+		overflow: hidden;
+		padding-block: 0.25rem;
+		mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+	}
+
+	.reel {
+		display: flex;
+		width: max-content;
+		animation: drift 160s linear infinite;
+	}
+
+	.reel[data-row="1"] {
+		animation-direction: reverse;
+		animation-duration: 180s;
+	}
+
+	.reel[data-row="2"] {
+		animation-duration: 200s;
+	}
+
+	.marquee:hover .reel {
+		animation-play-state: paused;
+	}
+
+	.set {
+		display: flex;
+	}
+
+	/* Four identical sets: sliding by two of them loops seamlessly and keeps
+	   the row wider than any screen. */
+	@keyframes drift {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	.pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.625rem;
+		margin-right: 0.75rem;
+		padding: 0.3125rem 1.125rem 0.3125rem 0.3125rem;
+		border: 1px solid hsl(0 0% 100% / 0.14);
+		border-radius: 999px;
+		background: hsl(0 0% 100% / 0.04);
+		font-size: 0.875rem;
+		font-weight: 700;
+		white-space: nowrap;
+		color: hsl(0 0% 100% / 0.85);
+		transition:
+			border-color 0.2s ease,
+			background 0.2s ease;
+	}
+
+	.pill:hover {
+		border-color: var(--primary);
+		background: hsl(0 0% 100% / 0.08);
+	}
+
+	.avatar {
+		width: 2.25rem;
+		height: 2.25rem;
+		flex-shrink: 0;
+		overflow: hidden;
+		border-radius: 999px;
+		background: var(--aws-squid-ink-soft);
+	}
+
+	@media (min-width: 64rem) {
+		.pill {
+			font-size: 0.9375rem;
+		}
+
+		.avatar {
+			width: 2.5rem;
+			height: 2.5rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.orbit::before,
+		.reel {
+			animation: none;
+		}
+
+		.lead-ring,
+		.photo {
+			transition: none;
+		}
+
+		.lead-link:hover .lead-ring,
+		.lead-link:hover .photo {
+			transform: none;
+		}
+
+		/* Without motion, show everyone once as wrapped rows. */
+		.marquee {
+			mask-image: none;
+		}
+
+		.reel {
+			width: auto;
+			justify-content: center;
+		}
+
+		.set {
+			flex-wrap: wrap;
+			justify-content: center;
+			row-gap: 0.75rem;
+		}
+
+		.set + .set {
+			display: none;
+		}
+	}
+</style>
